@@ -6,6 +6,9 @@ public class Channel {
     private String channel;
     private String user;
 
+    public Channel() {
+    }
+
     public Channel(Long id, String message, String channel, String user) {
         this.id = id;
         this.message = message;
@@ -36,5 +39,16 @@ public class Channel {
     public void setUser(String user) {
         this.user = user;
     }
+        @Override 
+         public String toString(){
+            return "Channel{" +
+                            "id=" + id +
+                            ", message='" + message + '\'' +
+                            ", channel='" + channel + '\'' +
+                            ", user='" + user + '\'' +
+                            '}';
+         } 
+
+
 
 }

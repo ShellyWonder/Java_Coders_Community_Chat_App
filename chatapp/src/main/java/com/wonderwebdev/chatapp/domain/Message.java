@@ -1,14 +1,24 @@
 package com.wonderwebdev.chatapp.domain;  
 
 public class Message {
-    private String id;
+    private Long id;
     private String message;
     private String channel;
     private String user;
-    public String getId() {
+
+    public Message() {
+    }
+
+    public Message(Long id, String message, String channel, String user) {
+        this.id = id;
+        this.message = message;
+        this.channel = channel;
+        this.user = user;
+    }
+    public Long getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public String getMessage() {
@@ -28,5 +38,12 @@ public class Message {
     }
     public void setUser(String user) {
         this.user = user;
+    }
+    @Override
+    public String toString() {
+        return "Message [id=" + id + ", message=" + message + ", channel=" + channel + ", user=" + user + ", getId()="
+                + getId() + ", getMessage()=" + getMessage() + ", getChannel()=" + getChannel() + ", getUser()="
+                + getUser() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
+                + super.toString() + "]";
     }
 }
