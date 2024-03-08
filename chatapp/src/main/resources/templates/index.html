@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" lang="en">
+  <head>
+    <div th:replace="layout :: common-head">
+      <th:block th:with="title='Home'">
+      <title th:text="${title}">JCCC: Home</title> 
+    </th:block>
+  </div>
+    </head>
+
+  <body class="d-flex flex-column h-100">
+    <!--Nav section-->
+    <header th:replace="layout :: header"></header>
+    <!--Main section-->
+    <main class="flex-fill">
+      <div class="container col-xxl-8 px-4 py-5">
+        <div class="row g-5 py-5 row-cols-1 row-cols-lg-2">
+          <div class="col order-last order-lg-first">
+            <h1 class="display-5 1h-1 mb-3">
+              <span class="logoFont">Java Coders Community Chat</span>
+              <br />A Demo Coding Project
+            </h1>
+            <h4 class="lead">
+              Welcome to the Java Coders Community Bank,
+              <strong>a fictious business demo project</strong> by SJ Wonder.
+              This fullstack, responsive application allows you to read, add,
+              update and delete transactions using Java, Spring Boot, Thymeleaf,
+              and vanilla Javascript.
+            </h4>
+            <ul class="fa-ul pt-2">
+              <li>
+                <span class="bi-li"
+                  ><i class="bi bi-check-circle-fill"></i></span
+                >Spring Boot MVC
+              </li>
+              <li>
+                <span class="bi-li"
+                  ><i class="bi bi-check-circle-fill"></i></span
+                >Thymeleaf Templating
+              </li>
+
+              <li>
+                <span class="bi-li"
+                  ><i class="bi bi-check-circle-fill"></i></span
+                >Repository and Service Layers
+              </li>
+              <li>
+                <span class="bi-li"
+                  ><i class="bi bi-check-circle-fill"></i></span
+                >Full CRUD Operations
+              </li>
+
+              <li>
+                <span class="bi-li"
+                  ><i class="bi bi-check-circle-fill"></i></span
+                >Custom CSS and Bootstrap Layout
+              </li>
+
+              <li>
+                <span class="bi-li"
+                  ><i class="bi bi-check-circle-fill"></i></span
+                >Javascript Functionalities
+              </li>
+              <li>
+                <span class="bi-li"
+                  ><i class="bi bi-check-circle-fill"></i></span
+                >Pagination
+              </li>
+            </ul>
+            <div>
+              <a
+                type="button"
+                class="btn btn-primary btn-lg px-4 me-md-2"
+                th:href="@{/register}"
+                >Let's Register!</a
+              >
+            </div>
+            <div class="d-flex">
+              <div class="row">
+                <div class="col">
+                  <h2 class="fw-bold mt-4">Technologies</h2>
+                </div>
+              </div>
+            </div>
+            <h5 class="fw-bold mt-3">
+              <div class="d-flex">
+                <!--icon row-->
+                <div class="row row-cols-4">
+                  <div class="col">
+                    <i class="fab fa-js-square fa-4x jsicon"></i>
+                  </div>
+                  <div class="col">
+                    <i class="fab fa-bootstrap fa-4x bsicon"></i>
+                  </div>
+                  <div class="col">
+                    <i class="fab fa-html5 fa-4x htmlicon"></i>
+                  </div>
+                  <div class="col">
+                    <i class="fab fa-css3-alt fa-4x cssicon"></i>
+                  </div>
+                </div>
+              </div>
+            </h5>
+          </div>
+
+          <!-- <div class="col">
+            <div class="col-10 col-sm-8">
+              <img
+                src="/img/JCCB_Logo.jpg"
+                class="img-fluid center-block mx-auto"
+                alt="Java Coders Community Bank logo"
+              />
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </main>
+    <!--footer section-->
+    <footer th:replace="layout :: footer"></footer>
+    <!-- scripts -->
+    <div th:replace="layout :: CustomJS"></div>
+    <div th:replace="layout :: BootstrapJS"></div>
+  </body>
+</html>
