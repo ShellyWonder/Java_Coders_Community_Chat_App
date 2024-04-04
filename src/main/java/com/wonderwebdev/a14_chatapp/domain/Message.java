@@ -1,9 +1,13 @@
 package com.wonderwebdev.a14_chatapp.domain;
 
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Message {
@@ -11,17 +15,22 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String message;
-    private String channel;
+    @ManyToOne
+    private Channel channel;
     private String user;
+    @Column(nullable = false)
+    private LocalDateTime publishedAt;
 
+    
     public Message() {
     }
-
-    public Message(Long id, String message, String channel, String user) {
+    
+    public Message(Long id, String message, Channel channel, String user, LocalDateTime publishedAt) {
         this.id = id;
         this.message = message;
         this.channel = channel;
         this.user = user;
+        this.publishedAt = LocalDateTime.now();
     }
     public Long getId() {
         return id;
@@ -35,10 +44,10 @@ public class Message {
     public void setMessage(String message) {
         this.message = message;
     }
-    public String getChannel() {
+    public Channel getChannel() {
         return channel;
     }
-    public void setChannel(String channel) {
+    public void setChannel(Channel channel) {
         this.channel = channel;
     }
     public String getUser() {
@@ -46,6 +55,13 @@ public class Message {
     }
     public void setUser(String user) {
         this.user = user;
+    }
+    public LocalDateTime getPublishedAt() {
+        return publishedAt;
+    }
+
+    public void setPublishedAt(LocalDateTime publishedAt) {
+        this.publishedAt = publishedAt;
     }
     @Override
     public String toString() {

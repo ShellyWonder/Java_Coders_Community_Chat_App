@@ -10,52 +10,43 @@ public class Channel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String message;
-    private String channel;
-    private String user;
+    private String name;
+    private String description;
 
     public Channel() {
     }
 
-    public Channel(Long id, String message, String channel, String user) {
+    public Channel(Long id, String name, String description) {
         this.id = id;
-        this.message = message;
-        this.channel = channel;
-        this.user = user;
+        this.name = name;
+        this.description = description;
     }
+
     public Long getId() {
         return id;
     }
     public void setId(Long id) {
         this.id = id;
     }
-    public String getMessage() {
-        return message;
+    public String getName() {
+        return name;
     }
-    public void setMessage(String message) {
-        this.message = message;
+    public void setName(String name) {
+        this.name = name;
     }
-    public String getChannel() {
-        return channel;
+    public String getDescription() {
+        return description;
     }
-    public void setChannel(String channel) {
-        this.channel = channel;
+    public void setDescription(String description) {
+        this.description = description;
     }
-    public String getUser() {
-        return user;
-    }
-    public void setUser(String user) {
-        this.user = user;
-    }
-        @Override 
-         public String toString(){
-            return "Channel{" +
-                            "id=" + id +
-                            ", message='" + message + '\'' +
-                            ", channel='" + channel + '\'' +
-                            ", user='" + user + '\'' +
-                            '}';
-         } 
 
- 
+    @Override
+    public String toString() {
+        return "Channel [id=" + id + ", name=" + name + ", description=" + description + ", getId()=" + getId()
+                + ", getName()=" + getName() + ", getDescription()=" + getDescription() + ", getClass()=" + getClass()
+                + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+    }
+   
+    
 }
