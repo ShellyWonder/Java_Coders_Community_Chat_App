@@ -1,0 +1,195 @@
+/*NOTE TO REVIEWER: Many classes are overrides of bootstrap classes. 
+Therefore "!important" is needed. */
+
+:root {
+    --sjw-dark-color: #265C4B;/*darkest green */
+   --sjw-lightbg-color: #8FC1B5;/*lightest--bg */
+   --sjw-primary-color: #589A8D;/*btn */
+   --sjw-secondary-color: #007566;/*btn-hover */
+   --sjw-tertiary-color: #146551;/*footer */
+   --sjw-light-color: #a5bf6b;
+   --sjw-headlineblue-color: #203354;
+   --sjw-creditgreen-color: green;
+   --sjw-debitred-color: #d30000;
+ }
+ 
+ body{
+   /*NOTE TO REVIEWER: Concerning consistancy, I used rgba here
+    because the format used for opasacity elsewhere in the file 
+    did not produce the desired effect */
+   background-color: rgba(143, 193, 181, 0.25);/*--sjw-lightbg-color @25% opacity */
+   }
+ main.flex-fill {
+    min-height: 100vh;
+ }
+ 
+ .custom-container {
+   margin-left: 1.25em;
+   margin-right: 1.25em;
+ }
+ 
+ h1,
+ h2,
+ h3,
+ h5,
+ h6 {
+   color: var(--sjw-headlineblue-color)!important;
+ }
+ 
+ h4 {
+   font-size: 4em;
+ }
+ /*nav styles*/
+ .logoFont {
+   font-family: ltc-broadway-engraved, sans-serif;
+   font-weight: 400;
+   font-style: normal;
+ }
+ .navbar {
+   background-color: var(--sjw-dark-color)!important;
+   opacity: 0.95;
+   box-shadow: 0 6px 10px 0 rgba(0,0,0,0.3);
+ }
+ .navbar-brand {
+   color: whitesmoke !important;
+   margin-top: .25rem;
+ }
+ .nav-item, .nav-link {
+   color: var(--sjw-light-color)!important; 
+   font-size: 1.2em;
+ }
+ .nav-item:hover,
+ .nav-link:hover,
+ .nav-item:focus,
+ .nav-link:focus {
+   color: var(--sjw-lightbg-color)!important;
+ }
+ 
+  .navbar-nav .nav-item .nav-link.active {
+   color: whitesmoke !important;
+ }
+ .dropdown-menu {
+   background-color: var(--sjw-light-color); 
+   opacity: 0.95;
+ }
+ .code-view {
+   color: var(--sjw-light-color) !important;
+ }
+ .code-view:hover {
+   background-color: var(--sjw-secondary-color) !important;
+ }
+ /*END nav styles*/
+ 
+ .checkListIcon {
+   color: var(--sjw-secondary-color);
+ }
+ 
+ /* form styles */
+ /* form background override bootstrap: added opacity 25%*/
+ form {
+   color: var(--sjw-headlineblue-color);
+   font-size: 1.25em;
+   font-weight: 700;
+   background-color:whitesmoke;
+   opacity: 0.75; 
+   box-shadow: 3px 6px 6px 5px rgba(0,0,0,0.4);
+ }
+ form:hover {
+   border: 3px solid var(--sjw-secondary-color);
+ }
+ /* table styles */
+ table {
+   border: 3px solid var(--sjw-secondary-color);
+   box-shadow: 3px 6px 6px 5px rgba(0,0,0,0.4);
+     }
+ /*table header*/
+  .custom-table {
+   background-color: var(--sjw-tertiary-color)!important;
+   color:var(--sjw-light-color)!important;
+   font-size: 1.2em;
+   font-weight: bold;
+ }
+ /*END table styles*/
+ 
+ /*--button styles --*/
+ .btn-primary {
+   color: white !important;
+   background-color: var(--sjw-primary-color) !important;
+   border-color: var(--sjw-light-color)!important;
+   box-shadow: 0 6px 10px 0 rgba(0,0,0,0.2);
+ }
+ 
+ .btn.outline-primary {
+   color: var(--sjw-secondary-color)!important;
+  
+ }
+ .btn-outline-primary:hover,
+ .btn-outline-primary:active,
+ .btn-outline-primary:focus {
+   border-radius: 4px;
+   border-color: var(--sjw-light-color);
+   background-color: var(--sjw-light-color);
+ }
+ 
+ .btn-primary:hover,
+ .btn-primary:active,
+ .btn-primary:visited,
+ .btn-primary:focus {
+   filter: brightness(1.1) !important;
+   color: var(--sjw-light-color) !important;
+   border-color: var(--sjw-primary-color) !important;
+   background-color: var(--sjw-secondary-color)!important;
+ }
+ /*Print Btn*/
+ .print-btn {
+   color: var(--sjw-light-color);
+   background-color: var(--sjw-headlineblue-color);
+   border-color: var(--sjw-tertiary-color);
+   box-shadow: 0 6px 10px 0 rgba(0,0,0,0.2);
+ }
+ 
+ /*footer styles*/
+ .sticky-footer {
+   position: sticky;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+ }
+ 
+ .styleFooter {
+   font-size: 1.25em;
+   background-color: var(--sjw-dark-color);
+   padding-right: 1rem;
+   color: var(--sjw-light-color);
+ }
+ 
+ footer .social > a {
+   font-size: 2em;
+   color: var(--sjw-light-color);
+   opacity: 0.75;
+ }
+ 
+ /*footer email link color */
+ footer .text-light > a{
+   color: var(--sjw-light-color);
+ }
+ footer .text-light > a:hover{
+   color: var(--sjw-lightbg-color);
+ }
+ footer .social > a:hover{
+   color: var(--sjw-lightbg-color);
+   opacity: 0.9;
+ }
+ /*END footer styles*/
+ 
+
+   
+ /*--transaction details--*/
+ .card-text {
+   font-size: 1.5em;
+ }
+ .category-text {
+   color: var(--sjw-headlineblue-color);
+   font-size: 1.5em;
+   font-weight: 800;
+ }
