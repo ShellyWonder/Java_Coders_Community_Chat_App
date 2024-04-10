@@ -17,7 +17,8 @@ public class Message {
     private String message;
     @ManyToOne
     private Channel channel;
-    private String user;
+    @ManyToOne
+    private User user;
     @Column(nullable = false)
     private LocalDateTime publishedAt;
 
@@ -25,13 +26,21 @@ public class Message {
     public Message() {
     }
     
-    public Message(Long id, String message, Channel channel, String user, LocalDateTime publishedAt) {
+    public Message(String message, Channel channel, User user) {
+        this.message = message;
+        this.channel = channel;
+        this.user = user;
+        this.publishedAt = LocalDateTime.now(); // Automatically set to current time
+    }
+    //overloaded constructor allows for the time to be set at creation and not automatically reset to the current time
+    public Message(Long id, String message, Channel channel, User user, LocalDateTime publishedAt) {
         this.id = id;
         this.message = message;
         this.channel = channel;
         this.user = user;
-        this.publishedAt = LocalDateTime.now();
+        this.publishedAt = publishedAt; // Use the explicitly provided time
     }
+    
     public Long getId() {
         return id;
     }
@@ -50,10 +59,10 @@ public class Message {
     public void setChannel(Channel channel) {
         this.channel = channel;
     }
-    public String getUser() {
+    public User getUser() {
         return user;
     }
-    public void setUser(String user) {
+    public void setUser(User user) {
         this.user = user;
     }
     public LocalDateTime getPublishedAt() {
@@ -64,10 +73,11 @@ public class Message {
         this.publishedAt = publishedAt;
     }
     @Override
-    public String toString() {
-        return "Message [id=" + id + ", message=" + message + ", channel=" + channel + ", user=" + user + ", getId()="
-                + getId() + ", getMessage()=" + getMessage() + ", getChannel()=" + getChannel() + ", getUser()="
-                + getUser() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
-                + super.toString() + "]";
-    }
+public String toString() {
+    // Including only non-sensitive user information (e.g., user ID or userName)
+    String userInfo = (user != null) ? "UserId=" + user.getId() + ", UserName=" + user.getUserName() : "User=null";
+    
+    return "Message [id=" + id + ", message=" + message + ", channel=" + (channel != null ? "ChannelId=" + channel.getId() + ", ChannelName=" + channel.getName() : "Channel=null") + ", " + userInfo + ", publishedAt=" + publishedAt + "]";
+}
+
 }

@@ -1,9 +1,14 @@
 package com.wonderwebdev.a14_chatapp.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Channel {
@@ -12,6 +17,10 @@ public class Channel {
     private Long id;
     private String name;
     private String description;
+
+    @OneToMany(mappedBy = "channel", fetch = FetchType.LAZY)
+    private List<Message> messages = new ArrayList<>(); // This line establishes the bidirectional relationship
+
 
     public Channel() {
     }
@@ -41,12 +50,20 @@ public class Channel {
         this.description = description;
     }
 
+    
+    public List<Message> getMessages() {
+        return messages;
+    }
+    
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+    
     @Override
     public String toString() {
         return "Channel [id=" + id + ", name=" + name + ", description=" + description + ", getId()=" + getId()
-                + ", getName()=" + getName() + ", getDescription()=" + getDescription() + ", getClass()=" + getClass()
+                + ", getName()=" + getName() + ", getDescription()=" + getDescription() + ", getMessages)=" + getMessages() + ", getClass()=" + getClass()
                 + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
     }
-   
     
 }
