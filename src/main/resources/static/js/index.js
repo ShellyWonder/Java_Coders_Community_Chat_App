@@ -1,15 +1,15 @@
 
-//registerBtn click "shows" registration form, hides login form
+//registerBtn click displays registration form, hides login form
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelector("#registerBtn").addEventListener("click", function () {
-        document.querySelector("#loginForm").style.display = "none";
+        document.querySelector("#login").style.display = "none";
         document.querySelector("#registrationForm").style.display = "block";
     });
 
     //backBtn click hides registration form, reinstates login form
     document.querySelector("#backBtn").addEventListener("click", function () {
         document.querySelector("#registrationForm").style.display = "none";
-        document.querySelector("#loginForm").style.display = "block";
+        document.querySelector("#login").style.display = "block";
     }
 )});
 //alert shows when registration is successful
@@ -20,7 +20,7 @@ function registrationSuccess() {
         document.querySelector("#registrationSuccess").style.display = "none";
     }, 2000);
     document.querySelector("#registrationForm").style.display = "none";
-    document.querySelector("#loginForm").style.display = "block";
+    document.querySelector("#login").style.display = "block";
     document.querySelector("#registerBtn").style.display = "none";
     document.querySelector("#backBtn").style.display = "none";
     document.querySelector("#loginBtn").style.display = "block";

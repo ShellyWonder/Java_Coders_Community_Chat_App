@@ -15,7 +15,7 @@
     <main class="flex-fill">
       <div class="container col-xxl-8 px-4 py-5">
         <div class="row g-5 py-5 row-cols-1 row-cols-lg-2">
-          <div class="col order-last order-lg-first">
+          <div class="col-lg-6 order-last order-lg-first">
             <h1 class="display-5 1h-1 mb-3">
               <span class="logoFont">Java Coders Community Chat</span>
               <br />A Demo Coding Project
@@ -64,8 +64,10 @@
               
             </ul>
           </div>
-
-          <div class="col-md-12 pt-3">
+          
+          <div class="col-lg-6 order-last order-lg-first">
+            <!-- login form content here -->
+              <div id="login" class="col-md-12 pt-3" >
                      <h1 class="d-flex justify-content-start my-5">Welcome!</h1>
                      <h3 class="lead">
                        Please enter your username and password to join the chat channel.</h3>
@@ -101,7 +103,10 @@
                         </div>
                       </form>
                       <a class="btn btn-danger ms-1"  id="registerBtn" th:href="@{/}">Register</a>
-                      <div id="registrationForm" class="col-md-12 pt-3" style="display:none;">
+              </div>
+
+              <!-- Registration form content here -->
+               <div id="registrationForm" class="col-md-12 pt-3" style="display:none;">
                         <!-- Registration form content here -->
                         <div class="col-12 pt-3">
                           <h1 class="d-flex justify-content-start my-5">Create Your Account</h1>
@@ -156,11 +161,45 @@
                           </form>
                         </div>
                         <a class="btn btn-danger ms-1" href="#" id="backBtn">Back</a>
-                    </div>
+                </div>
 
-                    
-                   </div>
+              <!-- Channel selection content here -->
+              <div id="channelSelect" class="col-md-12 pt-3" style="display:none;">
+                <div class="card">
+                  <div class="card-header">
+                    Available Channels
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">Welcome to to the Java Community Chat! Select a channel to begin.</h5>
+                      <ol class="list-group list-group-numbered">
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                          <div class="ms-2 me-auto">
+                            <div class="fw-bold">General</div>
+                            Something on your mind? Share it here.
+                          </div>
+                          <!--number of participants currently in the channel-->
+                          <span class="badge text-bg-primary rounded-pill">14</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                          <div class="ms-2 me-auto">
+                            <div class="fw-bold">Frontend frameworks</div>
+                            React, Vue, Angular, and more.
+                          </div>
+                          <span class="badge text-bg-primary rounded-pill">14</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                          <div class="ms-2 me-auto">
+                            <div class="fw-bold">Subheading</div>
+                            Content for list item
+                          </div>
+                          <span class="badge text-bg-primary rounded-pill">14</span>
+                        </li>
+                      </ol> 
+               </div>  
+                </div>  
+              </div>
           </div>
+        </div>
         </div>
       </div>
     </main>
