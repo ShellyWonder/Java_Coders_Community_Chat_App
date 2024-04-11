@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Message {
+public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,17 +23,17 @@ public class Message {
     private LocalDateTime publishedAt;
 
     
-    public Message() {
+    public Chat() {
     }
     
-    public Message(String message, Channel channel, User user) {
+    public Chat(String message, Channel channel, User user) {
         this.message = message;
         this.channel = channel;
         this.user = user;
         this.publishedAt = LocalDateTime.now(); // Automatically set to current time
     }
     //overloaded constructor allows for the time to be set at creation and not automatically reset to the current time
-    public Message(Long id, String message, Channel channel, User user, LocalDateTime publishedAt) {
+    public Chat(Long id, String message, Channel channel, User user, LocalDateTime publishedAt) {
         this.id = id;
         this.message = message;
         this.channel = channel;

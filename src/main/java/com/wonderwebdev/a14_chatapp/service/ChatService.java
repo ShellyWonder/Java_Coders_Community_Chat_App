@@ -1,5 +1,5 @@
 package com.wonderwebdev.a14_chatapp.service;
 
-public class MessageService {
+public class ChatService {
     
 }
