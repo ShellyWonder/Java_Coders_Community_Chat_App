@@ -19,7 +19,7 @@ public class Channel {
     private String description;
 
     @OneToMany(mappedBy = "channel", fetch = FetchType.LAZY)
-    private List<Message> messages = new ArrayList<>(); // This line establishes the bidirectional relationship
+    private List<Chat> messages = new ArrayList<>(); // This line establishes the bidirectional relationship
 
 
     public Channel() {
@@ -51,11 +51,11 @@ public class Channel {
     }
 
     
-    public List<Message> getMessages() {
+    public List<Chat> getMessages() {
         return messages;
     }
     
-    public void setMessages(List<Message> messages) {
+    public void setMessages(List<Chat> messages) {
         this.messages = messages;
     }
     
