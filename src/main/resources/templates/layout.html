@@ -76,23 +76,7 @@
                   >Home</a
                 >
               </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  th:href="@{/register}"
-                  th:classappend="${activePage == 'register' ? 'active' : ''}"
-                  >Register</a
-                >
-              </li>
-
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  th:href="@{/users}"
-                  th:classappend="${activePage == 'users' ? 'active' : ''}"
-                  >Users</a
-                >
-              </li>
+              
               
               <li class="nav-item">
                 <a
@@ -121,15 +105,7 @@
         <!-- Unique page content will be inserted here -->
       </div>
     </main>
-    <div th:fragment="back-to-users">
-    <div class="row justify-content-center mt-3">
-      <div class="col">
-        <a th:href="@{/users}" class="btn btn-primary w-100"
-          >Return to Users (back)</a
-        >
-      </div>
-    </div>
-    </div>
+    
     <div th:fragment="create-account">
       <div class="row justify-content-center mt-3">
         <div class="col">
@@ -139,35 +115,7 @@
         </div>
       </div>
       </div>
-      <div th:fragment="btn_group">
-        <div class="row d-flex justify-content-center"> 
-          <div class="btn-group w-100 col mt-3" role="group" aria-label="Large button group">
-                  <a th:href="@{/users}" class="btn btn-primary me-1"
-                  >Return to Users (back)</a
-                >
-                <a th:href="@{/user_details/{userId}/accounts(userId=${user.userId})}" class="btn btn-primary me-1"
-                >Create New Bank Account</a
-              >
-              <a th:href="@{/update_user/{id}(id=${user.userId})}" class="btn btn-primary me-1"
-              >Add Address/Update User</a
-            >
-            
-          </div>
-        </div>
-    </div>
-    <div th:fragment="btn_group_account">
-      <div class="col d-flex justify-content-end mb-3">
-        <input
-                    type="submit"
-                    class="btn btn-primary"
-                    value="Update Account"
-        />
-        <a  th:href="@{/users/{userId}/accounts/{accountId}/confirmAccountDelete(userId=${userId}, accountId=${account.accountId})}" class="btn btn-primary">
-          Delete Account
-      </a>
-      <a th:href="@{/user_details/{userId}(userId=${userId})}" class="btn btn-primary">Cancel</a>
-    </div>
-  </div>
+          
     <footer th:fragment="footer">
       <div class="styleFooter mt-auto py-3 sticky-bottom sticky-footer">
         <div class="container-fluid">
