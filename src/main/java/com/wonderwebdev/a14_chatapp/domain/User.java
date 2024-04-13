@@ -1,9 +1,15 @@
 package com.wonderwebdev.a14_chatapp.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 
 @Entity
 public class User {
@@ -14,6 +20,22 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
+
+    @ManyToMany
+    @JoinTable(
+        name = "user_channel",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "channel_id")
+    )
+    private Set<Channel> channels = new HashSet<>();
+
+    public Set<Channel> getChannels() {
+        return channels;
+    }
+
+    public void setChannels(Set<Channel> channels) {
+        this.channels = channels;
+    }
 
     public User() {
     }

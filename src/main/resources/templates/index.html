@@ -71,7 +71,7 @@
                      <h1 class="d-flex justify-content-start my-5">Welcome!</h1>
                      <h3 class="lead">
                        Please enter your username and password to join the chat channel.</h3>
-                      <form id="loginForm" class="row g-3" action="" th:action="@{/welcome}" method="POST">
+                      <form id="loginForm" class="row g-3" action="" th:action="@{/login}" method="POST">
                        <div class="col-12 mb-3">
                          <label for="username" class="form-label" aria label="username"
                            >Username</label
@@ -172,28 +172,16 @@
                   <div class="card-body">
                     <h5 class="card-title">Welcome to to the Java Community Chat! Select a channel to begin.</h5>
                       <ol class="list-group list-group-numbered">
-                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <!-- Thymeleaf foreach loop to iterate over channels -->
+                        <li th:each="channel: ${channels}" class="list-group-item d-flex justify-content-between align-items-start">
                           <div class="ms-2 me-auto">
-                            <div class="fw-bold">General</div>
-                            Something on your mind? Share it here.
+                            <h3 class="fw-bold" th:text="${channel.name}"></h3>
+                            <h4 class="fw-bold mt-2" th:text="${channel.description}"></h4>
                           </div>
-                          <!--number of participants currently in the channel-->
-                          <span class="badge text-bg-primary rounded-pill">14</span>
+                          <!--display number of participants currently in the channel-->
+                          <span class="badge text-bg-primary rounded-pill" th:text="${#lists.size(channel.users)}">0</span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-start">
-                          <div class="ms-2 me-auto">
-                            <div class="fw-bold">Frontend frameworks</div>
-                            React, Vue, Angular, and more.
-                          </div>
-                          <span class="badge text-bg-primary rounded-pill">14</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-start">
-                          <div class="ms-2 me-auto">
-                            <div class="fw-bold">Subheading</div>
-                            Content for list item
-                          </div>
-                          <span class="badge text-bg-primary rounded-pill">14</span>
-                        </li>
+                        
                       </ol> 
                </div>  
                 </div>  
