@@ -28,6 +28,7 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "channel_id")
     )
     private Set<Channel> channels = new HashSet<>();
+    private String username;
 
     public Set<Channel> getChannels() {
         return channels;
@@ -40,9 +41,9 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String userName, String password, String firstName, String lastName) {
+    public User(Long id, String username, String password, String firstName, String lastName) {
         this.id = id;
-        this.userName = userName;
+        this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -81,11 +82,11 @@ public class User {
     }
 
     public String getUsername() {
-        return userName;
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
