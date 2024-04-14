@@ -75,7 +75,7 @@ public class Chat {
     @Override
 public String toString() {
     // Including only non-sensitive user information (e.g., user ID or userName)
-    String userInfo = (user != null) ? "UserId=" + user.getId() + ", UserName=" + user.getUserName() : "User=null";
+    String userInfo = (user != null) ? "UserId=" + user.getId() + ", UserName=" + user.getUsername() : "User=null";
     
     return "Message [id=" + id + ", message=" + message + ", channel=" + (channel != null ? "ChannelId=" + channel.getId() + ", ChannelName=" + channel.getName() : "Channel=null") + ", " + userInfo + ", publishedAt=" + publishedAt + "]";
 }
