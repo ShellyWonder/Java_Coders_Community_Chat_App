@@ -179,7 +179,7 @@
                             <h4 class="fw-bold mt-2" th:text="${channel.description}"></h4>
                           </div>
                           <!--display number of participants currently in the channel-->
-                          <span id="participantCount" class="badge text-bg-primary rounded-pill" th:text="${#lists.size(channel.users)}">0</span>
+                          <span class="badge text-bg-primary rounded-pill" th:id="'participantCount' + ${channel.id}">0</span>
                         </li>
                         
                       </ol> 
