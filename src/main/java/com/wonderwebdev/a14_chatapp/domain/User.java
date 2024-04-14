@@ -80,7 +80,7 @@ public class User {
         this.id = id;
     }
 
-    public String getUserName() {
+    public String getUsername() {
         return userName;
     }
 
@@ -91,7 +91,7 @@ public class User {
     @Override
     public String toString() {
         return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", getId()=" + getId()
-                + ", getUserName()=" + getUserName() + ", getFirstName()=" + getFirstName() + ", getLastName()=" + getLastName()
+                + ", getUsername()=" + getUsername() + ", getFirstName()=" + getFirstName() + ", getLastName()=" + getLastName()
                 + ", getPassword()=" + getPassword() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
                 + ", toString()=" + super.toString()
                 + "]";
