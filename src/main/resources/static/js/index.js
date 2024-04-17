@@ -1,3 +1,51 @@
+function validateExistingUser() {
+    var username = document.querySelector("#username").value;
+    var password = document.querySelector("#password").value;
+    var user = {
+        username: username,
+        password: password
+    };
+    fetch("/login", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+    })
+    .then(function (response) {
+        return response.json(); // Parsing JSON from the response
+    })
+    .then(function (data) {
+        if (data.authenticated) {
+            localStorage.setItem("userSession", JSON.stringify(data)); // Storing session data
+            document.querySelector("#login").style.display = "none"; // Hiding the login form
+            document.querySelector("#channelSelect").style.display = "block"; // Displaying the channels
+            fetchChannels(); // API fetch for client-side rendering of channels
+        } else {
+            alert("Invalid username or password. Please try again.");
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function fetchChannels() {
+    fetch("/channels") // Endpoint to fetch channels
+    .then(response => response.json())
+    .then(channels => {
+        const channelsList = document.querySelector(".list-group-numbered");
+        channelsList.innerHTML = ""; // Clear existing items
+        channels.forEach(channel => {
+            channelsList.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <h3 class="fw-bold">${channel.name}</h3>
+                    <h4 class="fw-bold mt-2">${channel.description}</h4>
+                </div>
+                <span class="badge text-bg-primary rounded-pill">${channel.participantCount}</span>
+            </li>`;
+        });
+    })
+    .catch(error => console.error('Error fetching channels:', error));
+}
 
 //registerBtn click displays registration form, hides login form
 document.addEventListener("DOMContentLoaded", function () {

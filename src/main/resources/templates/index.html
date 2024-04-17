@@ -171,18 +171,8 @@
                   </div>
                   <div class="card-body">
                     <h5 class="card-title">Welcome to to the Java Community Chat! Select a channel to begin.</h5>
-                      <ol class="list-group list-group-numbered">
-                        <!-- Thymeleaf foreach loop to iterate over channels -->
-                        <li th:each="channel: ${channels}" class="list-group-item d-flex justify-content-between align-items-start">
-                          <div class="ms-2 me-auto">
-                            <h3 class="fw-bold" th:text="${channel.name}"></h3>
-                            <h4 class="fw-bold mt-2" th:text="${channel.description}"></h4>
-                          </div>
-                          <!--display number of participants currently in the channel-->
-                          <span class="badge text-bg-primary rounded-pill" th:id="'participantCount' + ${channel.id}">0</span>
-                        </li>
-                        
-                      </ol> 
+                    <!-- frontend JavaScript to handle the dynamic rendering of the channel list -->
+                      <ol class="list-group list-group-numbered"></ol> 
                </div>  
                 </div>  
               </div>
