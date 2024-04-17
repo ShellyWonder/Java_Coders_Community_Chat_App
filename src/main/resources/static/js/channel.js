@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateParticipantCount() {
         if (!currentChannelId) return; // Guard clause if no channel has been selected yet
 
-        fetch(`/path/to/participant/count/${currentChannelId}`) // Use the global variable here
+        fetch(`/channels/{channelId}/participants/count/${currentChannelId}`) // Use the global variable here
             .then(response => response.json())
             .then(data => {
                 document.querySelector(`#participantCount${currentChannelId}`).textContent = data.count;
