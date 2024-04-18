@@ -70,8 +70,8 @@
               <div id="login" class="col-md-12 pt-3" >
                      <h1 class="d-flex justify-content-start my-5">Welcome!</h1>
                      <h3 class="lead">
-                       Please enter your username and password to join the chat channel.</h3>
-                      <form id="loginForm" class="row g-3" action="" th:action="@{/login}" method="POST">
+                       Please enter your username and password to join the chat.</h3>
+                      <form id="loginForm" class="row g-3" method="POST">
                        <div class="col-12 mb-3">
                          <label for="username" class="form-label" aria label="username"
                            >Username</label
@@ -106,62 +106,38 @@
               </div>
 
               <!-- Registration form content here -->
-               <div id="registrationForm" class="col-md-12 pt-3" style="display:none;">
-                        <!-- Registration form content here -->
-                        <div class="col-12 pt-3">
-                          <h1 class="d-flex justify-content-start my-5">Create Your Account</h1>
-                          <!-- Display error message if username exists -->
-                            <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
-                              <p th:text="${errorMessage}"></p>
-                          </div>
-                          <form class="row g-3" action="" th:action="@{/register}" method="POST">
-                            <div class="col-12 mb-3">
-                              <label for="username" class="form-label" aria label="username"
-                                >Username</label
-                              >
-                              <input
-                                type="text"
-                                class="form-control"
-                                id="regUsername"
-                                th:field="${user.username}"
-                              />
-                            </div>
-              
-                            <div class="col-12 mb-3">
-                              <label for="password" class="form-label" aria label="password"
-                                >Password</label
-                              >
-                              <input
-                                type="text"
-                                class="form-control"
-                                th:field="${user.password}"
-                              />
-                            </div>
-              
-                            <div class="col-12 mb-3">
-                              <label for="fullname" class="form-label" aria label="full name"
-                                >Full Name</label
-                              ><input
-                                type="text"
-                                class="form-control"
-                                th:field="${user.name}"
-                              />
-                            </div>
-                            
-              
-                            <div class="col justify-content-start mb-3">
-                              <input
-                                type="submit"
-                                class="btn btn-primary"
-                                value="Create Account"
-                              />
-                              <a class="btn btn-danger ms-1" th:href="@{/}">Back</a>
-                            </div>
-              
-                          </form>
+              <div id="registrationForm" class="col-md-12 pt-3" style="display:none;">
+                <div class="col-12 pt-3">
+                    <h1 class="d-flex justify-content-start my-5">Create Your Account</h1>
+                    <form class="row g-3" id="registrationFormContent" method="POST">
+                        <div class="col-12 mb-3">
+                            <label for="regUsername" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="regUsername" name="username" />
                         </div>
-                        <a class="btn btn-danger ms-1" href="#" id="backBtn">Back</a>
+
+                        <div class="col-12 mb-3">
+                            <label for="regPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="regPassword" name="password" />
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <label for="regFirstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="regFirstName" name="firstName" />
+                        </div>
+
+                        <div class="col-12 mb-3">
+                          <label for="regLastName" class="form-label">Last Name</label>
+                          <input type="text" class="form-control" id="regLastName" name="lastName" />
+                      </div>
+
+
+                        <div class="col justify-content-start mb-3">
+                            <input type="submit" class="btn btn-primary" value="Create Account" />
+                            <button type="button" class="btn btn-danger ms-1" id="backBtn">Back</button>
+                        </div>
+                    </form>
                 </div>
+              </div>
 
               <!-- Channel selection content here -->
               <div id="channelSelect" class="col-md-12 pt-3" style="display:none;">
