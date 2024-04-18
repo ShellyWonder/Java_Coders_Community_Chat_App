@@ -22,9 +22,10 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> loginUser(@RequestBody User loginUser) {
         User user = userService.validateUser(loginUser.getUsername(), loginUser.getPassword());
         if (user != null) {
-            // Generate a session or a simple token
+            // Auth successful
             return ResponseEntity.ok(Map.of("authenticated", true, "userId", user.getId()));
         } else {
+            // Auth failed
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("authenticated", false));
         }
     }
