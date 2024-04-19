@@ -29,4 +29,14 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("authenticated", false));
         }
     }
+    
+    @PostMapping("/register")
+    public ResponseEntity<Map<String, Object>> registerUser(@RequestBody User newUser) {
+        try {
+            Map<String, Object> registeredUser = userService.registerNewUser(newUser);
+            return ResponseEntity.ok(registeredUser);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
+    }
 }
