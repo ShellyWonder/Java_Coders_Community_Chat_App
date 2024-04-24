@@ -19,7 +19,7 @@ public class Chat {
     private Channel channel;
     @ManyToOne
     private User user;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "published_at")
     private LocalDateTime publishedAt;
 
     
