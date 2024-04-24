@@ -18,8 +18,8 @@ public class UserService {
 }
 
     // Validate user credentials
-    public User validateUser(String username, String password) {
-        User user = findUserByUsername(username);
+    public User validateUser(String userName, String password) {
+        User user = findUserByUserName(userName);
         if (user != null && user.getPassword().equals(password)) {
             return user;
         }
@@ -29,7 +29,7 @@ public class UserService {
     // Register a new user
     public Map<String, Object> registerNewUser(User newUser) {
          Map<String, Object> response = new HashMap<>();
-        if (findUserByUsername(newUser.getUsername()) == null) {
+        if (findUserByUserName(newUser.getUserName()) == null) {
             response.put("success", false);
             response.put("message", "Username already exists.");
             return response;
@@ -43,7 +43,7 @@ public class UserService {
     }
 
     // Private helper method to find user by username
-    private User findUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    private User findUserByUserName(String userName) {
+        return userRepository.findByUserName(userName);
     }
 }

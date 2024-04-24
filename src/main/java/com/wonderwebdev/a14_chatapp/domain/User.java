@@ -17,7 +17,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, name = "username")
+    @Column(nullable = false, name = "userName")
     private String userName;
     private String password;
     @Column(name = "first_name")
@@ -32,7 +32,7 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "channel_id")
     )
     private Set<Channel> channels = new HashSet<>();
-    private String username;
+    
 
     public Set<Channel> getChannels() {
         return channels;
@@ -45,9 +45,9 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, String password, String firstName, String lastName) {
+    public User(Long id, String userName, String password, String firstName, String lastName) {
         this.id = id;
-        this.username = username;
+        this.userName = userName;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -85,18 +85,18 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(String userName) {
+        this.userName = userName;
     }
 
     @Override
     public String toString() {
         return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", getId()=" + getId()
-                + ", getUsername()=" + getUsername() + ", getFirstName()=" + getFirstName() + ", getLastName()=" + getLastName()
+                + ", getUserName()=" + getUserName() + ", getFirstName()=" + getFirstName() + ", getLastName()=" + getLastName()
                 + ", getPassword()=" + getPassword() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
                 + ", toString()=" + super.toString()
                 + "]";

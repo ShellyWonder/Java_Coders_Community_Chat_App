@@ -24,7 +24,7 @@ public class Channel {
     @OneToMany(mappedBy = "channel", fetch = FetchType.LAZY)
     private List<Chat> messages = new ArrayList<>(); // This line establishes the bidirectional relationship
 
-@ManyToMany(mappedBy = "channels")
+    @ManyToMany(mappedBy = "channels", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
     public Channel() {

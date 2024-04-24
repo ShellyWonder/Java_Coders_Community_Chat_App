@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,9 +16,9 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String message;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Channel channel;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
     @Column(nullable = false, name = "published_at")
     private LocalDateTime publishedAt;
@@ -75,7 +76,7 @@ public class Chat {
     @Override
 public String toString() {
     // Including only non-sensitive user information (e.g., user ID or userName)
-    String userInfo = (user != null) ? "UserId=" + user.getId() + ", UserName=" + user.getUsername() : "User=null";
+    String userInfo = (user != null) ? "UserId=" + user.getId() + ", UserName=" + user.getUserName() : "User=null";
     
     return "Message [id=" + id + ", message=" + message + ", channel=" + (channel != null ? "ChannelId=" + channel.getId() + ", ChannelName=" + channel.getName() : "Channel=null") + ", " + userInfo + ", publishedAt=" + publishedAt + "]";
 }

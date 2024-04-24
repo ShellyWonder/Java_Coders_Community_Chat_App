@@ -20,7 +20,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> loginUser(@RequestBody User loginUser) {
-        User user = userService.validateUser(loginUser.getUsername(), loginUser.getPassword());
+        User user = userService.validateUser(loginUser.getUserName(), loginUser.getPassword());
         if (user != null) {
             // Auth successful
             return ResponseEntity.ok(Map.of("authenticated", true, "userId", user.getId()));
