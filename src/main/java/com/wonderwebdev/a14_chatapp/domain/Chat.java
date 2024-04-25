@@ -73,12 +73,13 @@ public class Chat {
     public void setPublishedAt(LocalDateTime publishedAt) {
         this.publishedAt = publishedAt;
     }
-    @Override
-public String toString() {
-    // Including only non-sensitive user information (e.g., user ID or userName)
-    String userInfo = (user != null) ? "UserId=" + user.getId() + ", UserName=" + user.getUserName() : "User=null";
     
-    return "Message [id=" + id + ", message=" + message + ", channel=" + (channel != null ? "ChannelId=" + channel.getId() + ", ChannelName=" + channel.getName() : "Channel=null") + ", " + userInfo + ", publishedAt=" + publishedAt + "]";
-}
+            @Override
+            public String toString() {
+            // Including only non-sensitive user information (e.g., user ID or userName)
+            String userInfo = (user != null) ? "UserId=" + user.getId() + ", UserName=" + user.getUserName() : "User=null";
+            
+            return "Message [id=" + id + ", message=" + message + ", channel=" + (channel != null ? "ChannelId=" + channel.getId() + ", ChannelName=" + channel.getName() : "Channel=null") + ", " + userInfo + ", publishedAt=" + publishedAt + "]";
+        }
 
 }
