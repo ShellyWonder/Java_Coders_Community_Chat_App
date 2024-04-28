@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const loginForm = document.querySelector("#loginForm");
-    const registrationForm = document.querySelector("#registrationFormContent"); // Ensure you reference the correct form id
-
+    const registrationForm = document.querySelector("#registrationFormContent"); 
     // Handle Login Submission
     loginForm.addEventListener("submit", function (event) {
         event.preventDefault();
@@ -27,9 +26,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function validateExistingUser() {
-    var username = document.querySelector("#username").value;
+    var userName = document.querySelector("#username").value;
     var password = document.querySelector("#password").value;
-    var user = { username: username, password: password };
+    var user = { userName: userName, password: password };
 
     fetch("/login", {
         method: "POST",
@@ -40,7 +39,7 @@ function validateExistingUser() {
     .then(data => {
         if (data.authenticated) {
             sessionStorage.setItem("userId", data.userId);
-            sessionStorage.setItem("username", username);
+            sessionStorage.setItem("userName", userName);
             document.querySelector("#login").style.display = "none";
             document.querySelector("#channelSelect").style.display = "block";
             fetchChannels();
@@ -55,13 +54,13 @@ function validateExistingUser() {
 }
 
 function registerNewUser() {
-    const username = document.querySelector("#regUsername").value;
+    const userName = document.querySelector("#regUsername").value;
     const password = document.querySelector("#regPassword").value;
     const firstName = document.querySelector("#regFirstName").value;
     const lastName = document.querySelector("#regLastName").value;
 
     const user = {
-        username: username,
+        userName: userName,
         password: password,
         firstName: firstName,
         lastName: lastName

@@ -80,19 +80,22 @@ Therefore "!important" is needed. */
  }
  /*END nav styles*/
  
- .checkListIcon {
-   color: var(--sjw-secondary-color);
+ .bi-check-circle-fill {
+   color: var(--sjw-dark-color);
  }
  
  /* form styles */
- /* form background override bootstrap: added opacity 25%*/
+ #loginForm {
+   box-shadow: 2px 2px 2px 2px  rgba(0,0,0,0.4);
+  }
+  /* form background override bootstrap: added opacity 25%*/
  form {
    color: var(--sjw-headlineblue-color);
    font-size: 1.25em;
    font-weight: 700;
    background-color:whitesmoke;
    opacity: 0.75; 
-   box-shadow: 3px 6px 6px 5px rgba(0,0,0,0.4);
+   box-shadow: 3px 6px 6px 5px rgba(0,0,0,0.4); 
  }
  form:hover {
    border: 3px solid var(--sjw-secondary-color);
