@@ -3,6 +3,8 @@ package com.wonderwebdev.a14_chatapp.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.Table;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,12 +15,14 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 
 @Entity
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, name = "userName")
+    @Column(name = "user_name", nullable = false)
     private String userName;
+    @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "first_name")
     private String firstName;

@@ -20,11 +20,15 @@ public class UserService {
     // Validate user credentials
     public User validateUser(String userName, String password) {
         User user = findUserByUserName(userName);
+        System.out.println("Fetched User: " + user);
         if (user != null && user.getPassword().equals(password)) {
             return user;
+
         }
-        return null;  // Return null if user not found or password does not match
-    }
+            return null;
+        }
+        
+    
 
     // Register a new user
     public Map<String, Object> registerNewUser(User newUser) {
