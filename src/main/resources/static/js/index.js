@@ -87,17 +87,34 @@ function fetchChannels() {
     fetch("/channels")
     .then(response => response.json())
     .then(channels => {
-        const channelsList = document.querySelector(".list-group-numbered");
+        const channelsList = document.querySelector(".list-group");
         channelsList.innerHTML = "";
         channels.forEach(channel => {
             channelsList.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">
-                    <h3 class="fw-bold">${channel.name}</h3>
-                    <h4 class="fw-bold mt-2">${channel.description}</h4>
+                    <div class="name">${channel.name}</div>
+                    <div class="description">${channel.description}</div>
                 </div>
-                <span class="badge text-bg-primary rounded-pill">${channel.participantCount}</span>
+                <span class="badge rounded-pill">Current channel participants: ${channel.participantCount}</span>
             </li>`;
         });
     })
     .catch(error => console.error('Error fetching channels:', error));
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const userNameDisplay = document.querySelector("#userNameDisplay");
+    const userName = sessionStorage.getItem("userName");
+    if (userName) {
+        userNameDisplay.textContent = userName;
+    } else {
+        userNameDisplay.textContent = "Not logged in";
+    }
+});
+
+function logout() {
+    // Clear localStorage 
+    sessionStorage.clear();
+    // Redirect to login page or display login screen
+    window.location.href = '/login'; // Redirect to login page
 }

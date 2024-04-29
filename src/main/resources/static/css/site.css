@@ -72,12 +72,8 @@ Therefore "!important" is needed. */
    background-color: var(--sjw-light-color); 
    opacity: 0.95;
  }
- .code-view {
-   color: var(--sjw-light-color) !important;
- }
- .code-view:hover {
-   background-color: var(--sjw-secondary-color) !important;
- }
+ 
+ 
  /*END nav styles*/
  
  .bi-check-circle-fill {
@@ -143,13 +139,56 @@ Therefore "!important" is needed. */
    border-color: var(--sjw-primary-color) !important;
    background-color: var(--sjw-secondary-color)!important;
  }
- /*Print Btn*/
- .print-btn {
+ /*--card styles --*/
+ .list-group-numbered {
+  counter-reset: channel-counter;
+  list-style-type: none; /* Removes default numbering */
+}
+
+.list-group-numbered .list-group-item {
+  counter-increment: channel-counter;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  font-family: 'Segoe UI', sans-serif; /* Ensures consistent font family */
+}
+
+.list-group-numbered .list-group-item::before {
+  content: counter(channel-counter) ". ";
+  color: var(--sjw-headlineblue-color);
+  font-size: 1.25em; /* Matches .card .name */
+  font-weight: bold; /* Matches .card .name */
+  margin-right: 10px; /* Optional: Adjust spacing between number and text */
+}
+  
+ .card {
+   border: 3px solid var(--sjw-secondary-color);
+   box-shadow: 3px 6px 6px 5px rgba(0,0,0,0.4);
+  }
+  /*Current user count display*/
+  .card .rounded-pill {
    color: var(--sjw-light-color);
    background-color: var(--sjw-headlineblue-color);
    border-color: var(--sjw-tertiary-color);
-   box-shadow: 0 6px 10px 0 rgba(0,0,0,0.2);
+   box-shadow: 0 3px 5px 0 rgba(0,0,0,0.2);
  }
+ .card .description {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 1em;
+  color: var(--sjw-headlineblue-color);
+  font-weight: 200;
+}
+.card .name{
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 1.25em;
+  color: var(--sjw-headlineblue-color);
+  font-weight: bold;
+}
+.category-text {
+  color: var(--sjw-headlineblue-color);
+  font-size: 1.5em;
+  font-weight: 800;
+}
  
  /*footer styles*/
  .sticky-footer {
@@ -185,14 +224,4 @@ Therefore "!important" is needed. */
  }
  /*END footer styles*/
  
-
-   
- /*--transaction details--*/
- .card-text {
-   font-size: 1.5em;
- }
- .category-text {
-   color: var(--sjw-headlineblue-color);
-   font-size: 1.5em;
-   font-weight: 800;
- }
+ 
