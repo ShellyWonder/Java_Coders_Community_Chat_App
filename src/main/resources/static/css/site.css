@@ -111,7 +111,7 @@ Therefore "!important" is needed. */
  /*END table styles*/
  
  /*--button styles --*/
- .btn-primary {
+ .btn-primary  {
    color: white !important;
    background-color: var(--sjw-primary-color) !important;
    border-color: var(--sjw-light-color)!important;
@@ -139,6 +139,23 @@ Therefore "!important" is needed. */
    border-color: var(--sjw-primary-color) !important;
    background-color: var(--sjw-secondary-color)!important;
  }
+.btn-danger{
+    color: white !important;
+    background-color: var(--sjw-debitred-color) !important;
+    border-color: var(--sjw-light-color)!important;
+    box-shadow: 0 6px 10px 0 rgba(0,0,0,0.2);
+}
+
+ /* .btn-danger:hover,
+ .btn-danger:active,
+ .btn-danger:visited,
+ .btn-danger:focus {
+  color: var(--sjw-secondary-color) !important; 
+
+   box-shadow: 0 6px 10px 0 rgba(0,0,0,0.2);
+   
+ } */
+
  /*--card styles --*/
  .list-group-numbered {
   counter-reset: channel-counter;
