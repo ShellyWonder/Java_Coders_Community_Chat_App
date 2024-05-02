@@ -39,6 +39,12 @@ Therefore "!important" is needed. */
  h4 {
    font-size: 4em;
  }
+
+ li {
+   color: var(--sjw-headlineblue-color);
+ 
+ }
+
  /*nav styles*/
  .logoFont {
    font-family: ltc-broadway-engraved, sans-serif;
