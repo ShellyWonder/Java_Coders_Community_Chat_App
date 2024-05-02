@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     loginForm.addEventListener("submit", function (event) {
         event.preventDefault();
         validateExistingUser();
+     
     });
 
     // Handle Registration Submission
@@ -43,6 +44,7 @@ function validateExistingUser() {
             document.querySelector("#login").style.display = "none";
             document.querySelector("#channelSelect").style.display = "block";
             fetchChannels();
+            updateUserNameDisplay();
         } else {
             alert("Invalid username or password. Please try again.");
         }
@@ -102,7 +104,8 @@ function fetchChannels() {
     .catch(error => console.error('Error fetching channels:', error));
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+function updateUserNameDisplay() {
+    // This is where you need to check the session storage and update the greeting
     const userNameDisplay = document.querySelector("#userNameDisplay");
     const userName = sessionStorage.getItem("userName");
     if (userName) {
@@ -110,7 +113,8 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
         userNameDisplay.textContent = "Not logged in";
     }
-});
+};
+
 
 function logout() {
     // Clear localStorage 
