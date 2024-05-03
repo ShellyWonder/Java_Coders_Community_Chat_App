@@ -12,7 +12,7 @@ public class ChannelService {
     @Autowired
     private ChannelRepository channelRepository;
 
-    public List<Channel> findAll() {
+    public List<Channel> findAllChannels() {
         return channelRepository.findAll();
     }
 
