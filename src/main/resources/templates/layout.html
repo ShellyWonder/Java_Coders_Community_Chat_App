@@ -99,7 +99,16 @@
                   >Contact</a
                 >
               </li>
-            </ul>
+            
+            <div class="d-flex justify-content-end">
+              <div class="nav-item">
+                <a
+                  class="btn btn-danger nav-link" id="logoutBtn" style="display: none;"
+                  >Logout</a
+                >
+              </div>
+            </div>
+          </ul>
           </div>
         </div>
       </nav>
@@ -180,11 +189,17 @@
     </div>
     
     
+    
+    <div th:fragment="AuthJS">
+      <script type="text/javascript" th:src="@{/js/auth.js}"></script>
+
+    </div>
     <div th:fragment="IndexJS">
       <script type="text/javascript" th:src="@{/js/index.js}"></script>
 
     </div>
     <div th:fragment="ChannelJS">
       <script type="text/javascript" th:src="@{/js/channel.js}"></script>
+    </div>
   </body>
 </html>
