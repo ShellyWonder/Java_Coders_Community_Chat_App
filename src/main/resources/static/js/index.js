@@ -1,124 +1,36 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const loginForm = document.querySelector("#loginForm");
-    const registrationForm = document.querySelector("#registrationFormContent"); 
-    // Handle Login Submission
-    loginForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-        validateExistingUser();
-     
-    });
+// This file handles all non-authentication-related JavaScript code. 
+//It fetches and displays channels
 
-    // Handle Registration Submission
-    registrationForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-        registerNewUser();
-    });
-
-    // Switch between login and registration forms
-    document.querySelector("#registerBtn").addEventListener("click", function () {
-        document.querySelector("#login").style.display = "none";
-        document.querySelector("#registrationForm").style.display = "block";
-    });
-
-    document.querySelector("#backBtn").addEventListener("click", function () {
-        document.querySelector("#registrationForm").style.display = "none";
-        document.querySelector("#login").style.display = "block";
-    });
-});
-
-function validateExistingUser() {
-    var userName = document.querySelector("#username").value;
-    var password = document.querySelector("#password").value;
-    var user = { userName: userName, password: password };
-
-    fetch("/login", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.authenticated) {
-            sessionStorage.setItem("userId", data.userId);
-            sessionStorage.setItem("userName", userName);
-            document.querySelector("#login").style.display = "none";
-            document.querySelector("#channelSelect").style.display = "block";
-            fetchChannels();
-            updateUserNameDisplay();
-        } else {
-            alert("Invalid username or password. Please try again.");
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert("Error logging in.");
-    });
-}
-
-function registerNewUser() {
-    const userName = document.querySelector("#regUsername").value;
-    const password = document.querySelector("#regPassword").value;
-    const firstName = document.querySelector("#regFirstName").value;
-    const lastName = document.querySelector("#regLastName").value;
-
-    const user = {
-        userName: userName,
-        password: password,
-        firstName: firstName,
-        lastName: lastName
-    };
-
-    fetch("/register", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert("Registration successful! Please log in.");
-        document.querySelector("#registrationForm").style.display = "none";
-        document.querySelector("#login").style.display = "block";
-    })
-    .catch(error => {
-        console.error('There was a problem with your registration:', error);
-        alert("Registration failed. Please try again.");
-    });
-}
-
-function fetchChannels() {
-    fetch("/channels")
+function fetchAndDisplayChannels() {
+    fetch("/api/channels")
     .then(response => response.json())
     .then(channels => {
+        // Populate channels in the nav dropdown
+        const dropdownMenu = document.querySelector("#channelsDropdownMenu");
+        dropdownMenu.innerHTML = "";
+        channels.forEach(channel => {
+            const listItem = document.createElement("li");
+            const link = document.createElement("a");
+            link.href = `/channels/${channel.id}`; // Adjust based on your route
+            link.textContent = channel.name;
+            link.className = "dropdown-item";
+            listItem.appendChild(link);
+            dropdownMenu.appendChild(listItem);
+        });
+
+        // Populate channels in the #channelSelect
         const channelsList = document.querySelector(".list-group");
         channelsList.innerHTML = "";
         channels.forEach(channel => {
-            channelsList.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-start">
-                <div class="ms-2 me-auto">
-                    <div class="name">${channel.name}</div>
-                    <div class="description">${channel.description}</div>
-                </div>
-                <span class="badge rounded-pill">Current channel participants: ${channel.participantCount}</span>
-            </li>`;
+            channelsList.innerHTML += `<li class="list-group-item">${channel.name}</li>`;
         });
     })
-    .catch(error => console.error('Error fetching channels:', error));
+    .catch(error => {
+        console.error("Error fetching channels:", error);
+        alert("Error fetching channels. Please try again.");
+    });
 }
 
-function updateUserNameDisplay() {
-    // This is where you need to check the session storage and update the greeting
-    const userNameDisplay = document.querySelector("#userNameDisplay");
-    const userName = sessionStorage.getItem("userName");
-    if (userName) {
-        userNameDisplay.textContent = userName;
-    } else {
-        userNameDisplay.textContent = "Not logged in";
-    }
-};
-
-
-function logout() {
-    // Clear localStorage 
-    sessionStorage.clear();
-    // Redirect to login page or display login screen
-    window.location.href = '/login'; // Redirect to login page
-}
+document.addEventListener("DOMContentLoaded", function () {
+    fetchAndDisplayChannels(); // Call the function when the DOM is ready
+});
