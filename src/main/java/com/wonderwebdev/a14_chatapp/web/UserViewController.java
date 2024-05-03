@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 
 @Controller
 // Note: user login being handled by the AuthController class because it requires a RESTful API
-public class UserController {
+public class UserViewController {
     @GetMapping("/")
 	public String home(Model model) {
 		System.out.println("Home controller method called");
