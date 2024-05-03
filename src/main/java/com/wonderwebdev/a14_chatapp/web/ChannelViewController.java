@@ -10,12 +10,13 @@ import com.wonderwebdev.a14_chatapp.repository.ChannelRepository;
 
 @Controller
 public class ChannelViewController {
+    
     @Autowired
     private ChannelService channelService;
     private ChannelRepository channelRepository;
 
-        
-    @GetMapping("/channels/{id}")
+     //populates the index.html #channelSelect card with # of users in a channel   
+    @GetMapping("/channel/{id}")
     public String getChannelUserCount(@PathVariable Long id, Model model) {
         Channel channel = channelRepository.findById(id).orElse(null);
         int participantCount = channelService.getParticipantCount(id);
@@ -23,4 +24,5 @@ public class ChannelViewController {
         model.addAttribute("participantCount", participantCount);
         return "index";
     }
+     
 }
