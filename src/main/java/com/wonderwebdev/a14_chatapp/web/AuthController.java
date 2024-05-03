@@ -10,11 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wonderwebdev.a14_chatapp.domain.User;
 import com.wonderwebdev.a14_chatapp.service.UserService;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @RestController
-@RequestMapping("/api")
 public class AuthController {
         
     private UserService userService;
