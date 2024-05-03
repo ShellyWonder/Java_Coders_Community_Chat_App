@@ -76,8 +76,13 @@
                   >Home</a
                 >
               </li>
-              
-              
+              <!--Only display dynamic Channels if the user is logged in-->
+              <li class="nav-item dropdown" id="channelsDropdown" style="display:none;">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Channels
+                </a>
+                <ul class="dropdown-menu" id="channelsDropdownMenu"></ul>
+            </li>
               <li class="nav-item">
                 <a
                   class="nav-link"
