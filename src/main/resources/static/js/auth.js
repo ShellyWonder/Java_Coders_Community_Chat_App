@@ -8,17 +8,33 @@ document.addEventListener("DOMContentLoaded", function () {
     const loginForm = document.querySelector("#loginForm");
     const registrationForm = document.querySelector("#registrationFormContent"); 
 
+    //clear the login form 
+    function clearLoginForm() {
+        if (loginForm) {
+            loginForm.reset(); //Clears all form fields
+        }
+    }
+
     // Handle Login Submission
     loginForm.addEventListener("submit", function (event) {
         event.preventDefault();
         validateExistingUser();
+        clearLoginForm();
      
     });
+
+    //clear the registration form 
+    function clearRegistrationForm() {
+        if (registrationForm) {
+            registrationForm.reset(); //Clears all form fields
+        }
+    }
 
     // Handle Registration Submission
     registrationForm.addEventListener("submit", function (event) {
         event.preventDefault();
         registerNewUser();
+        clearRegistrationForm();
     });
 
     // Switch between login and registration forms
