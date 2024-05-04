@@ -68,6 +68,7 @@ function validateExistingUser() {
             document.querySelector("#channelSelect").style.display = "block";
             fetchAndDisplayChannels();
             showOrHideLogoutButton();
+            showOrHideNavDropdown();
             updateUserNameDisplay();
         } else {
             alert("Invalid username or password. Please try again.");
@@ -124,6 +125,20 @@ function showOrHideLogoutButton() {
     }
 }
 
+function showOrHideNavDropdown() {
+    const channelDropdown = document.querySelector("#channelsDropdown");
+    const isLoggedIn = sessionStorage.getItem("userId") !== null;
+    
+    if (channelDropdown) {
+        if (isLoggedIn) {
+            fetchAndDisplayChannels();
+            channelDropdown.style.display = "block"; // Show nav dropdown
+        } else {
+            channelDropdown.style.display = "none"; // Hide nav dropdown
+        }
+    }
+}
+
 //Initialize logout button display in Navbar
 document.addEventListener("DOMContentLoaded", function () {
     showOrHideLogoutButton();
@@ -139,6 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function logout() {
     sessionStorage.clear(); // Clear user session data
     updateUserNameDisplay(); // Update UI based on logout
+    showOrHideNavDropdown(); // Update navbar based on logout
     alert("You have been logged out.");
     window.location.href = '/'; // Redirect to index
 }
