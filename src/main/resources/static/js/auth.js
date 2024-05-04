@@ -1,9 +1,13 @@
 
 // This file contains the JavaScript code for the login and registration forms. 
 //It handles form submission, user authentication, user registration, user display and user logout.
+
+import { fetchAndDisplayChannels } from './index.js';
+
 document.addEventListener("DOMContentLoaded", function () {
     const loginForm = document.querySelector("#loginForm");
     const registrationForm = document.querySelector("#registrationFormContent"); 
+
     // Handle Login Submission
     loginForm.addEventListener("submit", function (event) {
         event.preventDefault();
@@ -46,7 +50,8 @@ function validateExistingUser() {
             sessionStorage.setItem("userName", userName);
             document.querySelector("#login").style.display = "none";
             document.querySelector("#channelSelect").style.display = "block";
-            fetchChannels();
+            fetchAndDisplayChannels();
+            showOrHideLogoutButton();
             updateUserNameDisplay();
         } else {
             alert("Invalid username or password. Please try again.");

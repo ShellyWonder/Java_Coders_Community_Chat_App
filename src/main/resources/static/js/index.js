@@ -1,7 +1,7 @@
 // This file handles all non-authentication-related JavaScript code. 
 //It fetches and displays channels
 
-function fetchAndDisplayChannels() {
+export function fetchAndDisplayChannels() {
     fetch("/api/channels")
     .then(response => response.json())
     .then(channels => {
