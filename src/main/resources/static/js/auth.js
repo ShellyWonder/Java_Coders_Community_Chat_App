@@ -1,61 +1,58 @@
-
 // This file contains the JavaScript code for the login and registration forms. 
-//It handles form submission, user authentication, user registration, user display and user logout.
+// It handles form submission, user authentication, user registration, user display and user logout.
 
 import { fetchAndDisplayChannels } from './index.js';
 
 document.addEventListener("DOMContentLoaded", function () {
+    const isLoggedIn = sessionStorage.getItem("userId") !== null;
+
+    if (isLoggedIn) {
+        hideLoginAndRegistrationForms();
+        showOrHideNavDropdown(true);
+        updateUserNameDisplay();
+        showOrHideLogoutButton(true);
+    } else {
+        showOrHideNavDropdown(false);
+        showOrHideLogoutButton(false);
+    }
+
+    const logoutButton = document.querySelector("#logoutBtn");
+    if (logoutButton) {
+        logoutButton.addEventListener("click", logout);
+    }
+
     const loginForm = document.querySelector("#loginForm");
-    const registrationForm = document.querySelector("#registrationFormContent"); 
-
-    //clear the login form 
-    function clearLoginForm() {
-        if (loginForm) {
-            loginForm.reset(); //Clears all form fields
-        }
+    if (loginForm) {
+        loginForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            validateExistingUser();
+            clearLoginForm();
+        });
     }
 
-    // Handle Login Submission
-    loginForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-        validateExistingUser();
-        clearLoginForm();
-     
-    });
-
-    //clear the registration form 
-    function clearRegistrationForm() {
-        if (registrationForm) {
-            registrationForm.reset(); //Clears all form fields
-        }
+    const registrationForm = document.querySelector("#registrationFormContent");
+    if (registrationForm) {
+        registrationForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            registerNewUser();
+            clearRegistrationForm();
+        });
     }
 
-    // Handle Registration Submission
-    registrationForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-        registerNewUser();
-        clearRegistrationForm();
-    });
-
-    // Switch between login and registration forms
+    // toggle login and registration forms via buttons
     document.querySelector("#registerBtn").addEventListener("click", function () {
-        document.querySelector("#login").style.display = "none";
-        document.querySelector("#registrationForm").style.display = "block";
+        toggleFormVisibility("#login", "#registrationForm");
     });
 
     document.querySelector("#backBtn").addEventListener("click", function () {
-        document.querySelector("#registrationForm").style.display = "none";
-        document.querySelector("#login").style.display = "block";
+        toggleFormVisibility("#registrationForm", "#login");
     });
 });
 
 function validateExistingUser() {
-    var userName = document.querySelector("#username").value;
-    var password = document.querySelector("#password").value;
-    const user = {
-        userName: userName,
-        password: password
-    };
+    const userName = document.querySelector("#username").value;
+    const password = document.querySelector("#password").value;
+    const user = { userName, password };
 
     fetch("/login", {
         method: "POST",
@@ -67,13 +64,11 @@ function validateExistingUser() {
         if (data.authenticated) {
             sessionStorage.setItem("userId", data.userId);
             sessionStorage.setItem("userName", userName);
-            document.querySelector("#login").style.display = "none";
-            document.querySelector("#channelSelect").style.display = "block";
+            toggleFormVisibility("#login", "#channelSelect");
             fetchAndDisplayChannels();
-            showOrHideLogoutButton();
-            showOrHideNavDropdown();
+            showOrHideLogoutButton(true);
+            showOrHideNavDropdown(true);
             updateUserNameDisplay();
-            hideLoginAndRegistrationForms();
         } else {
             alert("Invalid username or password. Please try again.");
         }
@@ -90,12 +85,7 @@ function registerNewUser() {
     const firstName = document.querySelector("#regFirstName").value;
     const lastName = document.querySelector("#regLastName").value;
 
-    const user = {
-        userName: userName,
-        password: password,
-        firstName: firstName,
-        lastName: lastName
-    };
+    const user = { userName, password, firstName, lastName };
 
     fetch("/register", {
         method: 'POST',
@@ -105,8 +95,7 @@ function registerNewUser() {
     .then(response => response.json())
     .then(data => {
         alert("Registration successful! Please log in.");
-        document.querySelector("#registrationForm").style.display = "none";
-        document.querySelector("#login").style.display = "block";
+        toggleFormVisibility("#registrationForm", "#login");
     })
     .catch(error => {
         console.error('There was a problem with your registration:', error);
@@ -114,74 +103,30 @@ function registerNewUser() {
     });
 }
 
-
-
-
-
-function showOrHideNavDropdown() {
+function showOrHideNavDropdown(isLoggedIn) {
     const channelDropdown = document.querySelector("#channelsDropdown");
-    const isLoggedIn = sessionStorage.getItem("userId") !== null;
-    
     if (channelDropdown) {
-        if (isLoggedIn) {
-            fetchAndDisplayChannels();
-            channelDropdown.style.display = "block"; // Show nav dropdown
-        } else {
-            channelDropdown.style.display = "none"; // Hide nav dropdown
-        }
+        channelDropdown.style.display = isLoggedIn ? "block" : "none";
+        if (isLoggedIn) fetchAndDisplayChannels();
     }
 }
 
-function showOrHideLogoutButton() {
+function showOrHideLogoutButton(isLoggedIn) {
     const logoutButton = document.querySelector("#logoutBtn");
-    const isLoggedIn = sessionStorage.getItem("userId") !== null;
-    
     if (logoutButton) {
-        if (isLoggedIn) {
-            logoutButton.style.display = "block"; // Show logout button
-        } else {
-            logoutButton.style.display = "none"; // Hide logout button
-        }
+        logoutButton.style.display = isLoggedIn ? "block" : "none";
     }
 }
 
-//Initialize logout button display in Navbar
-document.addEventListener("DOMContentLoaded", function () {
-    showOrHideLogoutButton();
-});
-
-//Hide login and registration forms after successful login
 function hideLoginAndRegistrationForms() {
-    const loginForm = document.querySelector("#login");
-    const registrationForm = document.querySelector("#registrationForm");
-    if (loginForm) loginForm.style.display = "none";
-    if (registrationForm) registrationForm.style.display = "none";
-    document.querySelector("#channelSelect").style.display = "block";
-    }
+    toggleFormVisibility("#login", "#channelSelect");
+}
 
-//Add event listener to check user login status on page load
-document.addEventListener("DOMContentLoaded", function () {
-    const isLoggedIn = sessionStorage.getItem("userId") !== null;
-    if (isLoggedIn) {
-        hideLoginAndRegistrationForms();
-        showOrHideNavDropdown();
-        updateUserNameDisplay();
-        showOrHideLogoutButton();
-    }
-    
-});
-
-// Attach event listener for logout
-document.addEventListener("DOMContentLoaded", function () {
-    const logoutButton = document.querySelector("#logoutBtn");
-    if (logoutButton) {
-        logoutButton.addEventListener("click", logout);
-    }
-});
 function logout() {
     sessionStorage.clear(); // Clear user session data
     updateUserNameDisplay(); // Update UI based on logout
-    showOrHideNavDropdown(); // Update navbar based on logout
+    showOrHideNavDropdown(false); // Update navbar based on logout
+    showOrHideLogoutButton(false);
     alert("You have been logged out.");
     window.location.href = '/'; // Redirect to index
 }
@@ -194,4 +139,25 @@ function updateUserNameDisplay() {
     } else {
         userNameDisplay.textContent = "Not logged in";
     }
+}
+
+function clearLoginForm() {
+    const loginForm = document.querySelector("#loginForm");
+    if (loginForm) {
+        loginForm.reset(); // Clears all form fields
+    }
+}
+
+function clearRegistrationForm() {
+    const registrationForm = document.querySelector("#registrationFormContent");
+    if (registrationForm) {
+        registrationForm.reset(); // Clears all form fields
+    }
+}
+
+function toggleFormVisibility(hideSelector, showSelector) {
+    const hideForm = document.querySelector(hideSelector);
+    const showForm = document.querySelector(showSelector);
+    if (hideForm) hideForm.style.display = "none";
+    if (showForm) showForm.style.display = "block";
 }
