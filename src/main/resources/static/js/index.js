@@ -22,7 +22,20 @@ export function fetchAndDisplayChannels() {
         const channelsList = document.querySelector(".list-group");
         channelsList.innerHTML = "";
         channels.forEach(channel => {
-            channelsList.innerHTML += `<li class="list-group-item">${channel.name}</li>`;
+            channelsList.innerHTML += `<li class="list-group-item">
+                        <div class="ms-2 me-auto">
+                            <div class="name">${channel.name}</div>
+                            <div class="description">${channel.description}</div>
+                        </div>
+                          <!--display number of participants currently in the channel-->
+                          <a href="/channels/${channel.id}" class="btn btn-primary">Join
+                          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill 
+                          id="'participantCount' + ${channel.id}">0
+                          <span class="visually-hidden">current number in chat</span>
+                          </span>
+                        </a>            
+            </li>`;
+           
         });
     })
     .catch(error => {

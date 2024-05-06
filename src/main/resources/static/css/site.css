@@ -78,9 +78,7 @@ Therefore "!important" is needed. */
    background-color: var(--sjw-light-color); 
    opacity: 0.95;
  }
- 
- 
- /*END nav styles*/
+  /*END nav styles*/
  
  .bi-check-circle-fill {
    color: var(--sjw-dark-color);
@@ -102,6 +100,8 @@ Therefore "!important" is needed. */
  form:hover {
    border: 3px solid var(--sjw-secondary-color);
  }
+ /*END form styles*/
+
  /* table styles */
  table {
    border: 3px solid var(--sjw-secondary-color);
@@ -152,19 +152,10 @@ Therefore "!important" is needed. */
     box-shadow: 0 6px 10px 0 rgba(0,0,0,0.2);
 }
 
- /* .btn-danger:hover,
- .btn-danger:active,
- .btn-danger:visited,
- .btn-danger:focus {
-  color: var(--sjw-secondary-color) !important; 
-
-   box-shadow: 0 6px 10px 0 rgba(0,0,0,0.2);
-   
- } */
-
- /*--card styles --*/
+  /*--card styles --*/
  .list-group-numbered {
   counter-reset: channel-counter;
+  font-size: 1.25em; /* Matches .card .name */
   list-style-type: none; /* Removes default numbering */
 }
 
@@ -181,9 +172,9 @@ Therefore "!important" is needed. */
   color: var(--sjw-headlineblue-color);
   font-size: 1.25em; /* Matches .card .name */
   font-weight: bold; /* Matches .card .name */
-  margin-right: 10px; /* Optional: Adjust spacing between number and text */
+  initial-letter-align: middle; /* Aligns the pseudo-element vertically */
 }
-  
+
  .card {
    border: 3px solid var(--sjw-secondary-color);
    box-shadow: 3px 6px 6px 5px rgba(0,0,0,0.4);
@@ -207,12 +198,8 @@ Therefore "!important" is needed. */
   color: var(--sjw-headlineblue-color);
   font-weight: bold;
 }
-.category-text {
-  color: var(--sjw-headlineblue-color);
-  font-size: 1.5em;
-  font-weight: 800;
-}
- 
+/*END card styles*/
+
  /*footer styles*/
  .sticky-footer {
    position: sticky;
