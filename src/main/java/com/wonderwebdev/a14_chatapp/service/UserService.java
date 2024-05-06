@@ -33,7 +33,7 @@ public class UserService {
     // Register a new user
     public Map<String, Object> registerNewUser(User newUser) {
          Map<String, Object> response = new HashMap<>();
-        if (findUserByUserName(newUser.getUserName()) == null) {
+        if (findUserByUserName(newUser.getUserName()) != null) {
             response.put("success", false);
             response.put("message", "Username already exists.");
             return response;
