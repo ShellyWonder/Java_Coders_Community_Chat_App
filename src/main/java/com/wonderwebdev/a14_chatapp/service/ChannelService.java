@@ -12,10 +12,14 @@ public class ChannelService {
     @Autowired
     private ChannelRepository channelRepository;
 
+    public Channel findChannelById(Long id) {
+        return channelRepository.findById(id).orElse(null);
+    }
+
     public List<Channel> findAllChannels() {
         return channelRepository.findAll();
     }
-
+    // Returns the number of users in a channel used by the #channelSelect card in index.html
     public int getParticipantCount(Long channelId) {
                     return channelRepository.findById(channelId)
                     .map(channel -> channel.getUsers().size())

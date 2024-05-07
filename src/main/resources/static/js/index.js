@@ -28,12 +28,13 @@ export function fetchAndDisplayChannels() {
                             <div class="description">${channel.description}</div>
                         </div>
                           <!--display number of participants currently in the channel-->
-                          <a href="/channels/${channel.id}" class="btn btn-primary">Join
-                          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill 
-                          id="'participantCount' + ${channel.id}" title="Current number in chat">0
-                          <span class="visually-hidden">current number in chat</span>
-                          </span>
-                        </a>            
+                          <a href="/channel/${channel.id}" class="btn btn-primary">Join
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill 
+                            id="participantCount_${channel.id}"
+                            title="Current number in chat">0
+                            <span class="visually-hidden">current number in chat</span>
+                            </span>
+                          </a>            
             </li>`;
            
         });

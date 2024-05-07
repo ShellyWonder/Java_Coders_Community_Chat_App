@@ -15,8 +15,15 @@ public class ChannelViewController {
     private ChannelService channelService;
     private ChannelRepository channelRepository;
 
-     //populates the index.html #channelSelect card with # of users in a channel   
     @GetMapping("/channel/{id}")
+    public String getChannel(@PathVariable Long id, Model model) {
+        Channel channel = channelService.findChannelById(id);
+        model.addAttribute("channel", channel);
+        return "channel";
+    }
+
+     //populates the index.html #channelSelect card with # of users in a channel   
+    @GetMapping("/channel/{channelId}/participants/count/{currentChannelId}")
     public String getChannelUserCount(@PathVariable Long id, Model model) {
         Channel channel = channelRepository.findById(id).orElse(null);
         int participantCount = channelService.getParticipantCount(id);
