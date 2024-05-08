@@ -28,8 +28,6 @@ public class UserService {
             return null;
         }
         
-    
-
     // Register a new user
     public Map<String, Object> registerNewUser(User newUser) {
          Map<String, Object> response = new HashMap<>();
@@ -46,6 +44,10 @@ public class UserService {
         return response;
     }
 
+    // Get the current user
+    public User getCurrentUser() {
+        return userRepository.findById(1L).orElse(null);
+    }
     // Private helper method to find user by username
     private User findUserByUserName(String userName) {
         return userRepository.findByUserName(userName);
