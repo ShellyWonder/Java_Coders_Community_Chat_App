@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" lang="en">
-  <head>
-    <div th:replace="layout :: common-head">
-      <th:block th:with="title='Channel'">
-      <title th:text="${title}">Java Chat: Chat</title> 
-    </th:block>
-  </div>
-    </head>
+  <head th:replace="layout :: common-head(title='JCCC: Chat')">
+  </head>
 
   <body class="d-flex flex-column h-100">
     <!--Nav section-->
@@ -21,7 +16,7 @@
               <br />A Demo Coding Project
             </h1>
             <h4 class="lead">
-              Welcome to the Java Coders Community Chat, <span th:text="${user.username}"></span></h4>
+              Welcome to the Java Coders Community Chat, <span th:text="${user.userName}"></span></h4>
               <h2><strong>Channel:</strong>  <span th:text="${channel.name}"></span></h2>
               <h4><strong>Description:</strong>  <span th:text="${channel.description}"></span></h4>
 
