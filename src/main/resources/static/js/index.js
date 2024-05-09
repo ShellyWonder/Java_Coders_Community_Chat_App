@@ -1,5 +1,5 @@
 // This file handles all non-authentication-related JavaScript code. 
-//It fetches and displays channels
+//It fetches and displays channels to index.html
 
 export function fetchAndDisplayChannels() {
     fetch("/api/channels")

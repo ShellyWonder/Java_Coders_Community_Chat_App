@@ -103,7 +103,7 @@ function registerNewUser() {
     });
 }
 
-function showOrHideNavDropdown(isLoggedIn) {
+export function showOrHideNavDropdown(isLoggedIn) {
     const channelDropdown = document.querySelector("#channelsDropdown");
     if (channelDropdown) {
         channelDropdown.style.display = isLoggedIn ? "block" : "none";
@@ -111,7 +111,7 @@ function showOrHideNavDropdown(isLoggedIn) {
     }
 }
 
-function showOrHideLogoutButton(isLoggedIn) {
+ export function showOrHideLogoutButton(isLoggedIn) {
     const logoutButton = document.querySelector("#logoutBtn");
     if (logoutButton) {
         logoutButton.style.display = isLoggedIn ? "block" : "none";
@@ -122,7 +122,7 @@ function hideLoginAndRegistrationForms() {
     toggleFormVisibility("#login", "#channelSelect");
 }
 
-function logout() {
+export function logout() {
     sessionStorage.clear(); // Clear user session data
     updateUserNameDisplay(); // Update UI based on logout
     showOrHideNavDropdown(false); // Update navbar based on logout
@@ -131,7 +131,7 @@ function logout() {
     window.location.href = '/'; // Redirect to index
 }
 
-function updateUserNameDisplay() {
+export function updateUserNameDisplay() {
     const userNameDisplay = document.querySelector("#userNameDisplay");
     const userName = sessionStorage.getItem("userName");
     if (userName) {

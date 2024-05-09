@@ -1,6 +1,17 @@
+import { updateUserNameDisplay, showOrHideLogoutButton, showOrHideNavDropdown, logout } from './auth.js';
+import { fetchAndDisplayChannels } from './index.js';
 
 document.addEventListener('DOMContentLoaded', function () {
+    const isLoggedIn = sessionStorage.getItem("userId") !== null;
 
+    if (isLoggedIn) {
+        updateUserNameDisplay();
+        showOrHideLogoutButton(true);
+        showOrHideNavDropdown(true);
+    } else {
+       showOrHideLogoutButton(false);
+       showOrHideNavDropdown(false);
+    }
     //**Elements and events for sending messages**//
     const messageForm = document.querySelector('#messageForm');
     const messageBtn = document.querySelector('#messageBtn');
