@@ -5,7 +5,11 @@ import { fetchAndDisplayChannels } from './index.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     const isLoggedIn = sessionStorage.getItem("userId") !== null;
+    handleLoginStatus(isLoggedIn);  // Check if user is logged in
+    attachEventListeners(); // Attach event listeners to form elements
+});
 
+export function handleLoginStatus(isLoggedIn) {
     if (isLoggedIn) {
         hideLoginAndRegistrationForms();
         showOrHideNavDropdown(true);
@@ -15,7 +19,9 @@ document.addEventListener("DOMContentLoaded", function () {
         showOrHideNavDropdown(false);
         showOrHideLogoutButton(false);
     }
+}
 
+export function attachEventListeners() {
     const logoutButton = document.querySelector("#logoutBtn");
     if (logoutButton) {
         logoutButton.addEventListener("click", logout);
@@ -23,31 +29,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const loginForm = document.querySelector("#loginForm");
     if (loginForm) {
-        loginForm.addEventListener("submit", function (event) {
-            event.preventDefault();
-            validateExistingUser();
-            clearLoginForm();
-        });
+        loginForm.addEventListener("submit", handleLoginFormSubmit );
     }
 
     const registrationForm = document.querySelector("#registrationFormContent");
     if (registrationForm) {
-        registrationForm.addEventListener("submit", function (event) {
-            event.preventDefault();
-            registerNewUser();
-            clearRegistrationForm();
-        });
+        registrationForm.addEventListener("submit", handleRegistrationFormSubmit); 
     }
 
-    // toggle login and registration forms via buttons
-    document.querySelector("#registerBtn").addEventListener("click", function () {
-        toggleFormVisibility("#login", "#registrationForm");
-    });
+    const registerBtn = document.querySelector("#registerBtn");
+    if (registerBtn) {
+        registerBtn.addEventListener("click", function () {
+            // toggle login and registration forms via buttons
+            toggleFormVisibility("#login", "#registrationForm");
+        });
+    }
+    const backBtn = document.querySelector("#backBtn");
+    if (backBtn) {
+        backBtn.addEventListener("click", function () {
+            toggleFormVisibility("#registrationForm", "#login");
+        });
+    }
+}
 
-    document.querySelector("#backBtn").addEventListener("click", function () {
-        toggleFormVisibility("#registrationForm", "#login");
-    });
-});
+function handleLoginFormSubmit(event) {
+    event.preventDefault();
+    validateExistingUser();
+    clearLoginForm();
+}
+
+function handleRegistrationFormSubmit(event) {
+    event.preventDefault();
+    registerNewUser();
+    clearRegistrationForm();
+}
+
 
 function validateExistingUser() {
     const userName = document.querySelector("#username").value;
@@ -103,7 +119,7 @@ function registerNewUser() {
     });
 }
 
-export function showOrHideNavDropdown(isLoggedIn) {
+function showOrHideNavDropdown(isLoggedIn) {
     const channelDropdown = document.querySelector("#channelsDropdown");
     if (channelDropdown) {
         channelDropdown.style.display = isLoggedIn ? "block" : "none";
@@ -111,7 +127,7 @@ export function showOrHideNavDropdown(isLoggedIn) {
     }
 }
 
- export function showOrHideLogoutButton(isLoggedIn) {
+function showOrHideLogoutButton(isLoggedIn) {
     const logoutButton = document.querySelector("#logoutBtn");
     if (logoutButton) {
         logoutButton.style.display = isLoggedIn ? "block" : "none";
@@ -131,15 +147,19 @@ export function logout() {
     window.location.href = '/'; // Redirect to index
 }
 
-export function updateUserNameDisplay() {
+function updateUserNameDisplay() {
     const userNameDisplay = document.querySelector("#userNameDisplay");
     const userName = sessionStorage.getItem("userName");
     if (userName) {
         userNameDisplay.textContent = userName;
+        //NOTE: the else statement is merely a double check; 
+        //the user should never be directed to this page unless 
+        //they are already logged in
     } else {
-        userNameDisplay.textContent = "Not logged in";
+        alert("You are not logged in. You are being redirected to the login page.");
+        window.location.href = '/index.html'; // Redirect to the index view
     }
-}
+   }
 
 function clearLoginForm() {
     const loginForm = document.querySelector("#loginForm");
