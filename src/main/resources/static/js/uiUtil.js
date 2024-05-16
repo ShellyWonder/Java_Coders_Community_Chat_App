@@ -1,4 +1,5 @@
-// Function to update the navbar with channel links
+// uiUtil.js: Contains utility functions for UI updates that are used across multiple pages.
+
 export function updateNavbarChannels() {
     fetch("/api/channels")
     .then(response => response.json())
@@ -19,7 +20,6 @@ export function updateNavbarChannels() {
     });
 }
 
-// Function to update the channel selection card (specific to index.html)
 export function updateChannelSelection() {
     fetch("/api/channels")
     .then(response => response.json())
@@ -34,9 +34,9 @@ export function updateChannelSelection() {
                         <div class="description">${channel.description}</div>
                     </div>
                     <a href="/channel/${channel.id}" class="btn btn-primary">Join
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill 
-                        id="participantCount_${channel.id}"
-                        title="Current number in chat">0
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" 
+                              id="participantCount_${channel.id}" 
+                              title="Current number in chat">0
                         <span class="visually-hidden">current number in chat</span>
                         </span>
                     </a>            
@@ -46,6 +46,31 @@ export function updateChannelSelection() {
             console.log("ChannelList element not found");
         }
     }); 
+}
+
+export function showOrHideNavDropdown(isLoggedIn) {
+    const channelDropdown = document.querySelector("#channelsDropdown");
+    if (channelDropdown) {
+        channelDropdown.style.display = isLoggedIn ? "block" : "none";
+        if (isLoggedIn) updateNavbarChannels();
+    }
+}
+
+export function showOrHideLogoutButton(isLoggedIn) {
+    const logoutButton = document.querySelector("#logoutBtn");
+    if (logoutButton) {
+        logoutButton.style.display = isLoggedIn ? "block" : "none";
+    }
+}
+
+export function updateUserNameDisplay() {
+    const userNameDisplay = document.querySelector("#userNameDisplay");
+    const userName = sessionStorage.getItem("userName");
+    if (userName) {
+        userNameDisplay.textContent = userName;
+    } else {
+        userNameDisplay.textContent = "Not logged in";
+    }
 }
 
 // Event listeners for DOM content loaded
