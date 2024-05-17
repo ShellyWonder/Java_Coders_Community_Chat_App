@@ -2,13 +2,7 @@
 
 import { updateNavbarChannels, showOrHideNavDropdown, showOrHideLogoutButton, updateUserNameDisplay } from './uiUtil.js';
 
-document.addEventListener("DOMContentLoaded", function () {
-    const isLoggedIn = checkLoginStatus();
-    handleLoginStatus(isLoggedIn);
-    attachEventListeners();
-});
-
-function checkLoginStatus() {
+export function checkLoginStatus() {
     return sessionStorage.getItem("userId") !== null;
 }
 
@@ -32,19 +26,13 @@ export function attachEventListeners() {
     document.querySelector("#backBtn")?.addEventListener("click", () => toggleFormVisibility("#registrationForm", "#login"));
 }
 
-function handleLoginFormSubmit(event) {
+export function handleLoginFormSubmit(event) {
     event.preventDefault();
-    validateExistingUser();
+    loginUser();
     clearLoginForm();
 }
 
-function handleRegistrationFormSubmit(event) {
-    event.preventDefault();
-    registerNewUser();
-    clearRegistrationForm();
-}
-
-function validateExistingUser() {
+function loginUser() {
     const userName = document.querySelector("#username").value;
     const password = document.querySelector("#password").value;
     const user = { userName, password };
@@ -70,6 +58,12 @@ function validateExistingUser() {
         console.error('Error:', error);
         alert("Error logging in.");
     });
+}
+
+function handleRegistrationFormSubmit(event) {
+    event.preventDefault();
+    registerNewUser();
+    clearRegistrationForm();
 }
 
 function registerNewUser() {
