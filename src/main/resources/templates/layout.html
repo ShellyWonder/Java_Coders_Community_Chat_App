@@ -120,16 +120,7 @@
       </div>
     </main>
     
-    <div th:fragment="create-account">
-      <div class="row justify-content-center mt-3">
-        <div class="col">
-          <a th:href="@{/users/{userId}/accounts}" class="btn btn-primary w-100"
-            >Create New Account</a
-          >
-        </div>
-      </div>
-      </div>
-          
+            
     <footer th:fragment="footer">
       <div class="styleFooter mt-auto py-3 sticky-bottom sticky-footer">
         <div class="container-fluid">
@@ -173,6 +164,7 @@
       </div>
     </footer>
 
+    <!--JS fragments-->
     <div th:fragment="BootstrapJS">
       <script
         type="text/javascript"
@@ -188,14 +180,16 @@
       ></script>
     </div>
     
-    
-    
     <div th:fragment="uiUtilJS">
       <script type="module" th:src="@{/js/uiUtil.js}"></script>
 
     </div>
     <div th:fragment="AuthJS">
       <script type="module" th:src="@{/js/auth.js}"></script>
+
+    </div>
+    <div th:fragment="MainJS">
+      <script type="module" th:src="@{/js/main.js}"></script>
 
     </div>
     <div th:fragment="ChannelJS">
