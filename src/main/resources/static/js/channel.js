@@ -1,42 +1,39 @@
 // channels.js: Manages channel interactions and updates related to channels.
 
-import { attachEventListeners } from './auth.js';
+let currentChannelId;
 
-document.addEventListener('DOMContentLoaded', function () {
-    attachEventListeners();
-    attachChannelEventListeners();
-});
-
-function attachChannelEventListeners() {
-    const messageForm = document.querySelector('#messageForm');
+export function attachChannelEventListeners() {
     const messageBtn = document.querySelector('#messageBtn');
     const chatMessage = document.querySelector('#chatMessage');
+    const messageList = document.querySelector('#messageList'); // Select messageList here
 
-    messageBtn?.addEventListener('click', function (event) {
-        event.preventDefault();
-        const messageContent = chatMessage.value.trim();
-        if (messageContent) {
-            sendMessage(messageContent);
-        }
-    });
+    if (messageBtn) {
+        messageBtn.addEventListener('click', function (event) {
+            event.preventDefault();
+            const messageContent = chatMessage.value.trim();
+            if (messageContent) {
+                sendMessage(messageContent, chatMessage);
+            }
+        });
+    }
 
     document.querySelectorAll('.list-group-item').forEach(item => {
         item.addEventListener('click', function () {
             currentChannelId = this.getAttribute('data-channel-id');
             updateParticipantCount();
-            fetchMessages();
+            fetchMessages(messageList); // Pass messageList to fetchMessages
         });
     });
 
     setInterval(() => {
         if (currentChannelId) {
             updateParticipantCount();
-            fetchMessages();
+            fetchMessages(messageList); // Pass messageList to fetchMessages
         }
     }, 5000);
 }
 
-function sendMessage(messageContent) {
+function sendMessage(messageContent, chatMessageElement) {
     fetch('/message', {
         method: 'POST',
         headers: {
@@ -47,27 +44,24 @@ function sendMessage(messageContent) {
     .then(response => response.json())
     .then(data => {
         console.log('Message sent:', data);
-        chatMessage.value = ''; // Clear input after sending
+        chatMessageElement.value = ''; // Clear input after sending
     })
     .catch(error => console.error('Error sending message:', error));
 }
 
-let currentChannelId;
-
-function fetchMessages() {
+function fetchMessages(messageList) {
     if (!currentChannelId) return;
-    fetch(`/channel/${currentChannelId}/messages`)
+    fetch(`/api/channel/${currentChannelId}/messages`)
     .then(response => response.json())
     .then(messages => {
-        updateMessageList(messages);
+        updateMessageList(messages, messageList); // Pass messageList to updateMessageList
     })
     .catch(error => {
         console.error('Error fetching messages:', error)
     });
 }
 
-function updateMessageList(messages) {
-    const messageList = document.querySelector('#messageList');
+function updateMessageList(messages, messageList) {
     messageList.innerHTML = '';
     if (messages.length === 0) {
         messageList.innerHTML = '<li>No one has posted to this channel yet. Be the first!</li>';
