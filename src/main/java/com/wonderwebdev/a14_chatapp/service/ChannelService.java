@@ -2,15 +2,22 @@ package com.wonderwebdev.a14_chatapp.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wonderwebdev.a14_chatapp.repository.ChannelRepository;
+import com.wonderwebdev.a14_chatapp.repository.ChatRepository;
 import com.wonderwebdev.a14_chatapp.domain.Channel;
+import com.wonderwebdev.a14_chatapp.domain.Chat;
 @Service
 public class ChannelService {
-    @Autowired
-    private ChannelRepository channelRepository;
+    
+    private final ChannelRepository channelRepository;
+    private final ChatRepository chatRepository;
+
+    public ChannelService(ChannelRepository channelRepository, ChatRepository chatRepository) {
+        this.channelRepository = channelRepository;
+        this.chatRepository = chatRepository;
+    }
 
     public Channel findChannelById(Long id) {
         return channelRepository.findById(id).orElse(null);
@@ -18,6 +25,10 @@ public class ChannelService {
 
     public List<Channel> findAllChannels() {
         return channelRepository.findAll();
+    }
+
+    public List<Chat> findMessagesByChannelId(Long channelId) {
+        return chatRepository.findByChannelId(channelId);
     }
     // Returns the number of users in a channel used by the #channelSelect card in index.html
     public int getParticipantCount(Long channelId) {
