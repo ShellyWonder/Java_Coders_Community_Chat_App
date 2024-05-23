@@ -34,7 +34,7 @@ export function attachChannelEventListeners() {
 }
 
 function sendMessage(messageContent, chatMessageElement) {
-    fetch('/message', {
+    fetch('/api/message', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -51,7 +51,7 @@ function sendMessage(messageContent, chatMessageElement) {
 
 function fetchMessages(messageList) {
     if (!currentChannelId) return;
-    fetch(`/api/channel/${currentChannelId}/messages`)
+    fetch(`/api/channel/${currentChannelId}/messages`)  //("/channel/{id}/messages")
     .then(response => response.json())
     .then(messages => {
         updateMessageList(messages, messageList); // Pass messageList to updateMessageList
