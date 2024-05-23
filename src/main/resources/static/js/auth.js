@@ -18,16 +18,21 @@ export function handleLoginStatus(isLoggedIn) {
     }
 }
 
-export function attachEventListeners() {
-    document.querySelector("#logoutBtn")?.addEventListener("click", logout);
+export function attachAuthEventListeners() {
+    console.log("Attaching event listeners");
     document.querySelector("#loginForm")?.addEventListener("submit", handleLoginFormSubmit);
     document.querySelector("#registrationFormContent")?.addEventListener("submit", handleRegistrationFormSubmit);
     document.querySelector("#registerBtn")?.addEventListener("click", () => toggleFormVisibility("#login", "#registrationForm"));
     document.querySelector("#backBtn")?.addEventListener("click", () => toggleFormVisibility("#registrationForm", "#login"));
 }
 
-export function handleLoginFormSubmit(event) {
+export function attachEventListeners() { 
+    document.querySelector("#logoutBtn")?.addEventListener("click", logout);
+}
+    
+   function handleLoginFormSubmit(event) {
     event.preventDefault();
+    console.log("Form submission captured");
     loginUser();
     clearLoginForm();
 }
@@ -37,7 +42,9 @@ function loginUser() {
     const password = document.querySelector("#password").value;
     const user = { userName, password };
 
-    fetch("/login", {
+    console.log("Sending login request", user);
+
+    fetch("/api/login", {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user)
@@ -73,7 +80,7 @@ function registerNewUser() {
     const lastName = document.querySelector("#regLastName").value;
     const user = { userName, password, firstName, lastName };
 
-    fetch("/register", {
+    fetch("api/register", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user)
@@ -93,7 +100,7 @@ function hideLoginAndRegistrationForms() {
     toggleFormVisibility("#login", "#channelSelect");
 }
 
-export function logout() {
+function logout() {
     sessionStorage.clear();
     handleLoginStatus(false);
     alert("You have been logged out.");
@@ -109,6 +116,14 @@ function clearRegistrationForm() {
 }
 
 function toggleFormVisibility(hideSelector, showSelector) {
-    document.querySelector(hideSelector)?.style.display = "none";
-    document.querySelector(showSelector)?.style.display = "block";
+    const hideElement = document.querySelector(hideSelector);
+    const showElement = document.querySelector(showSelector);
+
+    if (hideElement) {
+        hideElement.style.display = "none";
+    }
+
+    if (showElement) {
+        showElement.style.display = "block";
+    }
 }

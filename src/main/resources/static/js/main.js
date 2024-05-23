@@ -1,6 +1,6 @@
 // main.js: Initializes the application and handles login status checks.
 
-import { handleLoginStatus, attachAuthEventListeners,
+import { checkLoginStatus,handleLoginStatus, attachAuthEventListeners,
          attachEventListeners} from './auth.js';
 import { updateNavbarChannels, updateChannelSelection } from './uiUtil.js';
 import { attachChannelEventListeners} from './channel.js';
@@ -8,7 +8,9 @@ import { attachChannelEventListeners} from './channel.js';
 
 // user login check and update
 document.addEventListener("DOMContentLoaded", function () {
-    const isLoggedIn = sessionStorage.getItem("userId") !== null;
+  console.log("DOMContentLoaded event fired");
+    // Check if the user is logged in and update the UI accordingly
+    const isLoggedIn = checkLoginStatus();
     handleLoginStatus(isLoggedIn);
     attachEventListeners();
 
