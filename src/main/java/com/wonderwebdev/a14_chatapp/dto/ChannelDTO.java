@@ -6,7 +6,7 @@ public class ChannelDTO {
     private Long id;
     private String name;
     private String description;
-    private List<ChatDTO> messages; // Simplified to List<MessageDTO>
+    private List<ChatDTO> messages; // Simplified to List<ChatDTO>
 
      //Constructors are optional, but added for simplicity and consistency
     public ChannelDTO() {
