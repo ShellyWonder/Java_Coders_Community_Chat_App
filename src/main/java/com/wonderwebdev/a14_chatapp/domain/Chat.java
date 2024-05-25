@@ -1,8 +1,6 @@
 package com.wonderwebdev.a14_chatapp.domain;
 
 import java.time.LocalDateTime;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,21 +10,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-
 public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String message;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference // Prevents infinite recursion when serializing the user object
     private Channel channel;
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
     @Column(nullable = false, name = "published_at")
     private LocalDateTime publishedAt;
 
-    
     public Chat() {
     }
     
