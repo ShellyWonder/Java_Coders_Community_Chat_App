@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wonderwebdev.a14_chatapp.domain.User;
+import com.wonderwebdev.a14_chatapp.dto.UserDTO;
 import com.wonderwebdev.a14_chatapp.service.UserService;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class AuthController {
         
     private UserService userService;
@@ -24,17 +25,16 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> loginUser(@RequestBody User loginUser) {
-        User user = userService.validateUser(loginUser.getUserName(), loginUser.getPassword());
-        if (user != null) {
-            // Auth successful
-            return ResponseEntity.ok(Map.of("authenticated", true, "userId", user.getId()));
-        } else {
-            // Auth failed
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("authenticated", false));
-        }
+    public ResponseEntity<Map<String, Object>> loginUser(@RequestBody UserDTO loginUserDTO) {
+        UserDTO userDTO = userService.validateUser(loginUserDTO.getUserName(), loginUserDTO.getPassword());
+        
+            if ((userDTO != null)) {
+                return ResponseEntity.ok(Map.of("authenticated", true, "userId", userDTO.getId()));
+            } else {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("authenticated", false));
+            }
     }
-    
+
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> registerUser(@RequestBody User newUser) {
         try {

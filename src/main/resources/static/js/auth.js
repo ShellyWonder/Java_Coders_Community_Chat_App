@@ -44,7 +44,7 @@ function loginUser() {
 
     console.log("Sending login request", user);
 
-    fetch("/api/login", {
+    fetch("/api/auth/login", {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user)
@@ -80,7 +80,7 @@ function registerNewUser() {
     const lastName = document.querySelector("#regLastName").value;
     const user = { userName, password, firstName, lastName };
 
-    fetch("api/register", {
+    fetch("api/auth/register", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user)
