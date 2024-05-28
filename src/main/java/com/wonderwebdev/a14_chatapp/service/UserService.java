@@ -14,16 +14,18 @@ import com.wonderwebdev.a14_chatapp.repository.UserRepository;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     // Validate user credentials
     public UserDTO validateUser(String userName, String password) {
         User user = findUserByUserNameAndPassword(userName, password); 
         if (user != null && user.getPassword().equals(password)) {
-            return UserMapper.INSTANCE.toDto(user); 
+            return userMapper.toDto(user); 
         }
         return null;
     }
@@ -40,14 +42,14 @@ public class UserService {
         User savedUser = userRepository.save(newUser);
         response.put("success", true);
         response.put("message", "User registered successfully.");
-        response.put("user", UserMapper.INSTANCE.toDto(savedUser)); 
+        response.put("user", userMapper.toDto(savedUser)); 
         return response;
     }
 
     // Get the current user
     public UserDTO getCurrentUser() {
         User user = userRepository.findById(1L).orElse(null);
-        return UserMapper.INSTANCE.toDto(user);
+        return userMapper.toDto(user);
     }
 
     // Private helper method to find user by username
