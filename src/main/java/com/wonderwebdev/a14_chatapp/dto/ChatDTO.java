@@ -3,7 +3,7 @@ package com.wonderwebdev.a14_chatapp.dto;
 import java.time.LocalDateTime;
 
 public class ChatDTO {
-private Long id;
+    private Long id;
     private String message;
     private UserDTO user;
     private LocalDateTime publishedAt;
