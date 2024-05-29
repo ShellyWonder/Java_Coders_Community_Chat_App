@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.wonderwebdev.a14_chatapp.service.UserService;
 import com.wonderwebdev.a14_chatapp.service.ChannelService;
 import com.wonderwebdev.a14_chatapp.domain.Channel;
-import com.wonderwebdev.a14_chatapp.domain.User;
+import com.wonderwebdev.a14_chatapp.dto.UserDTO;
+import com.wonderwebdev.a14_chatapp.dto.ChannelDTO;
 import com.wonderwebdev.a14_chatapp.repository.ChannelRepository;
 
 @Controller
@@ -25,12 +26,12 @@ public class ChannelViewController {
 
     @GetMapping("/channel/{id}")
     public String getChannel(@PathVariable Long id, Model model) {
-        User user = userService.getCurrentUser();
-        model.addAttribute("user", user);
-        if(user == null) {
+        UserDTO userDTO = userService.getCurrentUser();
+        model.addAttribute("user", userDTO);
+        if(userDTO == null) {
             return "redirect:/login";
         }
-        Channel channel = channelService.findChannelById(id);
+        ChannelDTO channel = channelService.findChannelById(id);
         model.addAttribute("channel", channel);
         return "channel";
     }
