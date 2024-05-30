@@ -9,12 +9,13 @@ import com.wonderwebdev.a14_chatapp.dto.ChatDTO;
 
 @Mapper(componentModel = "spring")
 public interface ChatMapper {
-ChatMapper INSTANCE = Mappers.getMapper(ChatMapper.class);
-ChatDTO toDto(Chat chat);
-@Mapping (target = "id", source = "id")
-@Mapping (target = "message", source = "message")
-@Mapping (target = "user", source = "user")
-@Mapping (target = "publishedAt", source = "publishedAt")
+    ChatMapper INSTANCE = Mappers.getMapper(ChatMapper.class);
 
-Chat toEntity(ChatDTO chatDTO);
+    @Mapping(target = "user", source = "user")
+    @Mapping(target = "channel", source = "channel")
+    ChatDTO toDto(Chat chat);
+
+    @Mapping(target = "user", source = "user")
+    @Mapping(target = "channel", source = "channel")
+    Chat toEntity(ChatDTO chatDTO);
 }

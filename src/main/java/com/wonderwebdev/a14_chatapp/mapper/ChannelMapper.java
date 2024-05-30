@@ -10,10 +10,10 @@ import com.wonderwebdev.a14_chatapp.dto.ChannelDTO;
 @Mapper(componentModel = "spring")
 public interface ChannelMapper {
     ChannelMapper INSTANCE = Mappers.getMapper(ChannelMapper.class);
+
+    @Mapping(target = "messages", ignore = true)
     ChannelDTO toDto(Channel channel);
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "name", source = "name")
-    @Mapping(target = "description", source = "description")
+
+    @Mapping(target = "messages", ignore = true)
     Channel toEntity(ChannelDTO channelDTO);
 }
-

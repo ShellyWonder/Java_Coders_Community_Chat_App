@@ -6,16 +6,18 @@ public class ChatDTO {
     private Long id;
     private String message;
     private UserDTO user;
+    private ChannelDTO channel;
     private LocalDateTime publishedAt;
     
     //Constructors are optional, but added for simplicity and consistency
     public ChatDTO() {
     }
     
-    public ChatDTO(Long id, String message, UserDTO user, LocalDateTime publishedAt) {
+    public ChatDTO(Long id, String message, UserDTO user, ChannelDTO channel, LocalDateTime publishedAt) {
         this.id = id;
         this.message = message;
         this.user = user;
+        this.channel = channel;
         this.publishedAt = publishedAt;
     }
 
@@ -37,6 +39,12 @@ public class ChatDTO {
     }
     public void setUser(UserDTO user) {
         this.user = user;
+    }
+    public ChannelDTO getChannel() {
+        return channel;
+    }
+    public void setChannel(ChannelDTO channel) {
+        this.channel = channel;
     }
     public LocalDateTime getPublishedAt() {
         return publishedAt;

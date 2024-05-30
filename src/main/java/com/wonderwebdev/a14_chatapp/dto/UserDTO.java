@@ -1,22 +1,26 @@
 package com.wonderwebdev.a14_chatapp.dto;
 
+import java.util.Set;
+
 public class UserDTO {
     private Long id;
     private String userName;
     private String password;
     private String firstName;
     private String lastName;
+    private Set<ChannelDTO> channels;
 
     //Constructors are optional, but added for simplicity and consistency
     public UserDTO() {
     }
     
-    public UserDTO(Long id, String userName, String password, String firstName, String lastName) {
+    public UserDTO(Long id, String userName, String password, String firstName, String lastName, Set<ChannelDTO> channels) {
         this.id = id;
         this.userName = userName;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.channels = channels;
     }
     // Getters and setters
     public Long getId() {
@@ -48,6 +52,12 @@ public class UserDTO {
     }
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+    public Set<ChannelDTO> getChannels() {
+        return channels;
+    }
+    public void setChannels(Set<ChannelDTO> channels) {
+        this.channels = channels;
     }
     
 }
