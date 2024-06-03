@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +24,7 @@ public class Channel {
     private String description;
 
     @OneToMany(mappedBy = "channel", fetch = FetchType.LAZY)
+     @JsonManagedReference
     private List<Chat> messages = new ArrayList<>(); // This line establishes the bidirectional relationship
 
     @ManyToMany(mappedBy = "channels", fetch = FetchType.LAZY)

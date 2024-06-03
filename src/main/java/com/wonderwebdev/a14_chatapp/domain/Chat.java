@@ -1,6 +1,9 @@
 package com.wonderwebdev.a14_chatapp.domain;
 
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,6 +19,7 @@ public class Chat {
     private Long id;
     private String message;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Channel channel;
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
