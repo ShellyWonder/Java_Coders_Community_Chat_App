@@ -18,7 +18,7 @@ public class ChatDTO {
         this.message = message;
         this.user = user;
         this.channel = channel;
-        this.publishedAt = publishedAt;
+        this.publishedAt = publishedAt;// timestamp-- Use the explicitly provided time
     }
 
     // Getters and setters
