@@ -11,11 +11,11 @@ import com.wonderwebdev.a14_chatapp.dto.ChatDTO;
 public interface ChatMapper {
     ChatMapper INSTANCE = Mappers.getMapper(ChatMapper.class);
 
-    @Mapping(target = "user", source = "user")
-    @Mapping(target = "channel", source = "channel")
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "channel", ignore = true)
     ChatDTO toDto(Chat chat);
 
-    @Mapping(target = "user", source = "user")
-    @Mapping(target = "channel", source = "channel")
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "channel", ignore = true)
     Chat toEntity(ChatDTO chatDTO);
 }

@@ -12,8 +12,9 @@ public interface ChannelMapper {
     ChannelMapper INSTANCE = Mappers.getMapper(ChannelMapper.class);
 
     @Mapping(target = "messages", ignore = true)
-    ChannelDTO toDto(Channel channel);
+       ChannelDTO toDto(Channel channel);
 
     @Mapping(target = "messages", ignore = true)
+    
     Channel toEntity(ChannelDTO channelDTO);
 }
