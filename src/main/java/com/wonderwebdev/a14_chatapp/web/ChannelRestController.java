@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.wonderwebdev.a14_chatapp.dto.ChannelDTO;
-import com.wonderwebdev.a14_chatapp.dto.ChatDTO;
+import com.wonderwebdev.a14_chatapp.dto.ChatSummaryDTO;
 import com.wonderwebdev.a14_chatapp.service.ChannelService;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -34,9 +34,9 @@ public class ChannelRestController {
     }
 
     @GetMapping("/channel/{id}/messages")
-    public List<ChatDTO> getAllChannelMessages(@PathVariable Long id) {
+    public List<ChatSummaryDTO> getAllChannelMessages(@PathVariable Long id) {
         logger.info("Fetching messages for channel ID: {}", id);
-        List<ChatDTO> messages = channelService.findMessagesByChannelId(id);
+        List<ChatSummaryDTO> messages = channelService.findMessagesByChannelId(id);
         logger.info("Fetched messages: {}", messages);
         return messages;
     }
