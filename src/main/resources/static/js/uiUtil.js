@@ -32,14 +32,15 @@ export function updateChannelSelection() {
                     <div class="ms-2 me-auto">
                         <div class="name">${channel.name}</div>
                         <div class="description">${channel.description}</div>
+                        
                     </div>
-                    <a href="/channel/${channel.id}" class="btn btn-primary">Join
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" 
-                              id="participantCount_${channel.id}" 
-                              title="Current number in chat">0
-                        <span class="visually-hidden">current number in chat</span>
-                        </span>
-                    </a>            
+                    <a href="/channel/${channel.id}" class="btn btn-primary" data-channel-id="${channel.id}">Join
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill"
+                                  id="participantCount_${channel.id}" 
+                                  title="Current number in chat">0
+                                <span class="visually-hidden">current number in chat</span>
+                            </span>
+                        </a>              
                 </li>`;
             });
         } else {
@@ -75,8 +76,14 @@ export function updateUserNameDisplay() {
 
 // Event listeners for DOM content loaded
 document.addEventListener("DOMContentLoaded", function () {
-    updateNavbarChannels(); // Update navbar channels for both pages
-    if (document.querySelector(".list-group")) {
-        updateChannelSelection(); // Only call this in index.html where .list-group exists
+    const isLoggedIn = checkLoginStatus();
+    if (isLoggedIn) {
+        updateNavbarChannels(); // Update navbar channels for both pages
+        if (document.querySelector(".list-group")) {
+            updateChannelSelection(); // Only call this in index.html where .list-group exists
+        }
+    } else {
+        // Redirect to login page if not logged in
+        window.location.href = "/login";
     }
 });

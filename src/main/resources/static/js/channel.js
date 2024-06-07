@@ -3,6 +3,7 @@
 let currentChannelId;
 
 export function attachChannelEventListeners() {
+    console.log('Attaching channel event listeners');
     const messageBtn = document.querySelector('#messageBtn');
     const chatMessage = document.querySelector('#chatMessage');
     const messageList = document.querySelector('#messageList'); // Select messageList here
@@ -17,11 +18,13 @@ export function attachChannelEventListeners() {
         });
     }
 
-    document.querySelectorAll('.list-group-item').forEach(item => {
-        item.addEventListener('click', function () {
+    document.querySelectorAll('.btn-primary[data-channel-id]').forEach(item => {
+        item.addEventListener('click', function (event) {
+            event.preventDefault();  // Prevent default anchor behavior
             currentChannelId = this.getAttribute('data-channel-id');
+            console.log('Channel selected:', currentChannelId);  // Log the selected channel ID
             updateParticipantCount();
-            fetchMessages(messageList); // Pass messageList to fetchMessages
+            fetchMessages(messageList);  // Call fetchMessages
         });
     });
 
@@ -55,6 +58,7 @@ function fetchMessages(messageList) {
     .then(response => response.json())
     .then(messages => {
         updateMessageList(messages, messageList); // Pass messageList to updateMessageList
+        console.log('Messages fetched:', messages);
     })
     .catch(error => {
         console.error('Error fetching messages:', error)
@@ -67,6 +71,7 @@ function updateMessageList(messages, messageList) {
         messageList.innerHTML = '<li>No one has posted to this channel yet. Be the first!</li>';
     } else {
         messages.forEach(chat => {
+            console.log('Chat object:', chat); // Log the entire chat object
             const li = document.createElement('li');
             li.innerHTML = `<span>${chat.user.userName}</span>: 
                             <span>${chat.message}</span>

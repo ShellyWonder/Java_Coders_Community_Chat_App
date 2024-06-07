@@ -22,13 +22,17 @@ document.addEventListener("DOMContentLoaded", function () {
     // Attach event listeners specific to the channel page if it exists
     if (document.querySelector(".channel")) {
       attachChannelEventListeners();
-    }
-    // Update the navbar channels for all pages
-    updateNavbarChannels();
+      console.log("Channel event listeners attached");
 
-    // Update channel selection only on the index page
-    if (document.querySelector(".list-group")) {
-        updateChannelSelection();
     }
+    // Update the navbar channels for all pages if the user is logged in
+    if (isLoggedIn) {
+      updateNavbarChannels();
+  }
+
+  // Update channel selection only on the index page if the user is logged in
+  if (isLoggedIn && document.querySelector(".list-group")) {
+      updateChannelSelection();
+  }
 
 });
