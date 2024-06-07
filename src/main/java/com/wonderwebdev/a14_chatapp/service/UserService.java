@@ -1,31 +1,37 @@
 package com.wonderwebdev.a14_chatapp.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.wonderwebdev.a14_chatapp.domain.User;
 import com.wonderwebdev.a14_chatapp.dto.UserDTO;
+import com.wonderwebdev.a14_chatapp.dto.UserSummaryDTO;
 import com.wonderwebdev.a14_chatapp.mapper.UserMapper;
+import com.wonderwebdev.a14_chatapp.mapper.ChannelMapper;
 import com.wonderwebdev.a14_chatapp.repository.UserRepository;
 
-@Service   
+@Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final ChannelMapper channelMapper;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, ChannelMapper channelMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.channelMapper = channelMapper;
     }
 
     // Validate user credentials
     public UserDTO validateUser(String userName, String password) {
-        User user = findUserByUserNameAndPassword(userName, password); 
+        User user = findUserByUserNameAndPassword(userName, password);
         if (user != null && user.getPassword().equals(password)) {
-            return userMapper.toDto(user); 
+            return mapToUserDTO(user);
         }
         return null;
     }
@@ -42,14 +48,14 @@ public class UserService {
         User savedUser = userRepository.save(newUser);
         response.put("success", true);
         response.put("message", "User registered successfully.");
-        response.put("user", userMapper.toDto(savedUser)); 
+        response.put("user", mapToUserDTO(savedUser));
         return response;
     }
 
     // Get the current user
     public UserDTO getCurrentUser() {
         User user = userRepository.findById(1L).orElse(null);
-        return userMapper.toDto(user);
+        return mapToUserDTO(user);
     }
 
     // Private helper method to find user by username
@@ -57,9 +63,33 @@ public class UserService {
         return userRepository.findByUserName(userName);
     }
 
-
     // Private helper method to find user by username AND password used by validateUser()
     private User findUserByUserNameAndPassword(String userName, String password) {
         return userRepository.findByUserNameAndPassword(userName, password);
+    }
+
+      // Map User to UserDTO, including channels
+    private UserDTO mapToUserDTO(User user) {
+        UserDTO userDTO = userMapper.toDto(user);
+
+        userDTO.setChannels(
+            user.getChannels().stream()
+                .map(channelMapper::toSummaryDto)
+                .collect(Collectors.toSet())
+        );
+
+        return userDTO;
+    }
+
+    // Get the participant count for a channel
+    public int getParticipantCount(Long channelId) {
+        return userRepository.findUsersByChannelId(channelId).size();
+    }
+
+    // Find users by channel ID
+    public List<UserSummaryDTO> findUsersByChannelId(Long channelId) {
+        return userRepository.findUsersByChannelId(channelId).stream()
+                .map(userMapper::toSummaryDto)
+                .collect(Collectors.toList());
     }
 }

@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.util.stream.Collectors;
 import com.wonderwebdev.a14_chatapp.domain.Channel;
 import com.wonderwebdev.a14_chatapp.dto.ChannelDTO;
-import com.wonderwebdev.a14_chatapp.dto.ChatDTO;
+import com.wonderwebdev.a14_chatapp.dto.ChatSummaryDTO;
 import com.wonderwebdev.a14_chatapp.dto.UserSummaryDTO;
 import com.wonderwebdev.a14_chatapp.exception.ResourceNotFoundException;
 import com.wonderwebdev.a14_chatapp.mapper.ChannelMapper;
@@ -31,50 +31,43 @@ public class ChannelService {
         this.userMapper = userMapper;
     }
 
+    public ChannelDTO findChannelById(Long id) {
+        Channel channel = channelRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Channel not found"));
+        return mapToChannelDTO(channel);
+    }
+
     public List<ChannelDTO> findAllChannels() {
         List<Channel> channels = channelRepository.findAll();
         return channels.stream()
-                .map(channel -> {
-                    ChannelDTO channelDTO = channelMapper.toDto(channel);
+                .map(this::mapToChannelDTO)
+                .collect(Collectors.toList());
+    }
 
-                    // Map messages
-                    List<ChatDTO> chatDTOs = channel.getMessages().stream()
-                            .map(chat -> {
-                                ChatDTO chatDTO = chatMapper.toDto(chat);
-                                chatDTO.setUser(userMapper.toDto(chat.getUser()));
-                                return chatDTO;
-                            })
-                            .collect(Collectors.toList());
-                    channelDTO.setMessages(chatDTOs);
-
-                    // Map users
-                    List<UserSummaryDTO> userSummaryDTOs = channel.getUsers().stream()
-                            .map(userMapper::toSummaryDto)
-                            .collect(Collectors.toList());
-                    channelDTO.setUsers(userSummaryDTOs);
-
-                    return channelDTO;
+    public List<ChatSummaryDTO> findMessagesByChannelId(Long channelId) {
+        Channel channel = channelRepository.findById(channelId)
+                .orElseThrow(() -> new ResourceNotFoundException("Channel not found"));
+        return channel.getMessages().stream()
+                .map(chat -> {
+                    ChatSummaryDTO chatSummaryDTO = chatMapper.toSummaryDto(chat);
+                    chatSummaryDTO.setUserName(chat.getUser().getUserName());
+                    return chatSummaryDTO;
                 })
                 .collect(Collectors.toList());
     }
 
-    public ChannelDTO findChannelById(Long id) {
-        Channel channel = channelRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Channel not found"));
-
+    private ChannelDTO mapToChannelDTO(Channel channel) {
         ChannelDTO channelDTO = channelMapper.toDto(channel);
 
-        // Map messages
-        List<ChatDTO> chatDTOs = channel.getMessages().stream()
+        List<ChatSummaryDTO> chatSummaryDTOs = channel.getMessages().stream()
                 .map(chat -> {
-                    ChatDTO chatDTO = chatMapper.toDto(chat);
-                    chatDTO.setUser(userMapper.toDto(chat.getUser()));
-                    return chatDTO;
+                    ChatSummaryDTO chatSummaryDTO = chatMapper.toSummaryDto(chat);
+                    chatSummaryDTO.setUserName(chat.getUser().getUserName());
+                    return chatSummaryDTO;
                 })
                 .collect(Collectors.toList());
-        channelDTO.setMessages(chatDTOs);
+        channelDTO.setMessages(chatSummaryDTOs);
 
-        // Map users
         List<UserSummaryDTO> userSummaryDTOs = channel.getUsers().stream()
                 .map(userMapper::toSummaryDto)
                 .collect(Collectors.toList());
@@ -82,20 +75,6 @@ public class ChannelService {
 
         return channelDTO;
     }
-
-    public List<ChatDTO> findMessagesByChannelId(Long channelId) {
-        Channel channel = channelRepository.findById(channelId)
-                .orElseThrow(() -> new ResourceNotFoundException("Channel not found"));
-        List<ChatDTO> chatDTOs = channel.getMessages().stream()
-                .map(chat -> {
-                    ChatDTO chatDTO = chatMapper.toDto(chat);
-                    chatDTO.setUser(userMapper.toDto(chat.getUser()));
-                    return chatDTO;
-                })
-                .collect(Collectors.toList());
-        return chatDTOs;
-    }
-
     public int getParticipantCount(Long channelId) {
         return channelRepository.findById(channelId)
                 .map(channel -> {
