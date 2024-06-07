@@ -8,13 +8,13 @@ public class UserDTO {
     private String password;
     private String firstName;
     private String lastName;
-    private Set<ChannelDTO> channels;
+    private Set<ChannelSummaryDTO> channels;
 
     //Constructors are optional, but added for simplicity and consistency
     public UserDTO() {
     }
     
-    public UserDTO(Long id, String userName, String password, String firstName, String lastName, Set<ChannelDTO> channels) {
+    public UserDTO(Long id, String userName, String password, String firstName, String lastName, Set<ChannelSummaryDTO> channels) {
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -53,10 +53,10 @@ public class UserDTO {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    public Set<ChannelDTO> getChannels() {
+    public Set<ChannelSummaryDTO> getChannels() {
         return channels;
     }
-    public void setChannels(Set<ChannelDTO> channels) {
+    public void setChannels(Set<ChannelSummaryDTO> channels) {
         this.channels = channels;
     }
     

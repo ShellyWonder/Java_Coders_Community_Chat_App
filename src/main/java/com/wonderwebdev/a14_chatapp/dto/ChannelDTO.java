@@ -7,7 +7,7 @@ public class ChannelDTO {
     private String name;
     private String description;
     
-    private List<ChatDTO> messages; // This line establishes the bidirectional relationship
+    private List<ChatSummaryDTO> messages; // This line establishes the bidirectional relationship
     private List<UserSummaryDTO> users; 
     
     
@@ -46,11 +46,11 @@ public class ChannelDTO {
         this.description = description;
     }
 
-    public List<ChatDTO> getMessages() {
+    public List<ChatSummaryDTO> getMessages() {
         return messages;
     }
 
-    public void setMessages(List<ChatDTO> messages) {
+    public void setMessages(List<ChatSummaryDTO> messages) {
         this.messages = messages;
     }
     
