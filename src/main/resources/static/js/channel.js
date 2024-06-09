@@ -37,10 +37,12 @@ export function attachChannelEventListeners() {
 }
 
 function sendMessage(messageContent, chatMessageElement) {
+    const token = sessionStorage.getItem("jwtToken");
     fetch('/api/message', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ message: messageContent })
     })
@@ -54,7 +56,13 @@ function sendMessage(messageContent, chatMessageElement) {
 
 function fetchMessages(messageList) {
     if (!currentChannelId) return;
-    fetch(`/api/channel/${currentChannelId}/messages`)  //("/channel/{id}/messages")
+    const token = sessionStorage.getItem("jwtToken");
+    fetch(`/api/channel/${currentChannelId}/messages`, {
+        method: "GET",
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
     .then(response => response.json())
     .then(messages => {
         updateMessageList(messages, messageList); // Pass messageList to updateMessageList
@@ -87,7 +95,13 @@ function formatDate(date) {
 
 function updateParticipantCount() {
     if (!currentChannelId) return;
-    fetch(`/channel/${currentChannelId}/participants/count`)
+    const token = sessionStorage.getItem("jwtToken");
+    fetch(`/channel/${currentChannelId}/participants/count`, {
+        method: "GET",
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
     .then(response => response.json())
     .then(data => {
         document.querySelector(`#participantCount_${currentChannelId}`).textContent = data.count;

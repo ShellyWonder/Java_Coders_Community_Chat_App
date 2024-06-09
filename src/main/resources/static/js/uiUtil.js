@@ -1,7 +1,13 @@
 // uiUtil.js: Contains utility functions for UI updates that are used across multiple pages.
 
 export function updateNavbarChannels() {
-    fetch("/api/channels")
+    const token = sessionStorage.getItem("jwtToken");
+    fetch("/api/channels", {
+        method: "GET",
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
     .then(response => response.json())
     .then(channels => {
         const dropdownMenu = document.querySelector("#channelsDropdownMenu");
@@ -21,7 +27,13 @@ export function updateNavbarChannels() {
 }
 
 export function updateChannelSelection() {
-    fetch("/api/channels")
+    const token = sessionStorage.getItem("jwtToken");
+    fetch("/api/channels", {
+        method: "GET",
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
     .then(response => response.json())
     .then(channels => {
         const channelsList = document.querySelector(".list-group");
