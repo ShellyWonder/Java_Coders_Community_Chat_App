@@ -60,7 +60,7 @@ public class UserService {
 
     // Private helper method to find user by username
     private User findUserByUserName(String userName) {
-        return userRepository.findByUserName(userName);
+        return userRepository.findByUsername(userName);
     }
 
     // Private helper method to find user by username AND password used by validateUser()
