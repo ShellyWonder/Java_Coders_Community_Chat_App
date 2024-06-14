@@ -33,7 +33,7 @@ public class ChannelRestController {
         return channels;
     }
 
-    @GetMapping("/channel/{id}/messages")
+    @GetMapping("/channel/{id}/messages") 
     public List<ChatSummaryDTO> getAllChannelMessages(@PathVariable Long id) {
         logger.info("Fetching messages for channel ID: {}", id);
         List<ChatSummaryDTO> messages = channelService.findMessagesByChannelId(id);
