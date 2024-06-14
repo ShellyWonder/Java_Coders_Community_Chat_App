@@ -1,5 +1,7 @@
 // uiUtil.js: Contains utility functions for UI updates that are used across multiple pages.
 
+import { checkLoginStatus, handleLoginStatus, attachEventListeners, attachAuthEventListeners } from "./auth.js";
+
 export function updateNavbarChannels() {
     fetch("/api/channels")
     .then(response => response.json())
@@ -24,29 +26,33 @@ export function updateChannelSelection() {
     fetch("/api/channels")
     .then(response => response.json())
     .then(channels => {
-        const channelsList = document.querySelector(".list-group");
+        const channelsList = document.querySelector("ol.list-group"); // Get the list of channels
         if (channelsList) {
             channelsList.innerHTML = "";
             channels.forEach(channel => {
-                channelsList.innerHTML += `<li class="list-group-item">
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.innerHTML = `
                     <div class="ms-2 me-auto">
                         <div class="name">${channel.name}</div>
                         <div class="description">${channel.description}</div>
-                        
                     </div>
                     <a href="/channel/${channel.id}" class="btn btn-primary" data-channel-id="${channel.id}">Join
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill"
-                                  id="participantCount_${channel.id}" 
-                                  title="Current number in chat">0
-                                <span class="visually-hidden">current number in chat</span>
-                            </span>
-                        </a>              
-                </li>`;
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill"
+                              id="participantCount_${channel.id}" 
+                              title="Current number in chat">0
+                            <span class="visually-hidden">current number in chat</span>
+                        </span>
+                    </a>`;
+                channelsList.appendChild(listItem);
             });
         } else {
             console.log("ChannelList element not found");
         }
-    }); 
+    })
+    .catch(error => {
+        console.error('Error fetching channels:', error);
+    });
 }
 
 export function showOrHideNavDropdown(isLoggedIn) {
@@ -77,13 +83,23 @@ export function updateUserNameDisplay() {
 // Event listeners for DOM content loaded
 document.addEventListener("DOMContentLoaded", function () {
     const isLoggedIn = checkLoginStatus();
-    if (isLoggedIn) {
-        updateNavbarChannels(); // Update navbar channels for both pages
-        if (document.querySelector(".list-group")) {
-            updateChannelSelection(); // Only call this in index.html where .list-group exists
+
+    if (window.location.pathname === "/" || window.location.pathname === "/login") {
+        // Allow access to home and login pages without redirection
+        handleLoginStatus(isLoggedIn);
+        attachEventListeners();
+        if (document.querySelector("#loginForm") || document.querySelector("#registrationFormContent")) {
+            attachAuthEventListeners();
         }
-    } else {
+    } else if (!isLoggedIn) {
         // Redirect to login page if not logged in
         window.location.href = "/login";
+    } else {
+        // Update UI for authenticated pages
+        updateNavbarChannels();
+        if (document.querySelector("ol.list-group")) {
+            updateChannelSelection();
+        }
     }
 });
+

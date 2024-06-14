@@ -177,11 +177,11 @@
     </main>
     <!--footer section-->
 
-    <footer th:replace="layout :: footer"></footer>
+    <footer th:replace="~{layout :: footer}"></footer>
 
     <!-- scripts -->
-    <div th:replace="layout :: MainJS"></div>
+    <div th:replace="~{layout :: MainJS}"></div>
     <!--bootstrap core js-->
-    <div th:replace="layout :: BootstrapJS"></div>
-  </body>
+    <div th:replace="~{layout :: BootstrapJS}"></div>
+</body>
 </html>
