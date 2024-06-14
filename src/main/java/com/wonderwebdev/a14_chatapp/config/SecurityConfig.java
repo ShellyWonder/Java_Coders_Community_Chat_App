@@ -33,6 +33,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(authorizeRequests ->
             authorizeRequests
             .requestMatchers("/", "/api/auth/register", "/api/auth/login", "/public/**", "/static/**", "/css/**", "/js/**", "/img/**").permitAll()
+            .requestMatchers("/api/channels/**").authenticated()
             .anyRequest().authenticated()
             )
             .sessionManagement(sessionManagement ->

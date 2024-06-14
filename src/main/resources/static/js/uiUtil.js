@@ -10,7 +10,12 @@ export function updateNavbarChannels() {
             'Authorization': `Bearer ${token}`
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+    })
     .then(channels => {
         const dropdownMenu = document.querySelector("#channelsDropdownMenu");
         if (dropdownMenu) {
@@ -25,6 +30,9 @@ export function updateNavbarChannels() {
                 dropdownMenu.appendChild(listItem);
             });
         }
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
     });
 }
 
@@ -97,21 +105,22 @@ document.addEventListener("DOMContentLoaded", function () {
     const isLoggedIn = checkLoginStatus();
 
     if (window.location.pathname === "/" || window.location.pathname === "/login") {
-        // Allow access to home and login pages without redirection
         handleLoginStatus(isLoggedIn);
         attachEventListeners();
         if (document.querySelector("#loginForm") || document.querySelector("#registrationFormContent")) {
             attachAuthEventListeners();
         }
     } else if (!isLoggedIn) {
-        // Redirect to login page if not logged in
         window.location.href = "/login";
     } else {
-        // Update UI for authenticated pages
-        updateNavbarChannels();
-        if (document.querySelector("ol.list-group")) {
-            updateChannelSelection();
-        }
+        fetchChannels().then(channels => {
+            updateNavbarChannels(channels);
+            if (window.location.pathname === "/") {
+                updateChannelSelection(channels);
+            }
+        });
     }
 });
+
+
 
