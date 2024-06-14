@@ -3,7 +3,7 @@
 import { updateNavbarChannels, showOrHideNavDropdown, showOrHideLogoutButton, updateUserNameDisplay } from './uiUtil.js';
 
 export function checkLoginStatus() {
-    return sessionStorage.getItem("userId") !== null;
+    return sessionStorage.getItem("jwtToken") !== null;
 }
 
 export function handleLoginStatus(isLoggedIn) {
@@ -26,11 +26,11 @@ export function attachAuthEventListeners() {
     document.querySelector("#backBtn")?.addEventListener("click", () => toggleFormVisibility("#registrationForm", "#login"));
 }
 
-export function attachEventListeners() { 
+export function attachEventListeners() {
     document.querySelector("#logoutBtn")?.addEventListener("click", logout);
 }
-    
-   function handleLoginFormSubmit(event) {
+
+function handleLoginFormSubmit(event) {
     event.preventDefault();
     console.log("Form submission captured");
     loginUser();
@@ -52,7 +52,7 @@ function loginUser() {
     .then(response => response.json())
     .then(data => {
         if (data.authenticated) {
-            sessionStorage.setItem("userId", data.userId);
+            sessionStorage.setItem("jwtToken", data.token);
             sessionStorage.setItem("userName", userName);
             handleLoginStatus(true);
             toggleFormVisibility("#login", "#channelSelect");

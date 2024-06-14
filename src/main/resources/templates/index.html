@@ -1,179 +1,153 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" lang="en">
-   <head th:replace="layout :: common-head(title='Java Chat: Home')">
-    </head>
+<head th:replace="layout :: common-head(title='Java Chat: Home')"></head>
 
-  <body class="d-flex flex-column h-100">
+<body class="d-flex flex-column h-100">
     <!--Nav section-->
     <header th:replace="layout :: header"></header>
     <!--Main section-->
     <main class="flex-fill">
-      <div class="container col-xxl-8 px-4 py-5">
-        <div class="row g-5 py-5 row-cols-1 row-cols-lg-2">
-          <div class="col-lg-6 order-last order-lg-first">
-            <h1 class="display-5 1h-1 mb-3">
-              <span class="logoFont">Java Coders Community Chat</span>
-              <br />A Demo Coding Project
-            </h1>
-            <h4 class="lead">
-              Welcome to the Java Coders Community Chat,
-              <strong>a fictious business demo project</strong> by SJ Wonder.
-              This fullstack, responsive Java application allows you to create, read, update and delete your chat comments while in discussion with other users in real time. Showcased here are the following technologies and features:
-            </h4>
-            <ul class="fa-ul pt-2">
-              <li>
-                <span class="bi-li mb-1"
-                  ><i class="bi bi-check-circle-fill"></i></span
-                > Spring Boot MVC
-              </li>
+        <div class="container col-xxl-8 px-4 py-5">
+            <div class="row g-5 py-5 row-cols-1 row-cols-lg-2">
+                <div class="col-lg-6 order-last order-lg-first">
+                    <h1 class="display-5 1h-1 mb-3">
+                        <span class="logoFont">Java Coders Community Chat</span>
+                        <br />A Demo Coding Project
+                    </h1>
+                    <h4 class="lead">
+                        Welcome to the Java Coders Community Chat,
+                        <strong>a fictious business demo project</strong> by SJ Wonder.
+                        This fullstack, responsive Java application allows you to create, read, update and delete your chat comments while in discussion with other users in real time. Showcased here are the following technologies and features:
+                    </h4>
+                    <ul class="fa-ul pt-2">
+                        <li>
+                            <span class="bi-li mb-1"><i class="bi bi-check-circle-fill"></i></span>
+                            Spring Boot MVC using the Repository Pattern
+                        </li>
 
-              <li>
-                <span class="bi-li mb-1"
-                  ><i class="bi bi-check-circle-fill"></i></span
-                > RESTful API
-              </li>
-              
-              <li>
-                <span class="bi-li mb-1"
-                  ><i class="bi bi-check-circle-fill"></i></span
-                > Database-Supported User Authentication
-              </li>
-              <li>
-                <span class="bi-li mb-1"
-                  ><i class="bi bi-check-circle-fill"></i></span
-                > Hibernate/Spring Data JPA
-              </li>
+                        <li>
+                            <span class="bi-li mb-1"><i class="bi bi-check-circle-fill"></i></span>
+                            RESTful API
+                        </li>
 
-              <li>
-                <span class="bi-li mb-1"
-                  ><i class="bi bi-check-circle-fill"></i></span
-                > Repository and Service Layers
-              </li>
-              <li>
-                <span class="bi-li mb-1"
-                  ><i class="bi bi-check-circle-fill"></i></span
-                > Full CRUD Operations
-              </li>
+                        <li>
+                          <span class="bi-li mb-1"><i class="bi bi-check-circle-fill"></i></span>
+                          Spring Security Implementation
+                      </li>
 
-              <li>
-                <span class="bi-li mb-1"
-                  ><i class="bi bi-check-circle-fill"></i></span
-                > Thymeleaf Templating
-              </li>
+                        <li>
+                            <span class="bi-li mb-1"><i class="bi bi-check-circle-fill"></i></span>
+                            MySQL Database
+                        </li>
+                        <li>
+                            <span class="bi-li mb-1"><i class="bi bi-check-circle-fill"></i></span>
+                            Hibernate/Spring Data JPA
+                        </li>
 
-              <li>
-                <span class="bi-li mb-1"
-                  ><i class="bi bi-check-circle-fill"></i></span
-                > Custom CSS and Bootstrap Layout
-              </li>
+                        
+                        <li>
+                            <span class="bi-li mb-1"><i class="bi bi-check-circle-fill"></i></span>
+                            Full CRUD Operations
+                        </li>
 
-              <li>
-                <span class="bi-li mb-1"
-                  ><i class="bi bi-check-circle-fill"></i></span
-                > Javascript Functionalities
-              </li>
-              
-            </ul>
-          </div>
-          
-          <div class="col-lg-6 order-last order-lg-first">
-            <!-- login form content here -->
-              <div id="login" class="col-md-12 pt-3" >
-                     
-                      <form id="loginForm" class="row g-3" method="POST">
-                        <h2 class="d-flex justify-content-start my-2">Welcome!</h2>
-                        <h3 class="lead mb-2">
-                       Please enter your username and password to login.</h3>
-                       <div class="col-12 mb-3">
-                         <label for="username" class="form-label" aria label="username"
-                           >Username</label
-                         >
-                         <input
-                           type="text" id="username"
-                           class="form-control"
-                           
-                         />
-                       </div>
-                        <div class="col-12 mb-3">
-                          <label for="password" class="form-label" aria label="password"
-                            >Password</label
-                          >
-                          <input
-                            type="password" id="password"
-                            class="form-control"
-                           />
-                        </div>
-                        <div class="row">
-                          <div class="col-6 d-flex justify-content-start mb-3">
-                          <input
-                            type="submit"
-                            id="loginBtn"
-                            class="btn btn-primary"
-                            value="Let's Chat!"
-                          />
-                          </div>
-                          <div class="col-6 d-flex justify-content-end mb-3">
-                            <a class="btn btn-danger"  id="registerBtn" href="#">Register</a>
-                           </div>
-                        </div>
-                      </form>
-              </div>
+                        <li>
+                            <span class="bi-li mb-1"><i class="bi bi-check-circle-fill"></i></span>
+                            Thymeleaf Templating
+                        </li>
 
-              <!-- Registration form content here -->
-              <div id="registrationForm" class="col-md-12 pt-3" style="display:none;">
-                <div class="col-12 pt-3">
-                    <h1 class="d-flex justify-content-start my-5">Create Your Account</h1>
-                    <form id="registrationFormContent" class="row g-3" method="POST">
-                        <div class="col-12 mb-3">
-                            <label for="regUsername" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="regUsername" name="username" />
-                        </div>
+                        <li>
+                            <span class="bi-li mb-1"><i class="bi bi-check-circle-fill"></i></span>
+                            Custom CSS and Bootstrap Layout
+                        </li>
 
-                        <div class="col-12 mb-3">
-                            <label for="regPassword" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="regPassword" name="password" />
-                        </div>
-
-                        <div class="col-12 mb-3">
-                            <label for="regFirstName" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="regFirstName" name="firstName" />
-                        </div>
-
-                        <div class="col-12 mb-3">
-                          <label for="regLastName" class="form-label">Last Name</label>
-                          <input type="text" class="form-control" id="regLastName" name="lastName" />
-                      </div>
-
-                      <div class="row mb-3">
-                        <div class="col-6 d-flex justify-content-start">
-                            <input type="submit" class="btn btn-primary" value="Create Account" />
-                        </div>
-                        <div class="col-6 d-flex justify-content-end">
-                            <button type="button" class="btn btn-danger" id="backBtn">Back</button>
-                        </div>
-                      </div>
-                    </form>
+                        <li>
+                            <span class="bi-li mb-1"><i class="bi bi-check-circle-fill"></i></span>
+                            Javascript Functionalities including ES6 Modules, Template Literals, and Fetch API
+                        </li>
+                    </ul>
                 </div>
-              </div>
 
-              <!-- Channel selection content here -->
-              <div id="channelSelect" class="col-md-12 pt-3" style="display:none;">
-                <div class="card">
-                  <h3 class="card-header d-flex justify-content-center">
-                    Welcome, &nbsp;<span id="userNameDisplay">User</span>!
-                  </h3>
-                  <div class="card-body">
-                    <h5 class="card-title mt-2"> Select a channel to begin.</h5>
+                <div class="col-lg-6 order-last order-lg-first">
+                    <!-- login form content here -->
+                    <div id="login" class="col-md-12 pt-3">
 
-                    <!-- frontend JavaScript to handle the dynamic rendering of the channel list -->
-                      <ol class="list-group list-group-numbered"></ol> 
-               </div>  
-                </div>  
-              </div>
-          </div>
+                        <form id="loginForm" class="row g-3" method="POST">
+                            <h2 class="d-flex justify-content-start my-2">Welcome!</h2>
+                            <h3 class="lead mb-2">
+                                Please enter your username and password to login.</h3>
+                            <div class="col-12 mb-3">
+                                <label for="username" class="form-label" aria-label="username">Username</label>
+                                <input type="text" id="username" class="form-control" />
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="password" class="form-label" aria-label="password">Password</label>
+                                <input type="password" id="password" class="form-control" />
+                            </div>
+                            <div class="row">
+                                <div class="col-6 d-flex justify-content-start mb-3">
+                                    <input type="submit" id="loginBtn" class="btn btn-primary" value="Let's Chat!" />
+                                </div>
+                                <div class="col-6 d-flex justify-content-end mb-3">
+                                    <a class="btn btn-danger" id="registerBtn" href="#">Register</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Registration form content here -->
+                    <div id="registrationForm" class="col-md-12 pt-3" style="display:none;">
+                        <div class="col-12 pt-3">
+                            <h1 class="d-flex justify-content-start my-5">Create Your Account</h1>
+                            <form id="registrationFormContent" class="row g-3" method="POST">
+                                <div class="col-12 mb-3">
+                                    <label for="regUsername" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="regUsername" name="username" />
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <label for="regPassword" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="regPassword" name="password" />
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <label for="regFirstName" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="regFirstName" name="firstName" />
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <label for="regLastName" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="regLastName" name="lastName" />
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-6 d-flex justify-content-start">
+                                        <input type="submit" class="btn btn-primary" value="Create Account" />
+                                    </div>
+                                    <div class="col-6 d-flex justify-content-end">
+                                        <button type="button" class="btn btn-danger" id="backBtn">Back</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Channel selection content here -->
+                    <div id="channelSelect" class="col-md-12 pt-3" style="display:none;">
+                        <div class="card">
+                            <h3 class="card-header d-flex justify-content-center">
+                                Welcome, &nbsp;<span id="userNameDisplay">User</span>!
+                            </h3>
+                            <div class="card-body">
+                                <h5 class="card-title mt-2"> Select a channel to begin.</h5>
+
+                                <!-- frontend JavaScript to handle the dynamic rendering of the channel list -->
+                                <ol class="list-group list-group-numbered"></ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        </div>
-      </div>
     </main>
     <!--footer section-->
 
@@ -185,3 +159,4 @@
     <div th:replace="~{layout :: BootstrapJS}"></div>
 </body>
 </html>
+

@@ -3,7 +3,13 @@
 import { checkLoginStatus, handleLoginStatus, attachEventListeners, attachAuthEventListeners } from "./auth.js";
 
 export function updateNavbarChannels() {
-    fetch("/api/channels")
+    const token = sessionStorage.getItem("jwtToken");
+    fetch("/api/channels", {
+        method: "GET",
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
     .then(response => response.json())
     .then(channels => {
         const dropdownMenu = document.querySelector("#channelsDropdownMenu");
@@ -23,7 +29,13 @@ export function updateNavbarChannels() {
 }
 
 export function updateChannelSelection() {
-    fetch("/api/channels")
+    const token = sessionStorage.getItem("jwtToken");
+    fetch("/api/channels", {
+        method: "GET",
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
     .then(response => response.json())
     .then(channels => {
         const channelsList = document.querySelector("ol.list-group"); // Get the list of channels

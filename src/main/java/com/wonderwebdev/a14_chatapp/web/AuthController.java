@@ -1,5 +1,6 @@
 package com.wonderwebdev.a14_chatapp.web;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wonderwebdev.a14_chatapp.domain.User;
 import com.wonderwebdev.a14_chatapp.dto.UserDTO;
+import com.wonderwebdev.a14_chatapp.security.JwtUtil;
 import com.wonderwebdev.a14_chatapp.service.UserService;
 
 
@@ -19,20 +21,25 @@ import com.wonderwebdev.a14_chatapp.service.UserService;
 public class AuthController {
         
     private UserService userService;
+    private JwtUtil jwtUtil;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> loginUser(@RequestBody UserDTO loginUserDTO) {
         UserDTO userDTO = userService.validateUser(loginUserDTO.getUserName(), loginUserDTO.getPassword());
-        
-            if ((userDTO != null)) {
-                return ResponseEntity.ok(Map.of("authenticated", true, "userId", userDTO.getId()));
-            } else {
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("authenticated", false));
-            }
+        if (userDTO != null) {
+            String token = jwtUtil.generateToken(userDTO.getUserName());
+            Map<String, Object> response = new HashMap<>();
+            response.put("authenticated", true);
+            response.put("token", token);
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("authenticated", false));
+        }
     }
 
     @PostMapping("/register")
