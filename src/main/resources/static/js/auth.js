@@ -1,6 +1,6 @@
-// auth.js: Handles form submission, user authentication, user registration, user display, and user logout.
+// auth.js: Handles authentication-related logic.
 
-import { updateNavbarChannels, updateChannelSelection,showOrHideNavDropdown, showOrHideLogoutButton, updateUserNameDisplay } from './uiUtil.js';
+import { fetchAndUpdateChannels, showOrHideNavDropdown, showOrHideLogoutButton, updateUserNameDisplay } from './uiUtil.js';
 
 export function checkLoginStatus() {
     return sessionStorage.getItem("jwtToken") !== null;
@@ -56,10 +56,7 @@ function loginUser() {
             sessionStorage.setItem("userName", userName);
             handleLoginStatus(true);
             toggleFormVisibility("#login", "#channelSelect");
-            updateNavbarChannels();
-            if (window.location.pathname === "/") {
-                updateChannelSelection(); // Ensure channel selection is updated on the index page
-            }
+            fetchAndUpdateChannels(); // Only call here after a successful login
         } else {
             alert("Invalid username or password. Please try again.");
         }

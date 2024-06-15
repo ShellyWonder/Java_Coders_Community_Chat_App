@@ -1,33 +1,48 @@
-// main.js: Initializes the application and handles login status checks.
+// main.js: Handles the main initialization logic, including attaching event listeners and fetching the initial data.
 
-import { checkLoginStatus, handleLoginStatus, 
-         attachAuthEventListeners, attachEventListeners } from './auth.js';
-import { updateNavbarChannels, updateChannelSelection } from './uiUtil.js';
+import { checkLoginStatus, handleLoginStatus, attachAuthEventListeners, attachEventListeners } from './auth.js';
+import { fetchAndUpdateChannels } from './uiUtil.js';
 import { attachChannelEventListeners } from './channel.js';
 
-// user login check and update
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", onDOMContentLoaded);
+
+function onDOMContentLoaded() {
     console.log("DOMContentLoaded event fired");
     const isLoggedIn = checkLoginStatus();
-    handleLoginStatus(isLoggedIn);
-    attachEventListeners();
 
-    if (document.querySelector("#loginForm") || document.querySelector("#registrationFormContent")) {
-        attachAuthEventListeners();
-    }
+    handleInitialPageLoad(isLoggedIn);
+    attachEventListeners();
 
     if (document.querySelector(".channel")) {
         attachChannelEventListeners();
         console.log("Channel event listeners attached");
     }
 
-
-    if (isLoggedIn) {
-        updateNavbarChannels();
-        if (document.querySelector("ol.list-group")) {
-            updateChannelSelection(); // Ensure this is called when the user is logged in and on the index page
-        }
-
+    // Only call fetchAndUpdateChannels if the user is already logged in before the login action
+    if (isLoggedIn && window.location.pathname === "/") {
+        fetchAndUpdateChannels();
     }
-});
+}
 
+function handleInitialPageLoad(isLoggedIn) {
+    if (isLoginOrHomePage()) {
+        handleLoginStatus(isLoggedIn);
+        attachAuthEventListenersIfNeeded();
+    } else if (!isLoggedIn) {
+        redirectToLogin();
+    }
+}
+
+function isLoginOrHomePage() {
+    return window.location.pathname === "/" || window.location.pathname === "/login";
+}
+
+function attachAuthEventListenersIfNeeded() {
+    if (document.querySelector("#loginForm") || document.querySelector("#registrationFormContent")) {
+        attachAuthEventListeners();
+    }
+}
+
+function redirectToLogin() {
+    window.location.href = "/login";
+}

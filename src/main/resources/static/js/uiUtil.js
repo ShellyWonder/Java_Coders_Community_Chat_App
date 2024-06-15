@@ -1,9 +1,12 @@
-// uiUtil.js: Contains utility functions for UI updates that are used across multiple pages.
+// uiUtil.js: Handles UI updates that are used across multiple pages.
 
-import { checkLoginStatus, handleLoginStatus, attachEventListeners, attachAuthEventListeners } from "./auth.js";
+let channelsFetched = false;
 
-export function updateNavbarChannels() {
+export function fetchAndUpdateChannels() {
     const token = sessionStorage.getItem("jwtToken");
+    if (channelsFetched) return;
+    channelsFetched = true;
+    console.log("Fetching channels with token:", token); // Log the token
     fetch("/api/channels", {
         method: "GET",
         headers: {
@@ -17,9 +20,23 @@ export function updateNavbarChannels() {
         return response.json();
     })
     .then(channels => {
-        const dropdownMenu = document.querySelector("#channelsDropdownMenu");
-        if (dropdownMenu) {
-            dropdownMenu.innerHTML = "";
+        if (Array.isArray(channels)) {
+            updateNavbarChannels(channels);
+            updateChannelSelection(channels);
+        } else {
+            console.error('Expected an array of channels, but received:', channels);
+        }
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+}
+
+function updateNavbarChannels(channels) {
+    const dropdownMenu = document.querySelector("#channelsDropdownMenu");
+    if (dropdownMenu) {
+        dropdownMenu.innerHTML = "";
+        if (Array.isArray(channels)) {
             channels.forEach(channel => {
                 const listItem = document.createElement("li");
                 const link = document.createElement("a");
@@ -29,26 +46,20 @@ export function updateNavbarChannels() {
                 listItem.appendChild(link);
                 dropdownMenu.appendChild(listItem);
             });
+        } else {
+            console.error('Expected an array of channels, but received:', channels);
         }
-    })
-    .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-    });
+    } else {
+        console.error("Dropdown menu element not found");
+    }
 }
 
-export function updateChannelSelection() {
-    const token = sessionStorage.getItem("jwtToken");
-    fetch("/api/channels", {
-        method: "GET",
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-    .then(response => response.json())
-    .then(channels => {
-        const channelsList = document.querySelector("ol.list-group"); // Get the list of channels
-        if (channelsList) {
-            channelsList.innerHTML = "";
+
+function updateChannelSelection(channels) {
+    const channelsList = document.querySelector("ol.list-group");
+    if (channelsList) {
+        channelsList.innerHTML = "";
+        if (Array.isArray(channels)) {
             channels.forEach(channel => {
                 const listItem = document.createElement('li');
                 listItem.className = 'list-group-item';
@@ -67,19 +78,18 @@ export function updateChannelSelection() {
                 channelsList.appendChild(listItem);
             });
         } else {
-            console.log("ChannelList element not found");
+            console.error('Expected an array of channels, but received:', channels);
         }
-    })
-    .catch(error => {
-        console.error('Error fetching channels:', error);
-    });
+    } else {
+        console.error("Channels list element not found");
+    }
 }
 
 export function showOrHideNavDropdown(isLoggedIn) {
     const channelDropdown = document.querySelector("#channelsDropdown");
     if (channelDropdown) {
         channelDropdown.style.display = isLoggedIn ? "block" : "none";
-        if (isLoggedIn) updateNavbarChannels();
+        if (isLoggedIn && !channelsFetched) fetchAndUpdateChannels();
     }
 }
 
@@ -100,27 +110,12 @@ export function updateUserNameDisplay() {
     }
 }
 
-// Event listeners for DOM content loaded
-document.addEventListener("DOMContentLoaded", function () {
-    const isLoggedIn = checkLoginStatus();
-
-    if (window.location.pathname === "/" || window.location.pathname === "/login") {
-        handleLoginStatus(isLoggedIn);
-        attachEventListeners();
-        if (document.querySelector("#loginForm") || document.querySelector("#registrationFormContent")) {
-            attachAuthEventListeners();
-        }
-    } else if (!isLoggedIn) {
-        window.location.href = "/login";
-    } else {
-        fetchChannels().then(channels => {
-            updateNavbarChannels(channels);
-            if (window.location.pathname === "/") {
-                updateChannelSelection(channels);
-            }
-        });
-    }
+// Reset the flag when the page is loaded, reducing the opportunity for redundant fetches
+document.addEventListener("DOMContentLoaded", () => {
+    channelsFetched = false;
 });
+
+
 
 
 
