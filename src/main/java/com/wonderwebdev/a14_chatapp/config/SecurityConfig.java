@@ -32,8 +32,9 @@ public class SecurityConfig {
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(authorizeRequests ->
             authorizeRequests
-            .requestMatchers("/", "/api/auth/register", "/api/auth/login", "/public/**", "/static/**", "/css/**", "/js/**", "/img/**").permitAll()
-            .requestMatchers("/api/channels/**").authenticated()
+            .requestMatchers("/", "/api/auth/register", "/api/auth/login", "/public/**", "/static/**", 
+            "/css/**", "/js/**", "/img/**", "/img/favicon/**", "img/favicon/favicon.ico").permitAll()
+            .requestMatchers("/api/channels/**", "/api/channel/{id}/messages").authenticated()
             .anyRequest().authenticated()
             )
             .sessionManagement(sessionManagement ->

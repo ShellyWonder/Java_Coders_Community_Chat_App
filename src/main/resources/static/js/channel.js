@@ -7,6 +7,7 @@ export function attachChannelEventListeners() {
     const messageBtn = document.querySelector('#messageBtn');
     const chatMessage = document.querySelector('#chatMessage');
     const messageList = document.querySelector('#messageList'); // Select messageList here
+ 
 
     if (messageBtn) {
         messageBtn.addEventListener('click', function (event) {
@@ -38,6 +39,7 @@ export function attachChannelEventListeners() {
 
 function sendMessage(messageContent, chatMessageElement) {
     const token = sessionStorage.getItem("jwtToken");
+    console.log("Sending message with token:", token);
     fetch('/api/message', {
         method: 'POST',
         headers: {
@@ -57,13 +59,17 @@ function sendMessage(messageContent, chatMessageElement) {
 function fetchMessages(messageList) {
     if (!currentChannelId) return;
     const token = sessionStorage.getItem("jwtToken");
+    console.log("Fetching messages with token:", token);
     fetch(`/api/channel/${currentChannelId}/messages`, {
         method: "GET",
         headers: {
             'Authorization': `Bearer ${token}`
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log("Fetch response status:", response.status);
+        return response.json();
+    })
     .then(messages => {
         updateMessageList(messages, messageList); // Pass messageList to updateMessageList
         console.log('Messages fetched:', messages);
@@ -96,6 +102,7 @@ function formatDate(date) {
 function updateParticipantCount() {
     if (!currentChannelId) return;
     const token = sessionStorage.getItem("jwtToken");
+    console.log("Updating participant count with token:", token);
     fetch(`/channel/${currentChannelId}/participants/count`, {
         method: "GET",
         headers: {

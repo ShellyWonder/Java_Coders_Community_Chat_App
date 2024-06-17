@@ -46,3 +46,4 @@ function attachAuthEventListenersIfNeeded() {
 function redirectToLogin() {
     window.location.href = "/login";
 }
+
