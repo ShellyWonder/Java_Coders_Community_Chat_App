@@ -2,6 +2,8 @@ package com.wonderwebdev.a14_chatapp.service;
 
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.stream.Collectors;
@@ -31,10 +33,9 @@ public class ChannelService {
         this.userMapper = userMapper;
     }
 
-    public ChannelDTO findChannelById(Long id) {
-        Channel channel = channelRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Channel not found"));
-        return mapToChannelDTO(channel);
+    public Optional<ChannelDTO> findChannelById(Long id) {
+        return channelRepository.findById(id)
+                .map(channel -> new ChannelDTO(channel.getId(), channel.getName(), channel.getDescription()));
     }
 
     public List<ChannelDTO> findAllChannels() {
