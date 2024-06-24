@@ -1,5 +1,4 @@
 // auth.js: Handles authentication-related logic.
-
 import { fetchAndUpdateChannels, showOrHideNavDropdown, showOrHideLogoutButton, updateUserNameDisplay } from './uiUtil.js';
 
 export function checkLoginStatus() {
@@ -24,9 +23,6 @@ export function attachAuthEventListeners() {
     document.querySelector("#registrationFormContent")?.addEventListener("submit", handleRegistrationFormSubmit);
     document.querySelector("#registerBtn")?.addEventListener("click", () => toggleFormVisibility("#login", "#registrationForm"));
     document.querySelector("#backBtn")?.addEventListener("click", () => toggleFormVisibility("#registrationForm", "#login"));
-}
-
-export function attachEventListeners() {
     document.querySelector("#logoutBtn")?.addEventListener("click", logout);
 }
 
