@@ -32,10 +32,12 @@ public class SecurityConfig {
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(authorizeRequests ->
             authorizeRequests
-            .requestMatchers("/", "/api/auth/register", "/api/auth/login", "/public/**", "/static/**", 
-            "/css/**", "/js/**", "/img/**", "/img/favicon/**", "img/favicon/favicon.ico").permitAll()
-            .requestMatchers("/api/channels/**", "/api/channel/{id}/messages").authenticated()
-            .anyRequest().authenticated()
+                            .requestMatchers("/", "/api/auth/register", "/api/auth/login", "/public/**", "/static/**", 
+                                            "/css/**", "/js/**", "/img/**", "/img/favicon/**", "img/favicon/favicon.ico").permitAll()
+                            .requestMatchers("/api/channels/**", "/api/channel/{id}", 
+                                            "/api/channel/{id}/messages","/api/channel/{id}/participants/count",
+                                            "/api/channel/{id}/view").authenticated()
+                            .anyRequest().authenticated()
             )
             .sessionManagement(sessionManagement ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
