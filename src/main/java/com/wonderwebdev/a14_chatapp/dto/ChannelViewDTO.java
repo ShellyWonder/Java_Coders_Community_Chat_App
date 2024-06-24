@@ -8,6 +8,8 @@ public class ChannelViewDTO {
     private List<ChatSummaryDTO> messages;
     private int participantCount;
     
+    public ChannelViewDTO() {
+    }
     
     // Constructors, getters, and setters
     public ChannelViewDTO(ChannelDTO channel, List<ChatSummaryDTO> messages, int participantCount) {
