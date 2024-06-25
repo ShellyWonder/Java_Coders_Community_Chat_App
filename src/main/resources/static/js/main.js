@@ -23,7 +23,7 @@ function onDOMContentLoaded() {
     }
     
     // Attach event listeners and initialize the channel page if on a channel
-    if (window.location.pathname.startsWith("/channel/")) {
+    if (window.location.pathname.startsWith("/api/channel/")) {
         initializeChannelPage();
     }
     
