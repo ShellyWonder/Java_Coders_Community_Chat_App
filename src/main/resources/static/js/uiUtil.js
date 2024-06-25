@@ -1,35 +1,87 @@
-// uiUtil.js: Handles UI updates that are used across multiple pages.
+ // uiUtil.js: Handles UI updates that are used across multiple pages.
+ //channel related functions used outside channel.html have been moved from channel.js to uiUtil.js 
+// to keep the code organized and available to future features.
+
+import { checkLoginStatus} from './auth.js';
+import { populateChannelDetails, updateMessageList } from './channel.js';
 
 let channelsFetched = false;
 
-export function fetchAndUpdateChannels() {
+//handles join button on index.html #channelSelect
+export function attachJoinChannelEventListener() {
+    const channelsList = document.querySelector('#channelsList');
+    if (channelsList) {
+        channelsList.addEventListener('click', joinChannelHandler);
+    }
+}
+
+async function joinChannelHandler(event) {
+    const joinButton = event.target.closest('.btn-primary[data-channel-id]');
+    if (joinButton) {
+        event.preventDefault();  // Prevent default button behavior
+        const currentChannelId = joinButton.getAttribute('data-channel-id');
+        const isLoggedIn = checkLoginStatus();
+
+        if (isLoggedIn) {
+            console.log('Channel selected:', currentChannelId);
+           const token = sessionStorage.getItem("jwtToken");
+           //Fetch the channel view page for the selected channel
+           try {
+                const response = await fetch (`/api/channel/${currentChannelId}/view`, {
+                    method: "GET",
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+            if(response.ok){
+                const channelViewData = await response.json();
+
+                console.log("Channel view data:", channelViewData);
+                populateChannelDetails(channelViewData.channel, "");
+                updateMessageList(channelViewData.messages);
+                updateParticipantCount(channelViewData.participantCount);
+                // Optionally update the URL without reloading the page
+                window.history.pushState({}, "", `/channel/${currentChannelId}`);
+            } else {
+                throw new Error('Failed to fetch channel view data');
+            }
+            
+           } catch (error) {
+                console.error('Error fetching channel view data:', error);
+           }
+
+        } else {
+            alert('You must be logged in to join a channel.');
+            window.location.href = '/login'; // Redirect to login page
+        }
+    }
+}
+
+export async function fetchAndUpdateChannels() {
     const token = sessionStorage.getItem("jwtToken");
     if (channelsFetched) return;
     channelsFetched = true;
     console.log("Fetching channels with token:", token); // Log the token
-    fetch("/api/channels", {
-        method: "GET",
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-    .then(response => {
+    try {
+        const response = await fetch("/api/channels", {
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
-        return response.json();
-    })
-    .then(channels => {
+        const channels = await response.json();
         if (Array.isArray(channels)) {
             updateNavbarChannels(channels);
             updateChannelSelection(channels);
         } else {
             console.error('Expected an array of channels, but received:', channels);
         }
-    })
-    .catch(error => {
+    } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
-    });
+    }
 }
 
 function updateNavbarChannels(channels) {
@@ -54,28 +106,58 @@ function updateNavbarChannels(channels) {
     }
 }
 
+export async function updateParticipantCount(channelId) {
+    const token = sessionStorage.getItem("jwtToken");
+    console.log("Updating participant count with token:", token);
+    try {
+        const response = await fetch(`/api/channel/${channelId}/participants/count`, {
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (response.ok) {
+            const participantCount = await response.json();
+            const participantCountElement = document.querySelector(`#participantCount_${channelId}`);
+            if (participantCountElement) {
+                participantCountElement.textContent = participantCount;
+            } else {
+                console.error(`Element with ID participantCount_${channelId} not found`);
+            }
+        } else {
+            console.error('Failed to fetch participant count:', response.status);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
 
 function updateChannelSelection(channels) {
-    const channelsList = document.querySelector("ol.list-group");
+    const channelsList = document.querySelector('#channelsList');
     if (channelsList) {
         channelsList.innerHTML = "";
         if (Array.isArray(channels)) {
             channels.forEach(channel => {
+                console.log('Processing channel:', channel); // Add debug log
                 const listItem = document.createElement('li');
                 listItem.className = 'list-group-item';
                 listItem.innerHTML = `
                     <div class="ms-2 me-auto">
-                        <div class="name">${channel.name}</div>
-                        <div class="description">${channel.description}</div>
+                        <h1 class="name" id="channelName_${channel.id}"></h1>
+                        <p class="description" id="channelDescription_${channel.id}"></p>
                     </div>
-                    <a href="/channel/${channel.id}" class="btn btn-primary" data-channel-id="${channel.id}">Join
+                    <button id="joinButton" class="btn btn-primary" data-channel-id="${channel.id}">Join
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill"
-                              id="participantCount_${channel.id}" 
-                              title="Current number in chat">0
+                            id="participantCount_${channel.id}" 
+                            title="Current number in chat">0
                             <span class="visually-hidden">current number in chat</span>
                         </span>
-                    </a>`;
+                    </button>`;
                 channelsList.appendChild(listItem);
+                // Populate channel details for each channel
+                populateChannelDetails(channel);
+                // Update participant count for each channel
+                updateParticipantCount(channel.id);
             });
         } else {
             console.error('Expected an array of channels, but received:', channels);
@@ -101,12 +183,12 @@ export function showOrHideLogoutButton(isLoggedIn) {
 }
 
 export function updateUserNameDisplay() {
-    const userNameDisplay = document.querySelector("#userNameDisplay");
-    const userName = sessionStorage.getItem("userName");
-    if (userName) {
-        userNameDisplay.textContent = userName;
+    const userNameElement = document.querySelector("#userName");
+    if (userNameElement) {
+        const userName = sessionStorage.getItem("userName");
+        userNameElement.textContent = userName || "User";
     } else {
-        userNameDisplay.textContent = "Not logged in";
+        console.error("Element with ID userName not found");
     }
 }
 
