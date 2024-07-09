@@ -34,9 +34,9 @@ public class SecurityConfig {
             authorizeRequests
                             .requestMatchers("/", "/api/auth/register", "/api/auth/login", "/public/**", "/static/**", 
                                             "/css/**", "/js/**", "/img/**", "/img/favicon/**", "img/favicon/favicon.ico").permitAll()
-                            .requestMatchers("/api/channels/**", "/api/channel/{id}", 
-                                            "/api/channel/{id}/messages","/api/channel/{id}/participants/count",
-                                            "/api/channel/{id}/view").authenticated()
+                                            // Allow access to channel view endpoint--authentication handled in ChannelViewController
+                                            .requestMatchers("/channel/**").permitAll() 
+                                            .requestMatchers("/api/channels/**", "/api/channel/**").authenticated() // Secure API endpoints
                             .anyRequest().authenticated()
             )
             .sessionManagement(sessionManagement ->
