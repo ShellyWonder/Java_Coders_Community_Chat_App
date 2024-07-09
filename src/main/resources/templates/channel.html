@@ -5,7 +5,7 @@
 
   <body class="d-flex flex-column h-100">
     <!--Nav section-->
-    <header th:replace="layout :: header"></header>
+  <header th:replace="~{layout :: header}"></header>
     <!--Main section-->
     <main class="flex-fill" >
       <div class="container col-xxl-8 px-4 py-5">
@@ -15,44 +15,28 @@
                 <h3 class=" d-flex justify-content-start display-5 1h-1 mb-3">
                   <span class="logoFont">Java Coders Community Chat</span>
                   </h3>
+                  <div id="channelContent">
+                    <h1 id="channelName"></h1>
+                    <p id="channelDescription"></p>
+                  </div>
               </div>
               <div class="col-3">
                 <h3 class="logoFont d-flex justify-content-end">
-                  Welcome, &nbsp;<span id="userNameDisplay">User</span>!
+                  Welcome, &nbsp; <span id="userName"></span>!
                 </h3>
               </div>
             </div>  
-            <div class="row channel">
+            <div class="row" id="chatChannel">
               
-              <div class="name" id="channelName"></div>
-              <div class="description" id="channelDescription"></div>
-
-              <!-- //Messages are inserted here via JavaScript -->
-              <div id="messages" class="mt-3 border border-dark rounded">
-                <!--Messages are inserted here via JavaScript-->
-                <ul id="messageList"></ul>
+              <div id="messageContainer">
+                <!-- Messages will be populated here -->
+                <ul>
+                  <li id="messageList"></li>
+                </ul> 
+                <textarea id="chatMessage" placeholder="Type your message..."></textarea>
+                <button id="messageBtn">Send</button>
               </div>
-         
-              <!--Comment Input Form-->
-             <form class="row g-3" method="POST">
-              <div class="col-12 mb-3">
-                <label for="message" class="form-label" aria label="message" aria-placeholder="Chat Here"
-                  ></label
-                >
-                <input
-                  type="text" id="chatMessage"
-                  class="form-control"
-                    />
-              </div>
-               
-              <div class="col justify-content-start mb-3">
-                <button
-                  type="submit"
-                  id="messageBtn"
-                  class="btn btn-primary">
-                  Let's Chat!</button>
-               </div>
-             </form>
+            </div>
           </div>   
              
         </div>
