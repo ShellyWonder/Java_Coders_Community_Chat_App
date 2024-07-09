@@ -3,7 +3,7 @@
 // to keep the code organized and available to future features.
 
 import { checkLoginStatus} from './auth.js';
-import { populateChannelDetails, updateMessageList } from './channel.js';
+import { populateChannelDetails} from './channel.js';
 
 let channelsFetched = false;
 
@@ -18,44 +18,47 @@ export function attachJoinChannelEventListener() {
 async function joinChannelHandler(event) {
     const joinButton = event.target.closest('.btn-primary[data-channel-id]');
     if (joinButton) {
-        event.preventDefault();  // Prevent default button behavior
+        event.preventDefault();
         const currentChannelId = joinButton.getAttribute('data-channel-id');
         const isLoggedIn = checkLoginStatus();
 
         if (isLoggedIn) {
             console.log('Channel selected:', currentChannelId);
-           const token = sessionStorage.getItem("jwtToken");
-           //Fetch the channel view page for the selected channel
-           try {
-                const response = await fetch (`/api/channel/${currentChannelId}/view`, {
+            const token = sessionStorage.getItem("jwtToken");
+            console.log('JWT Token:', token);  // Log the token to verify
+
+            // Fetch the channel view data
+            try {
+                const response = await fetch(`/api/channel/${currentChannelId}/view`, {
                     method: "GET",
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-            if(response.ok){
-                const channelViewData = await response.json();
 
-                console.log("Channel view data:", channelViewData);
-                populateChannelDetails(channelViewData.channel, "");
-                updateMessageList(channelViewData.messages);
-                updateParticipantCount(channelViewData.participantCount);
-                // Optionally update the URL without reloading the page
-                window.history.pushState({}, "", `/channel/${currentChannelId}`);
-            } else {
-                throw new Error('Failed to fetch channel view data');
-            }
-            
-           } catch (error) {
+                if (response.ok) {
+                    const channelViewData = await response.json();
+                    console.log("Channel view data:", channelViewData);
+
+                    // Save channel view data to sessionStorage 
+                    sessionStorage.setItem('currentChannelViewData', JSON.stringify(channelViewData));
+                    
+                    // Redirect to the channel view, include the token in the URL
+                    window.location.href = `/channel/${currentChannelId}?token=${token}`; // Include token in URL
+
+                } else {
+                    throw new Error('Failed to fetch channel view data');
+                }
+            } catch (error) {
                 console.error('Error fetching channel view data:', error);
-           }
-
+            }
         } else {
             alert('You must be logged in to join a channel.');
             window.location.href = '/login'; // Redirect to login page
         }
     }
 }
+
 
 export async function fetchAndUpdateChannels() {
     const token = sessionStorage.getItem("jwtToken");
@@ -191,6 +194,7 @@ export function updateUserNameDisplay() {
         console.error("Element with ID userName not found");
     }
 }
+
 
 // Reset the flag when the page is loaded, reducing the opportunity for redundant fetches
 document.addEventListener("DOMContentLoaded", () => {
