@@ -1,5 +1,5 @@
-//global variable to store the current channel id thereby avoiding 
-//code duplication and curcular dependency issues
+//global variable storing the current channel id thereby avoiding 
+//code duplication and circular dependency issues
 
 let currentChannelId = null;
 
