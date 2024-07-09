@@ -4,6 +4,7 @@
 
 import { checkLoginStatus} from './auth.js';
 import { populateChannelDetails} from './channel.js';
+import { setCurrentChannelId } from './shared.js';
 
 let channelsFetched = false;
 
@@ -59,7 +60,6 @@ async function joinChannelHandler(event) {
     }
 }
 
-
 export async function fetchAndUpdateChannels() {
     const token = sessionStorage.getItem("jwtToken");
     if (channelsFetched) return;
@@ -87,6 +87,23 @@ export async function fetchAndUpdateChannels() {
     }
 }
 
+function addNavbarDropdownEventListener(link) {
+    link.addEventListener("click", (event) => {
+        event.preventDefault();
+        const channelId = event.dataset.channelId;
+        // const token = sessionStorage.getItem("jwtToken");
+        console.log("Channel selected:", channelId);
+        if (channelId) {
+            // Set the current channel ID in the shared module and navigate to the channel view
+            setCurrentChannelId(channelId);
+            // window.location.href = `/channel/${channelId}?token=${token}`;
+            window.location.href = `/channel/${channelId}`;
+        } else {
+            console.error("Channel ID not found in event data");
+        }
+    });
+}
+
 function updateNavbarChannels(channels) {
     const dropdownMenu = document.querySelector("#channelsDropdownMenu");
     if (dropdownMenu) {
@@ -98,6 +115,9 @@ function updateNavbarChannels(channels) {
                 link.href = `/channel/${channel.id}`;
                 link.textContent = channel.name;
                 link.className = "dropdown-item";
+                //Store channel ID in a data attribute
+                link.dataset.channelId = channel.id;
+                addNavbarDropdownEventListener(link);
                 listItem.appendChild(link);
                 dropdownMenu.appendChild(listItem);
             });
@@ -194,6 +214,7 @@ export function updateUserNameDisplay() {
         console.error("Element with ID userName not found");
     }
 }
+
 
 
 // Reset the flag when the page is loaded, reducing the opportunity for redundant fetches
