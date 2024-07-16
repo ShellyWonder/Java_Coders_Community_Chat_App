@@ -48,48 +48,22 @@ function handleDirectChannelAccess() {
     }
 }
 
-async function joinChannelHandler(event) {
-    const joinButton = event.target.closest('.btn-primary[data-channel-id]');
-    if (joinButton) {
-        event.preventDefault(); 
-        const currentChannelId = joinButton.getAttribute('data-channel-id');
-        const isLoggedIn = checkLoginStatus();
-
-        if (isLoggedIn) {
-            console.log('Channel selected:', currentChannelId);
-            const token = sessionStorage.getItem("jwtToken");
-
-            // Fetch the channel view data
-            try {
-                const response = await fetch(`/api/channel/${currentChannelId}/view`, {
-                    method: "GET",
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (response.ok) {
-                    const channelViewData = await response.json();
-                    console.log("Channel view data:", channelViewData);
-
-                    // Save channel view data to sessionStorage 
-                    sessionStorage.setItem('currentChannelViewData', JSON.stringify(channelViewData));
-                    
-                    // Navigate to the channel view
-                    window.location.href = `/channel/${currentChannelId}?token=${token}`; // Force page reload with token
-
-                } else {
-                    throw new Error('Failed to fetch channel view data');
-                }
-            } catch (error) {
-                console.error('Error fetching channel view data:', error);
-            }
-        } else {
-            alert('You must be logged in to join a channel.');
-            window.location.href = '/login'; // Redirect to login page
-        }
+function handleInitialPageLoad(isLoggedIn) {
+    if (isLoggedIn) {
+        console.log("User is logged in");
+        // Perform actions for logged-in users
+        fetchAndUpdateChannels();  // Fetch and update the list of channels
+        showOrHideNavDropdown(true); // Show the navigation dropdown
+        updateUserNameDisplay(); // Update the user name display
+        showOrHideLogoutButton(true); // Show the logout button
+        
+    } else {
+        console.log("User is not logged in");
+        // Perform actions for guests
+        showOrHideNavDropdown(false); // Hide the navigation dropdown
     }
 }
+
 
 function attachAuthEventListenersIfNeeded() {
     if (document.querySelector("#loginForm") || document.querySelector("#registrationFormContent")) {
@@ -103,9 +77,4 @@ function attachJoinChannelEventListenerIfNeeded() {
     }
 }
 
-function attachJoinChannelEventListener() {
-    const channelsList = document.querySelector('#channelsList');
-    if (channelsList) {
-        channelsList.addEventListener('click', joinChannelHandler);
-    }
-}
+
