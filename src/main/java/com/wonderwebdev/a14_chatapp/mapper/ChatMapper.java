@@ -21,5 +21,7 @@ public interface ChatMapper {
     Chat toEntity(ChatDTO chatDTO);
 
     @Mapping(target = "userName", source = "user.userName")
+    @Mapping(target = "message", source = "message")
+    @Mapping(target = "publishedAt", source = "publishedAt")
     ChatSummaryDTO toSummaryDto(Chat chat);
 }

@@ -73,6 +73,7 @@ public class ChannelService {
                 .map(chat -> {
                     ChatSummaryDTO chatSummaryDTO = chatMapper.toSummaryDto(chat);
                     chatSummaryDTO.setUserName(chat.getUser().getUserName());
+                    chatSummaryDTO.setPublishedAt(chat.getPublishedAt());
                     return chatSummaryDTO;
                 })
                 .collect(Collectors.toList());
