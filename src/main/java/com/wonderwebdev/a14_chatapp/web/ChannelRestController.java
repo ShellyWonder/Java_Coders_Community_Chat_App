@@ -49,9 +49,9 @@ public class ChannelRestController {
 
     // Existing endpoint to fetch messages
     @GetMapping("/channel/{id}/messages")
-    public List<ChatSummaryDTO> getAllChannelMessages(@PathVariable Long id) {
+    public ResponseEntity<List<ChatSummaryDTO>> getAllChannelMessages(@PathVariable Long id) {
         List<ChatSummaryDTO> messages = channelService.findMessagesByChannelId(id);
-        return messages;
+        return ResponseEntity.ok(messages);
     }
 
     // to fetch participant count

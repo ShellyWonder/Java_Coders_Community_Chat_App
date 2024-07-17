@@ -11,23 +11,26 @@ import com.wonderwebdev.a14_chatapp.domain.Channel;
 import com.wonderwebdev.a14_chatapp.dto.ChannelDTO;
 import com.wonderwebdev.a14_chatapp.dto.ChatSummaryDTO;
 import com.wonderwebdev.a14_chatapp.dto.UserSummaryDTO;
-import com.wonderwebdev.a14_chatapp.exception.ResourceNotFoundException;
 import com.wonderwebdev.a14_chatapp.mapper.ChannelMapper;
 import com.wonderwebdev.a14_chatapp.mapper.ChatMapper;
 import com.wonderwebdev.a14_chatapp.mapper.UserMapper;
 import com.wonderwebdev.a14_chatapp.repository.ChannelRepository;
+import com.wonderwebdev.a14_chatapp.repository.ChatRepository;
 
 @Service
 public class ChannelService {
 
     private final ChannelRepository channelRepository;
     private final ChannelMapper channelMapper;
+    private final ChatRepository chatRepository;
     private final ChatMapper chatMapper;
     private final UserMapper userMapper;
     private static final Logger logger = (Logger) LoggerFactory.getLogger(ChannelService.class);
 
-    public ChannelService(ChannelRepository channelRepository, ChannelMapper channelMapper, ChatMapper chatMapper, UserMapper userMapper) {
+    public ChannelService(ChannelRepository channelRepository, ChatRepository chatRepository,
+            ChannelMapper channelMapper, ChatMapper chatMapper, UserMapper userMapper) {
         this.channelRepository = channelRepository;
+        this.chatRepository = chatRepository;
         this.channelMapper = channelMapper;
         this.chatMapper = chatMapper;
         this.userMapper = userMapper;
@@ -46,15 +49,21 @@ public class ChannelService {
     }
 
     public List<ChatSummaryDTO> findMessagesByChannelId(Long channelId) {
-        Channel channel = channelRepository.findById(channelId)
-                .orElseThrow(() -> new ResourceNotFoundException("Channel not found"));
-        return channel.getMessages().stream()
+        return chatRepository.findByChannelId(channelId).stream()
                 .map(chat -> {
-                    ChatSummaryDTO chatSummaryDTO = chatMapper.toSummaryDto(chat);
-                    chatSummaryDTO.setUserName(chat.getUser().getUserName());
+                    ChatSummaryDTO chatSummaryDTO = new ChatSummaryDTO();
+                    chatSummaryDTO.setId(chat.getId());
+                    chatSummaryDTO.setMessage(chat.getMessage());
+                    chatSummaryDTO.setUserName(chat.getUser() != null ? chat.getUser().getUserName() : "Unknown User");
+                    chatSummaryDTO.setPublishedAt(chat.getPublishedAt());
+
+                    // Log the values being set
+                    System.out.println("Chat ID: " + chat.getId());
+                    System.out.println("Published At: " + chat.getPublishedAt());
+                    System.out.println("Message: " + chat.getMessage());
+
                     return chatSummaryDTO;
-                })
-                .collect(Collectors.toList());
+                }).collect(Collectors.toList());
     }
 
     private ChannelDTO mapToChannelDTO(Channel channel) {
@@ -76,6 +85,7 @@ public class ChannelService {
 
         return channelDTO;
     }
+
     public int getParticipantCount(Long channelId) {
         return channelRepository.findById(channelId)
                 .map(channel -> {

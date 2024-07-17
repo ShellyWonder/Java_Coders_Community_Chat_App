@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class ChatDTO {
     private Long id;
     private String message;
-    private UserSummaryDTO user;
+    private UserSummaryDTO userName;
     private ChannelSummaryDTO channel;
     private LocalDateTime publishedAt;
     
@@ -13,10 +13,10 @@ public class ChatDTO {
     public ChatDTO() {
     }
     
-    public ChatDTO(Long id, String message, UserSummaryDTO user, ChannelSummaryDTO channel, LocalDateTime publishedAt) {
+    public ChatDTO(Long id, String message, UserSummaryDTO userName, ChannelSummaryDTO channel, LocalDateTime publishedAt) {
         this.id = id;
         this.message = message;
-        this.user = user;
+        this.userName = userName;
         this.channel = channel;
         this.publishedAt = publishedAt;// timestamp-- Use the explicitly provided time
     }
@@ -34,11 +34,11 @@ public class ChatDTO {
     public void setMessage(String message) {
         this.message = message;
     }
-    public UserSummaryDTO getUser() {
-        return user;
+    public UserSummaryDTO getUserName() {
+        return userName;
     }
-    public void setUser(UserSummaryDTO user) {
-        this.user = user;
+    public void setUser(UserSummaryDTO userName) {
+        this.userName = userName;
     }
     public ChannelSummaryDTO getChannel() {
         return channel;
