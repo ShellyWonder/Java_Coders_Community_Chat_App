@@ -24,15 +24,15 @@
                 <h3 class="logoFont d-flex justify-content-end">
                   Welcome, &nbsp; <span id="userName"></span>!
                 </h3>
+                <p class="userCounter">Current Users in Channel:</p>
+                <p id="participantCount"></p>
               </div>
             </div>  
             <div class="row" id="chatChannel">
               
               <div id="messageContainer">
                 <!-- Messages will be populated here -->
-                <ul>
-                  <li id="messageList"></li>
-                </ul> 
+                <div id="messageList" class="list-group"></div> 
                 <textarea id="chatMessage" placeholder="Type your message..."></textarea>
                 <button id="messageBtn">Send</button>
               </div>

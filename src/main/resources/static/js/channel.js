@@ -12,7 +12,7 @@ export function initializeChannelPage(channelViewData) {
     }
     
     // Use already fetched data to populate the channel details
-    populateChannelDetails(channelViewData.channel);
+    channelViewDetails(channelViewData.channel);
     updateMessageList(channelViewData.messages);
     updateParticipantCountDisplay(channelViewData.participantCount);
 }
@@ -67,8 +67,8 @@ export async function fetchChannelViewData(channelId) {
         console.error('Error fetching channel view data:', error);
     }
 }
-
-export function populateChannelDetails(channelData, idPrefix = "") {
+//dynamically populates channel details on channelSelect card
+export function channelSelectDetails(channelData, idPrefix = "") {
     const channelNameElement = document.querySelector(`#${idPrefix}channelName_${channelData.id}`);
     const channelDescriptionElement = document.querySelector(`#${idPrefix}channelDescription_${channelData.id}`);
 
@@ -87,20 +87,51 @@ export function populateChannelDetails(channelData, idPrefix = "") {
     console.log('Channel data:', channelData);
 }
 
+//dynamically populates channel details on channel page
+export function channelViewDetails(channelData) {
+    const channelNameElement = document.querySelector("#channelName");
+    const channelDescriptionElement = document.querySelector("#channelDescription");
+
+    if (channelNameElement) {
+        channelNameElement.textContent = channelData.name;
+    } else {
+        console.error("Element with ID channelName not found");
+    }
+
+    if (channelDescriptionElement) {
+        channelDescriptionElement.textContent = channelData.description;
+    } else {
+        console.error("Element with ID channelDescription not found");
+    }
+
+    console.log('Channel data for channel page:', channelData);
+}
+
+
 export function populateChatDetails(chat) {
     const messageList = document.querySelector('#messageList');
     if (!messageList) {
         console.error('Element with ID messageList not found');
         return;
     }
-    const li = document.createElement('li');
+    
+    const card = document.createElement('div');
     const userName = chat.userName ? chat.userName : "Unknown User";
     const message = chat.message ? chat.message : "No message content";
     const publishedAt = chat.publishedAt ? formatDate(new Date(chat.publishedAt)) : "Unknown date";
-    li.innerHTML = `<span>${userName}</span>: 
-                    <span>${message}</span>
-                    <span>${publishedAt}</span>`;
-    messageList.appendChild(li);
+    card.className = "card chatCard mb-3";
+
+    card.innerHTML = `
+    <h5 class="card-header">${userName}</h5>
+        <div class="card-body">
+            <p class="card-text">${message}</p>
+            <a href="#" class="btn btn-primary">Reply</a>
+        </div>
+        <div class="card-footer text-body-secondary">${publishedAt}</div>
+    `;
+
+    messageList.appendChild(card);
+
 }
 
 export function updateMessageList(messages) {
