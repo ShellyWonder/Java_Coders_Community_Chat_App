@@ -3,7 +3,7 @@
 // to keep the code organized and available to future features.
 
 import { checkLoginStatus} from './auth.js';
-import { populateChannelDetails} from './channel.js';
+import { channelSelectDetails} from './channel.js';
 import { setCurrentChannelId } from './shared.js';
 
 let channelsFetched = false;
@@ -178,7 +178,7 @@ function updateChannelSelection(channels) {
                     </button>`;
                 channelsList.appendChild(listItem);
                 // Populate channel details for each channel
-                populateChannelDetails(channel);
+                channelSelectDetails(channel);
                 // Update participant count for each channel
                 updateParticipantCount(channel.id);
             });
