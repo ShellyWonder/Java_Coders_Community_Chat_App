@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" lang="en">
-  <head th:replace="~{layout :: common-head(title='Java Chat: Chat')}">
+  <head th:replace="~{layout :: common-head(title='Channel')}">
+    <!-- Quill editor stylesheet -->
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
   </head>
 
   <body class="d-flex flex-column h-100">
@@ -33,19 +35,30 @@
               <div id="messageContainer">
                 <!-- Messages will be populated here -->
                 <div id="messageList" class="list-group"></div> 
-                <textarea id="chatMessage" placeholder="Type your message..."></textarea>
+                
+                <!-- Message input form -->
+                  <!-- quill editor -->
+                <div id="editor"></div>
+                <!-- <textarea id="chatMessage" placeholder="Type your message..."></textarea> -->
                 <button id="messageBtn">Send</button>
               </div>
             </div>
           </div>   
-             
         </div>
       </div>
     </main>
     
     <!--footer section-->
     <footer th:replace="~{layout :: footer}"></footer>
-    
+    <!-- Include the Quill library -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
+    <!-- Initialize Quill editor -->
+    <script>
+      const quill = new Quill('#editor', {
+        theme: 'snow'
+      });
+    </script>
     <!-- scripts -->
     <div th:replace="~{layout :: MainJS}"></div>
     <div th:replace="~{layout :: BootstrapJS}"></div>
