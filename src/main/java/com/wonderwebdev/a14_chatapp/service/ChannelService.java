@@ -66,7 +66,7 @@ public class ChannelService {
                 }).collect(Collectors.toList());
     }
 
-    private ChannelDTO mapToChannelDTO(Channel channel) {
+    public ChannelDTO mapToChannelDTO(Channel channel) {
         ChannelDTO channelDTO = channelMapper.toDto(channel);
 
         List<ChatSummaryDTO> chatSummaryDTOs = channel.getMessages().stream()
@@ -85,6 +85,11 @@ public class ChannelService {
         channelDTO.setUsers(userSummaryDTOs);
 
         return channelDTO;
+    }
+
+    public Channel fetchChannelById(Long channelId) {
+        return channelRepository.findById(channelId)
+                                .orElseThrow(() -> new RuntimeException("Channel not found"));
     }
 
     public int getParticipantCount(Long channelId) {
