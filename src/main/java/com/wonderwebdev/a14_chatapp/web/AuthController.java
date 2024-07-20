@@ -14,6 +14,7 @@ import com.wonderwebdev.a14_chatapp.domain.User;
 import com.wonderwebdev.a14_chatapp.dto.UserDTO;
 import com.wonderwebdev.a14_chatapp.security.JwtUtil;
 import com.wonderwebdev.a14_chatapp.service.UserService;
+import com.wonderwebdev.a14_chatapp.service.AuthenticationService;
 
 
 @RestController
@@ -22,15 +23,17 @@ public class AuthController {
         
     private UserService userService;
     private JwtUtil jwtUtil;
+    private AuthenticationService authenticationService;
 
-    public AuthController(UserService userService, JwtUtil jwtUtil) {
+    public AuthController(UserService userService, JwtUtil jwtUtil, AuthenticationService authenticationService) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> loginUser(@RequestBody UserDTO loginUserDTO) {
-        UserDTO userDTO = userService.validateUser(loginUserDTO.getUserName(), loginUserDTO.getPassword());
+        UserDTO userDTO = authenticationService.validateUser(loginUserDTO.getUserName(), loginUserDTO.getPassword());
         if (userDTO != null) {
             String token = jwtUtil.generateToken(userDTO.getUserName());
             Map<String, Object> response = new HashMap<>();
