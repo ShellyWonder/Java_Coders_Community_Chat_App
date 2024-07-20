@@ -21,19 +21,20 @@ export function attachChannelEventListeners() {
     console.log('Attaching channel event listeners');
 
     const messageBtn = document.querySelector('#messageBtn');
-    const chatMessage = document.querySelector('#chatMessage');
     const messageList = document.querySelector('#messageList');
 
     
-    console.log("Elements found:", { messageBtn, chatMessage, messageList });
+    console.log("Elements found:", { messageBtn, messageList });
 
     if (messageBtn) {
         messageBtn.addEventListener('click', function (event) {
             event.preventDefault();
             console.log('Message button clicked');
-            const messageContent = chatMessage.value.trim();
+            const messageContent = quill.root.innerHTML.trim();
             if (messageContent) {
-                sendMessage(messageContent, chatMessage);
+                sendMessage(messageContent);
+            } else {
+                console.log('Message content is empty');
             }
         });
     }
@@ -160,14 +161,25 @@ function formatDate(date) {
     return date.toLocaleString(); // Formats the date in a human-readable way
 }
 
-function sendMessage(messageContent, chatMessageElement) {
+function sendMessage() {
     const token = sessionStorage.getItem("jwtToken");
+    const channelId = getCurrentChannelId();
+
     if (!token) {
-        console.error("JWT token is missing from sessionStorage");
+        console.log("JWT token is missing from sessionStorage");
         return;
     }
+
+    // Get the content from the Quill editor
+    const messageContent = quill.root.innerHTML.trim();
+
+    if (!messageContent) {
+        console.log("Message content is empty");
+        return;
+    }
+
     console.log("Sending message with token:", token);
-    fetch('/api/message', {
+    fetch(`/api/channel/${channelId}/message`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -178,10 +190,12 @@ function sendMessage(messageContent, chatMessageElement) {
     .then(response => response.json())
     .then(data => {
         console.log('Message sent:', data);
-        chatMessageElement.value = '';
+        quill.root.innerHTML = ''; // Clear the editor after sending
+        fetchMessages(channelId); // Refresh messages after sending
     })
     .catch(error => console.error('Error sending message:', error));
 }
+
 
 export async function fetchMessages() {
     const token = sessionStorage.getItem("jwtToken");
