@@ -27,15 +27,6 @@ public class UserService {
         this.channelMapper = channelMapper;
     }
 
-    // Validate user credentials
-    public UserDTO validateUser(String userName, String password) {
-        User user = findUserByUserNameAndPassword(userName, password);
-        if (user != null && user.getPassword().equals(password)) {
-            return mapToUserDTO(user);
-        }
-        return null;
-    }
-
     // Register a new user
     public Map<String, Object> registerNewUser(User newUser) {
         Map<String, Object> response = new HashMap<>();
@@ -58,25 +49,24 @@ public class UserService {
         return mapToUserDTO(user);
     }
 
+    public User fetchUserById(Long userId) {
+        return userRepository.findById(userId)
+                             .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
     // Private helper method to find user by username
     private User findUserByUserName(String userName) {
         return userRepository.findByUsername(userName);
     }
 
-    // Private helper method to find user by username AND password used by validateUser()
-    private User findUserByUserNameAndPassword(String userName, String password) {
-        return userRepository.findByUserNameAndPassword(userName, password);
-    }
-
-      // Map User to UserDTO, including channels
+    // Map User to UserDTO, including channels
     private UserDTO mapToUserDTO(User user) {
         UserDTO userDTO = userMapper.toDto(user);
 
         userDTO.setChannels(
-            user.getChannels().stream()
-                .map(channelMapper::toSummaryDto)
-                .collect(Collectors.toSet())
-        );
+                user.getChannels().stream()
+                        .map(channelMapper::toSummaryDto)
+                        .collect(Collectors.toSet()));
 
         return userDTO;
     }
@@ -92,4 +82,5 @@ public class UserService {
                 .map(userMapper::toSummaryDto)
                 .collect(Collectors.toList());
     }
+
 }
