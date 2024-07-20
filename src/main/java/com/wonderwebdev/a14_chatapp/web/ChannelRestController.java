@@ -2,8 +2,11 @@ package com.wonderwebdev.a14_chatapp.web;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +16,15 @@ import com.wonderwebdev.a14_chatapp.domain.Channel;
 import com.wonderwebdev.a14_chatapp.dto.ChannelDTO;
 import com.wonderwebdev.a14_chatapp.dto.ChannelViewDTO;
 import com.wonderwebdev.a14_chatapp.dto.ChatSummaryDTO;
+import com.wonderwebdev.a14_chatapp.dto.ChatMessageDTO;
 import com.wonderwebdev.a14_chatapp.service.ChannelService;
+import com.wonderwebdev.a14_chatapp.service.ChatService;
 import com.wonderwebdev.a14_chatapp.repository.ChannelRepository;
+import com.wonderwebdev.a14_chatapp.mapper. ChatMapper;
+
+
 import org.springframework.web.bind.annotation.RequestMapping;
+
 
 @RestController
 @RequestMapping("/api")
@@ -23,10 +32,14 @@ public class ChannelRestController {
     
     private final ChannelService channelService;
     private final ChannelRepository channelRepository;
+    private final ChatService chatService;
+    private final ChatMapper chatMapper;
 
-    public ChannelRestController(ChannelService channelService, ChannelRepository channelRepository) {
+    public ChannelRestController(ChannelService channelService, ChatService chatService, ChannelRepository channelRepository, ChatMapper chatMapper) {
         this.channelService = channelService;
+        this.chatService = chatService;
         this.channelRepository = channelRepository;
+        this.chatMapper = chatMapper;
     }
 
     // Existing endpoint to fetch all channels
@@ -65,18 +78,31 @@ public class ChannelRestController {
         return ResponseEntity.ok(participantCount);
     }
 
-    //to serve channel view data
+    // To serve channel view data
     @GetMapping("/channel/{id}/view")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ChannelViewDTO> getChannelViewData(@PathVariable Long id) {
         Optional<ChannelDTO> optionalChannelDTO = channelService.findChannelById(id);
         if (optionalChannelDTO.isPresent()) {
             ChannelDTO channelDTO = optionalChannelDTO.get();
-            List<ChatSummaryDTO> messages = channelService.findMessagesByChannelId(id);
+            List<ChatSummaryDTO> messages = chatService.getMessagesByChannelId(id)
+                .stream()
+                .map(chatMapper::messageDtoToSummaryDto)
+                .collect(Collectors.toList());
+            
+            // Use chatService to get messages
             int participantCount = channelService.getParticipantCount(id);
             ChannelViewDTO channelViewDTO = new ChannelViewDTO(channelDTO, messages, participantCount);
             return ResponseEntity.ok(channelViewDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @PostMapping("/channel/{channelId}/message")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ChatMessageDTO> sendMessage(@PathVariable Long channelId, @RequestBody ChatMessageDTO message) {
+        ChatMessageDTO savedMessage = chatService.sendMessage(channelId, message);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedMessage);
     }
 }
