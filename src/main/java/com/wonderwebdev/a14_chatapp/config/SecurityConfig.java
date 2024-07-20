@@ -3,8 +3,10 @@ package com.wonderwebdev.a14_chatapp.config;
 import com.wonderwebdev.a14_chatapp.security.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer; 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,7 +16,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+// Enable method-level security
+@EnableMethodSecurity(prePostEnabled = true)
+public class SecurityConfig extends WebSecurityConfiguration {
 
     private final JwtFilter jwtFilter;
 
@@ -33,10 +37,11 @@ public class SecurityConfig {
         .authorizeHttpRequests(authorizeRequests ->
             authorizeRequests
                             .requestMatchers("/", "/api/auth/register", "/api/auth/login", "/public/**", "/static/**", 
-                                            "/css/**", "/js/**", "/img/**", "/img/favicon/**", "img/favicon/favicon.ico").permitAll()
+                                            "/css/**", "/js/**", "/img/**", "/img/favicon/**", "img/favicon/favicon.ico","/quill/**" ).permitAll()
                                             // Allow access to channel view endpoint--authentication handled in ChannelViewController
                                             .requestMatchers("/channel/**").permitAll() 
-                                            .requestMatchers("/api/channels/**", "/api/channel/**").authenticated() // Secure API endpoints
+                                            // Secure API endpoints
+                                            .requestMatchers("/api/channels/**", "/api/channel/**").authenticated() 
                             .anyRequest().authenticated()
             )
             .sessionManagement(sessionManagement ->
