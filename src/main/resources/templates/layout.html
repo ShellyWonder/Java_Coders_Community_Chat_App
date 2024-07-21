@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" lang="en">
-  <head th:fragment="common-head(title)">
+  <head th:fragment="common-head(title, additionalFragments)">
 
     <title th:text="${title}">Java Coders Community Chat</title>
     <meta charset="UTF-8" />
@@ -39,88 +39,92 @@
     />
     <!--Custom CSS-->
     <link rel="stylesheet" th:href="@{/css/site.css}"> 
+
+    <!-- Additional Fragments -->
+    <th:block th:replace="${additionalFragments}"></th:block>
   </head>
 
+  
   <body class="d-flex flex-column h-100">
     <header th:fragment="header">
       <nav class="navbar navbar-expand-md fixed-top">
         <div class="container-fluid">
           <a class="navbar-brand logoFont" th:href="@{/}"
-            ><img
-              src="/img/logoMarkWhite.png"
-              class="mt-1"
-              width="40"
-              height="49"
-              
-            />
-            Java Coders Community Chat</a
+          ><img
+          src="/img/logoMarkWhite.png"
+          class="mt-1"
+          width="40"
+          height="49"
+          
+          />
+          Java Coders Community Chat</a
           >
           <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarCollapse"
-            aria-controls="navbarCollapse"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarCollapse"
+          aria-controls="navbarCollapse"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
           >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav me-auto mb-2 mb-md-0">
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  th:href="@{/}"
-                  th:classappend="${activePage == 'index' ? 'active' : ''}"
-                  >Home</a
-                >
-              </li>
-              <!--Only display dynamic Channels if the user is logged in-->
-              <li class="nav-item dropdown" id="channelsDropdown" style="display:none;">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Channels
-                </a>
-                <ul class="dropdown-menu" id="channelsDropdownMenu"></ul>
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item">
+              <a
+              class="nav-link"
+              th:href="@{/}"
+              th:classappend="${activePage == 'index' ? 'active' : ''}"
+              >Home</a
+              >
             </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  target="_blank"
-                  href="https://github.com/ShellyWonder/a14_chatapp"
-                  >GitHub Repo</a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  target="_blank"
-                  href="http://www.wonderwebdev.com/#contact"
+            <!--Only display dynamic Channels if the user is logged in-->
+            <li class="nav-item dropdown" id="channelsDropdown" style="display:none;">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Channels
+              </a>
+              <ul class="dropdown-menu" id="channelsDropdownMenu"></ul>
+            </li>
+            <li class="nav-item">
+              <a
+              class="nav-link"
+              target="_blank"
+              href="https://github.com/ShellyWonder/a14_chatapp"
+              >GitHub Repo</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+              class="nav-link"
+              target="_blank"
+              href="http://www.wonderwebdev.com/#contact"
                   >Contact</a
                 >
               </li>
-            
-            <div class="d-flex justify-content-end">
-              <div class="nav-item">
-                <a
+              
+              <div class="d-flex justify-content-end">
+                <div class="nav-item">
+                  <a
                   class="btn btn-danger nav-link" id="logoutBtn" style="display: none;"
                   >Logout</a
-                >
+                  >
+                </div>
               </div>
-            </div>
-          </ul>
+            </ul>
           </div>
         </div>
       </nav>
     </header>
-
+    
     <main th:fragment="content">
       <div class="flex-shrink-0">
         <!-- Unique page content will be inserted here -->
       </div>
     </main>
     
-            
+    
     <footer th:fragment="footer">
       <div class="styleFooter mt-auto py-3 sticky-bottom sticky-footer">
         <div class="container-fluid">
@@ -129,33 +133,33 @@
               <div class="text-light">
                 &copy;<span id="currentYear">2024</span>&nbsp;SJ Wonder |
                 <a href="mailto:shelly@wonderwebdev.com"
-                  ><strong>shelly@wonderwebdev.com</strong></a
+                ><strong>shelly@wonderwebdev.com</strong></a
                 >
               </div>
             </div>
             <div
               class="col d-flex align-items-center justify-content-start justify-content-lg-center"
             >
-              <img
-                src="/img/White logo - no background.svg"
-                alt="SJ Wonder Logo"
-                height="65"
-              />
-            </div>
-            <!--using bootstrap icons for social media icons-->
-            <div
-              class="col d-flex align-items-center justify-content-start justify-content-lg-end"
-            >
-              <div class="row">
-                <div class="col social">
-                  <a href="https://www.linkedin.com/in/shelly-wonder-153990233/"
-                    ><i class="bi bi-linkedin"></i>
-                  </a>
-                </div>
-                <div class="col social">
-                  <a href="https://github.com/ShellyWonder" target="_blank"
-                    ><i class="bi bi-github"></i>
-                  </a>
+            <img
+            src="/img/White logo - no background.svg"
+            alt="SJ Wonder Logo"
+            height="65"
+            />
+          </div>
+          <!--using bootstrap icons for social media icons-->
+          <div
+          class="col d-flex align-items-center justify-content-start justify-content-lg-end"
+          >
+          <div class="row">
+            <div class="col social">
+              <a href="https://www.linkedin.com/in/shelly-wonder-153990233/"
+              ><i class="bi bi-linkedin"></i>
+            </a>
+          </div>
+          <div class="col social">
+            <a href="https://github.com/ShellyWonder" target="_blank"
+            ><i class="bi bi-github"></i>
+          </a>
                 </div>
               </div>
             </div>
@@ -163,23 +167,24 @@
         </div>
       </div>
     </footer>
-
+    <!-- Quill Editor fragment content-->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" th:fragment="quill-editor-stylesheet"/>
     <!--JS fragments-->
     <div th:fragment="BootstrapJS">
       <script
-        type="text/javascript"
+      type="text/javascript"
         th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js}"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"
-      ></script>
-      <script
+        ></script>
+        <script
         type="text/javascript"
         th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js}"
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
         crossorigin="anonymous"
-      ></script>
-    </div>
-    
+        ></script>
+      </div>
+      
     <div th:fragment="uiUtilJS">
       <script type="module" th:src="@{/js/uiUtil.js}"></script>
 
@@ -195,5 +200,14 @@
     <div th:fragment="ChannelJS">
       <script type="module" th:src="@{/js/channel.js}"></script>
     </div>
+    <!-- Utilizing the Quill library -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
+    <!-- Initialize Quill editor -->
+    <script>
+      const quill = new Quill("#editor", {
+        theme: "snow",
+      });
+    </script>
   </body>
 </html>

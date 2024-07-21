@@ -1,62 +1,65 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" lang="en">
-  <head th:replace="~{layout :: common-head(title='Channel')}">
-    <!-- Quill editor stylesheet -->
-<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+  <head
+    th:replace="~{layout :: common-head(title='Channel', 'layout :: quill-editor-stylesheet')}"
+  >
   </head>
 
   <body class="d-flex flex-column h-100">
     <!--Nav section-->
-  <header th:replace="~{layout :: header}"></header>
+    <header th:replace="~{layout :: header}"></header>
     <!--Main section-->
-    <main class="flex-fill" >
+    <main class="flex-fill">
       <div class="container col-xxl-8 px-4 py-5">
         <div class="row mt-3 g-5 py-5 row-cols-1">
-            <div class="row ">
-                <div class="col-9">
-                <h3 class=" d-flex justify-content-start display-5 1h-1 mb-3">
-                  <span class="logoFont">Java Coders Community Chat</span>
-                  </h3>
-                  <div id="channelContent">
-                    <h1 id="channelName"></h1>
-                    <p id="channelDescription"></p>
-                  </div>
-              </div>
-              <div class="col-3">
-                <h3 class="logoFont d-flex justify-content-end">
-                  Welcome, &nbsp; <span id="userName"></span>!
-                </h3>
-                <p class="userCounter">Current Users in Channel:</p>
-                <p id="participantCount"></p>
-              </div>
-            </div>  
-            <div class="row" id="chatChannel">
-              
-              <div id="messageContainer">
-                <!-- Messages will be populated here -->
-                <div id="messageList" class="list-group"></div> 
-                
-                <!-- Message input form -->
-                  <!-- quill editor -->
-                <div id="editor"></div>
-               
-                <button id="messageBtn">Send</button>
+          <div class="row">
+            <div class="col-9">
+              <h3 class="d-flex justify-content-start display-5 1h-1 mb-3">
+                <span class="logoFont">Java Coders Community Chat</span>
+              </h3>
+              <div id="channelContent">
+                <h1 id="channelName"></h1>
+                <p id="channelDescription"></p>
               </div>
             </div>
-          </div>   
+            <div class="col-3">
+              <h3 class="logoFont d-flex justify-content-end">
+                Welcome, &nbsp; <span id="userName"></span>!
+              </h3>
+              <p class="userCounter">Current Users in Channel:</p>
+              <p id="participantCount"></p>
+            </div>
+          </div>
+          <div class="row" id="chatChannel">
+            <div id="messageContainer">
+              <!-- Messages will be populated here -->
+              <div id="messageList" class="list-group"></div>
+
+              <!-- Message input form -->
+              <div class="card">
+                <div class="card-body">
+                  <!-- quill editor -->
+                  <div id="editor"></div>
+                  <div class="card-footer text-body-secondary">
+                    <button id="messageBtn">Send</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </main>
-    
+
     <!--footer section-->
     <footer th:replace="~{layout :: footer}"></footer>
-    <!-- Include the Quill library -->
+    <!-- Utilizing the Quill library -->
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 
     <!-- Initialize Quill editor -->
     <script>
-      const quill = new Quill('#editor', {
-        theme: 'snow'
+      const quill = new Quill("#editor", {
+        theme: "snow",
       });
     </script>
     <!-- scripts -->
