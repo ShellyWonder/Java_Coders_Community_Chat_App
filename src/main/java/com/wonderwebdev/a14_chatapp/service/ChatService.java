@@ -45,6 +45,7 @@ public class ChatService {
         return chatMapper.toMessageDto(savedMessage);
     }
 
+    //saves a message without explicitly setting the channel (e.g., draft messages, global messages)
     public ChatMessageDTO saveMessage(ChatMessageDTO messageDTO) {
         Chat chatMessage = chatMapper.toEntity(messageDTO);
         chatMessage.setUser(userService.fetchUserById(messageDTO.getUser().getId())); // Use UserService to fetch the user
