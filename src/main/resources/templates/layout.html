@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" lang="en">
-  <head th:fragment="common-head(title, additionalFragments)">
+  <head th:fragment="common-head(title)">
 
     <title th:text="${title}">Java Coders Community Chat</title>
     <meta charset="UTF-8" />
@@ -37,11 +37,11 @@
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
+    <!-- Quill Editor fragment content-->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" >
     <!--Custom CSS-->
     <link rel="stylesheet" th:href="@{/css/site.css}"> 
 
-    <!-- Additional Fragments -->
-    <th:block th:replace="${additionalFragments}"></th:block>
   </head>
 
   
@@ -167,8 +167,7 @@
         </div>
       </div>
     </footer>
-    <!-- Quill Editor fragment content-->
-    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" th:fragment="quill-editor-stylesheet"/>
+    
     <!--JS fragments-->
     <div th:fragment="BootstrapJS">
       <script
@@ -203,11 +202,5 @@
     <!-- Utilizing the Quill library -->
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 
-    <!-- Initialize Quill editor -->
-    <script>
-      const quill = new Quill("#editor", {
-        theme: "snow",
-      });
-    </script>
-  </body>
+      </body>
 </html>

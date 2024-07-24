@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" lang="en">
   <head
-    th:replace="~{layout :: common-head(title='Channel', 'layout :: quill-editor-stylesheet')}"
+    th:replace="~{layout :: common-head(title='Channel')}"
   >
   </head>
 
@@ -38,12 +38,13 @@
               <!-- Message input form -->
               <div class="card">
                 <div class="card-body">
+                  <p class="card-text">Type your message here:</p>
                   <!-- quill editor -->
                   <div id="editor"></div>
+                </div>
                   <div class="card-footer text-body-secondary">
                     <button id="messageBtn">Send</button>
                   </div>
-                </div>
               </div>
             </div>
           </div>
@@ -53,17 +54,12 @@
 
     <!--footer section-->
     <footer th:replace="~{layout :: footer}"></footer>
-    <!-- Utilizing the Quill library -->
+   
+    <!-- Initialize Quill editor  in channel.js-->
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-
-    <!-- Initialize Quill editor -->
-    <script>
-      const quill = new Quill("#editor", {
-        theme: "snow",
-      });
-    </script>
     <!-- scripts -->
     <div th:replace="~{layout :: MainJS}"></div>
+    
     <div th:replace="~{layout :: BootstrapJS}"></div>
   </body>
 </html>
