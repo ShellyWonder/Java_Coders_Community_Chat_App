@@ -5,8 +5,9 @@ let currentChannelId = null;
 
 export function setCurrentChannelId(channelId) {
     currentChannelId = channelId;
+    sessionStorage.setItem('currentChannelId', channelId);
 }
 
 export function getCurrentChannelId() {
-    return currentChannelId;
+    return currentChannelId || sessionStorage.getItem('currentChannelId');
 }

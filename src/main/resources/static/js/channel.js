@@ -190,6 +190,11 @@ function formatDate(date) {
 function sendMessage() {
   const token = sessionStorage.getItem("jwtToken");
   const channelId = getCurrentChannelId();
+  if (channelId === null) {
+    console.log("Channel ID is missing from sessionStorage");
+    
+  }
+  console.log("Channel ID for message:", channelId);
 
   if (!token) {
     console.log("JWT token is missing from sessionStorage");
@@ -219,7 +224,7 @@ function sendMessage() {
       quill.root.innerHTML = ""; // Clear the editor after sending
       fetchMessages(channelId); // Refresh messages after sending
     })
-    .catch((error) => console.error("Error sending message:", error));
+    .catch((error) => console.log("Error sending message:", error));
 }
 
 export async function fetchMessages() {

@@ -21,6 +21,8 @@ async function joinChannelHandler(event) {
     if (joinButton) {
         event.preventDefault();
         const currentChannelId = joinButton.getAttribute('data-channel-id');
+        //update Current Channel ID
+        setCurrentChannelId(currentChannelId);
         const isLoggedIn = checkLoginStatus();
 
         if (isLoggedIn) {
@@ -99,7 +101,7 @@ function addNavbarDropdownEventListener(link) {
             // window.location.href = `/channel/${channelId}?token=${token}`;
             window.location.href = `/channel/${channelId}`;
         } else {
-            console.error("Channel ID not found in event data");
+            console.log("Channel ID not found in event data");
         }
     });
 }
