@@ -14,6 +14,9 @@ import com.wonderwebdev.a14_chatapp.domain.User;
 import com.wonderwebdev.a14_chatapp.dto.UserDTO;
 import com.wonderwebdev.a14_chatapp.security.JwtUtil;
 import com.wonderwebdev.a14_chatapp.service.UserService;
+
+import jakarta.annotation.security.PermitAll;
+
 import com.wonderwebdev.a14_chatapp.service.AuthenticationService;
 
 
@@ -32,6 +35,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @PermitAll()
     public ResponseEntity<Map<String, Object>> loginUser(@RequestBody UserDTO loginUserDTO) {
         UserDTO userDTO = authenticationService.validateUser(loginUserDTO.getUserName(), loginUserDTO.getPassword());
         if (userDTO != null) {
@@ -46,6 +50,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+    @PermitAll()
     public ResponseEntity<Map<String, Object>> registerUser(@RequestBody User newUser) {
         try {
             Map<String, Object> registeredUser = userService.registerNewUser(newUser);
