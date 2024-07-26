@@ -11,6 +11,7 @@ import com.wonderwebdev.a14_chatapp.mapper.ChatMapper;
 import com.wonderwebdev.a14_chatapp.mapper.UserMapper;
 import com.wonderwebdev.a14_chatapp.repository.ChatRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,5 +83,30 @@ public class ChatService {
         return channelViewDTO;
     }
 
-    
+    public ChatMessageDTO updateMessage(Long channelId, Long messageId, ChatMessageDTO messageDTO) {
+        Chat existingMessage = chatRepository.findByChannelIdAndId(channelId, messageId)
+                .orElseThrow(() -> new RuntimeException("Message not found"));
+
+        if (messageDTO.getMessage() != null) {
+            existingMessage.setMessage(messageDTO.getMessage());
+        }
+        existingMessage.setPublishedAt(LocalDateTime.now()); // Update timestamp
+
+        Chat savedMessage = chatRepository.save(existingMessage);
+        return chatMapper.toMessageDto(savedMessage);
+    }
+
+    public void deleteMessage(Long channelId, Long messageId) {
+        Chat message = chatRepository.findByChannelIdAndId(channelId, messageId)
+                .orElseThrow(() -> new RuntimeException("Message not found"));
+        chatRepository.delete(message);
+    }
+
+    public void deleteMessageById(Long messageId) {
+        if (chatRepository.existsById(messageId)) {
+            chatRepository.deleteById(messageId);
+        } else {
+            throw new RuntimeException("Message not found");
+        }
+    }
 }
