@@ -1,5 +1,5 @@
 // channel.js: Manages channel interactions and updates related to channels.
-import { getCurrentChannelId } from "./shared.js";
+import { getCurrentChannelId, getCurrentUser } from "./shared.js";
 
 let quill;
 export function initializeChannelPage(channelViewData) {
@@ -13,16 +13,15 @@ export function initializeChannelPage(channelViewData) {
   }
 
   // Initialize Quill editor if the element is present
-    const editorElement = document.querySelector("#editor");
- if (editorElement) {
-     quill = new Quill("#editor", {
-       theme: "snow",
-     });
- } else {
-        console.error("Element with ID editor not found");
-        return;
-    }
-
+  const editorElement = document.querySelector("#editor");
+  if (editorElement) {
+    quill = new Quill("#editor", {
+      theme: "snow",
+    });
+  } else {
+    console.error("Element with ID editor not found");
+    return;
+  }
 
   // Use already fetched data to populate the channel details
   channelViewDetails(channelViewData.channel);
@@ -190,9 +189,12 @@ function formatDate(date) {
 function sendMessage() {
   const token = sessionStorage.getItem("jwtToken");
   const channelId = getCurrentChannelId();
+  const currentUser = getCurrentUser();
+  // Get the content from the Quill editor
+  const messageContent = quill.root.innerHTML.trim();
   if (channelId === null) {
     console.log("Channel ID is missing from sessionStorage");
-    
+    return;
   }
   console.log("Channel ID for message:", channelId);
 
@@ -201,14 +203,22 @@ function sendMessage() {
     return;
   }
 
-  // Get the content from the Quill editor
-  const messageContent = quill.root.innerHTML.trim();
-
   if (!messageContent) {
     console.log("Message content is empty");
     return;
   }
+  if (!currentUser) {
+    console.log("Current user is missing from sessionStorage");
+    return;
+  }
 
+  const messagePayload = {
+    message: messageContent,
+    user: {
+      id: currentUser.id,
+      userName: currentUser.name,
+    },
+  };
   console.log("Sending message with token:", token);
   fetch(`/api/channel/${channelId}/message`, {
     method: "POST",
@@ -216,15 +226,27 @@ function sendMessage() {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ message: messageContent }),
+    body: JSON.stringify(messagePayload),
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then((data) => {
       console.log("Message sent:", data);
       quill.root.innerHTML = ""; // Clear the editor after sending
       fetchMessages(channelId); // Refresh messages after sending
     })
-    .catch((error) => console.log("Error sending message:", error));
+    .catch((error) => {
+      console.log("Error sending message:", error);
+      console.log("Error details:", error.message);
+      if (error.response) {
+        console.log("Response status:", error.response.status);
+        console.log("Response headers:", error.response.headers);
+      }
+    });
 }
 
 export async function fetchMessages() {

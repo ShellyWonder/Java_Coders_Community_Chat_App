@@ -1,5 +1,7 @@
 // auth.js: Handles authentication-related logic.
-import { fetchAndUpdateChannels, showOrHideNavDropdown, showOrHideLogoutButton, updateUserNameDisplay } from './uiUtil.js';
+import { fetchAndUpdateChannels, showOrHideNavDropdown, 
+         showOrHideLogoutButton, updateUserNameDisplay } from './uiUtil.js';
+         import { setCurrentUser } from './shared.js';         
 
 export function checkLoginStatus() {
     return sessionStorage.getItem("jwtToken") !== null;
@@ -48,8 +50,11 @@ function loginUser() {
     .then(response => response.json())
     .then(data => {
         if (data.authenticated) {
-            sessionStorage.setItem("jwtToken", data.token);
+            const { token, user } = data;
+            sessionStorage.setItem("jwtToken", token);
             sessionStorage.setItem("userName", userName);
+            sessionStorage.setItem("userId", user.id);
+            setCurrentUser(user);
             handleLoginStatus(true);
             toggleFormVisibility("#login", "#channelSelect");
             fetchAndUpdateChannels(); // Only call here after a successful login
