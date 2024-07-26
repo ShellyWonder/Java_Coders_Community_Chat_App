@@ -43,6 +43,10 @@ public class AuthController {
             Map<String, Object> response = new HashMap<>();
             response.put("authenticated", true);
             response.put("token", token);
+            response.put("user", Map.of(
+                    "id", userDTO.getId(),
+                    "userName", userDTO.getUserName()
+            ));
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("authenticated", false));
@@ -53,8 +57,16 @@ public class AuthController {
     @PermitAll()
     public ResponseEntity<Map<String, Object>> registerUser(@RequestBody User newUser) {
         try {
-            Map<String, Object> registeredUser = userService.registerNewUser(newUser);
-            return ResponseEntity.ok(registeredUser);
+            UserDTO registeredUser = (UserDTO) userService.registerNewUser(newUser);
+            String token = jwtUtil.generateToken(registeredUser.getUserName());
+            Map<String, Object> response = new HashMap<>();
+            response.put("authenticated", true);
+            response.put("token", token);
+            response.put("user", Map.of(
+                    "id", registeredUser.getId(),
+                    "userName", registeredUser.getUserName()
+            ));
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }

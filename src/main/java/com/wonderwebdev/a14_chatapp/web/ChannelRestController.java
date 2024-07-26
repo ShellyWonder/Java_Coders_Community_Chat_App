@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -100,9 +102,21 @@ public class ChannelRestController {
     }
 
     @PostMapping("/channel/{channelId}/message")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ChatMessageDTO> sendMessage(@PathVariable Long channelId, @RequestBody ChatMessageDTO message) {
-        ChatMessageDTO savedMessage = chatService.sendMessage(channelId, message);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedMessage);
+    public ResponseEntity<?> sendMessage(@PathVariable Long channelId, @RequestBody ChatMessageDTO messageDTO) {
+        System.out.println("Received message DTO: " + messageDTO);
+
+        if (messageDTO.getUser() == null || messageDTO.getUser().getId() == null) {
+            System.err.println("User information is missing in the request: " + messageDTO);
+            return ResponseEntity.badRequest().body("User information is missing in the request.");
+        }
+
+        try {
+            messageDTO.setPublishedAt(LocalDateTime.now());
+            ChatMessageDTO savedMessage = chatService.sendMessage(channelId, messageDTO);
+            return ResponseEntity.ok(savedMessage);
+        } catch (RuntimeException e) {
+            System.err.println("Error while sending message: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }
