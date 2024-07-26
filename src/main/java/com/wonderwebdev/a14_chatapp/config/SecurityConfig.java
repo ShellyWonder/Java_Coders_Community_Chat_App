@@ -40,7 +40,7 @@ public class SecurityConfig  {
                                             // Allow access to channel view endpoint--authentication handled in ChannelViewController
                                             .requestMatchers("/channel/**").permitAll() 
                                             // Secure API endpoints
-                                            .requestMatchers("/api/channels/**", "/api/channel/**").authenticated() 
+                                            .requestMatchers("/api/channels/**", "/api/channel/**","/api/channel/{channelId}/message").authenticated() 
                             .anyRequest().authenticated()
             )
             .sessionManagement(sessionManagement ->
