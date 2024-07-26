@@ -21,4 +21,9 @@ public interface UserMapper {
 
     // Map User to UserSummaryDTO
     UserSummaryDTO toSummaryDto(User user);
+
+    // Map UserSummaryDTO to User
+    @Mapping(target = "channels", ignore = true)
+    @Mapping(target = "password", ignore = true)
+    User toEntity(UserSummaryDTO userSummaryDTO);
 }

@@ -8,6 +8,7 @@ import com.wonderwebdev.a14_chatapp.dto.ChannelViewDTO;
 import com.wonderwebdev.a14_chatapp.dto.ChatMessageDTO;
 import com.wonderwebdev.a14_chatapp.dto.ChatSummaryDTO;
 import com.wonderwebdev.a14_chatapp.mapper.ChatMapper;
+import com.wonderwebdev.a14_chatapp.mapper.UserMapper;
 import com.wonderwebdev.a14_chatapp.repository.ChatRepository;
 
 import java.util.List;
@@ -17,16 +18,19 @@ import java.util.stream.Collectors;
 public class ChatService {
 
    private ChatMapper chatMapper;
+   private UserMapper userMapper;
     private ChatRepository chatRepository;
     private ChannelService channelService;
     private UserService userService;
     
 
-    public ChatService(ChatMapper chatMapper, ChatRepository chatRepository, ChannelService channelService, UserService userService) {
-        this.chatMapper = chatMapper;
+    public ChatService(ChatMapper chatMapper, UserMapper userMapper, ChatRepository chatRepository, 
+                       ChannelService channelService, UserService userService) {
         this.chatRepository = chatRepository;
         this.channelService = channelService;
+        this.chatMapper = chatMapper;
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     public List<ChatMessageDTO> getMessagesByChannelId(Long channelId) {
@@ -37,12 +41,18 @@ public class ChatService {
     }
 
     public ChatMessageDTO sendMessage(Long channelId, ChatMessageDTO messageDTO) {
+        if (messageDTO.getUser() == null || messageDTO.getUser().getId() == null) {
+            throw new IllegalArgumentException("User information is missing in the message.");
+        }
         Chat chatMessage = chatMapper.toEntity(messageDTO);
         // Setting the channel based on the provided ID
         chatMessage.setChannel(channelService.fetchChannelById(channelId)); 
         chatMessage.setUser(userService.fetchUserById(messageDTO.getUser().getId()));
         Chat savedMessage = chatRepository.save(chatMessage);
-        return chatMapper.toMessageDto(savedMessage);
+        ChatMessageDTO savedMessageDTO = chatMapper.toMessageDto(savedMessage);
+        //Manually map user to DTO
+        savedMessageDTO.setUser(userMapper.toSummaryDto(savedMessage.getUser()));
+        return savedMessageDTO;
     }
 
     //saves a message without explicitly setting the channel (e.g., draft messages, global messages)
