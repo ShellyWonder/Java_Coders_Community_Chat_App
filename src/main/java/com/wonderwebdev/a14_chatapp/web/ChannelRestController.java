@@ -3,9 +3,11 @@ package com.wonderwebdev.a14_chatapp.web;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -116,6 +118,36 @@ public class ChannelRestController {
             return ResponseEntity.ok(savedMessage);
         } catch (RuntimeException e) {
             System.err.println("Error while sending message: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/channel/{channelId}/message/{messageId}")
+    public ResponseEntity<?> updateMessage(@PathVariable Long channelId, @PathVariable Long messageId, @RequestBody ChatMessageDTO messageDTO) {
+        try {
+            ChatMessageDTO updatedMessage = chatService.updateMessage(channelId, messageId, messageDTO);
+            return ResponseEntity.ok(updatedMessage);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/channel/{channelId}/message/{messageId}")
+    public ResponseEntity<?> deleteMessage(@PathVariable Long channelId, @PathVariable Long messageId) {
+        try {
+            chatService.deleteMessage(channelId, messageId);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/message/{messageId}")
+    public ResponseEntity<?> deleteMessageById(@PathVariable Long messageId) {
+        try {
+            chatService.deleteMessageById(messageId);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
