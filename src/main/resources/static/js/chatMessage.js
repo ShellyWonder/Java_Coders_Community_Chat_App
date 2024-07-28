@@ -1,5 +1,6 @@
 //chatMessage.js: Manages message interactions and updates related to messages.
 import { getCurrentChannelId, getCurrentUser } from "./shared.js";
+
 let quill;
 
 export function initializeMessages(messages) {
@@ -13,46 +14,78 @@ export function initializeMessages(messages) {
 }
 
 export function attachChatMessageEventListeners() {
-  const messageBtn = document.querySelector("#messageBtn");
-  const messageList = document.querySelector("#messageList");
-
-  if (messageBtn) {
-    messageBtn.addEventListener("click", function (event) {
+    const messageBtn = document.querySelector("#messageBtn");
+    const messageList = document.querySelector("#messageList");
+  
+    attachMessageButtonListener(messageBtn);
+    attachMessageListListener(messageList);
+  }
+  
+  // Function to attach listener to the message button
+  function attachMessageButtonListener(messageBtn) {
+    if (messageBtn) {
+      messageBtn.addEventListener("click", handleMessageButtonClick);
+    }
+  }
+  
+  // Event handler for the message button click
+  function handleMessageButtonClick(event) {
+    event.preventDefault();
+    const messageContent = quill.root.innerHTML.trim();
+    const messageBtn = event.target;
+  
+    if (messageBtn.innerText === "Update") {
+      handleUpdateMessage(messageBtn, messageContent);
+    } else {
+      handleSendMessage(messageContent);
+    }
+  }
+  
+  // Handle message update
+  function handleUpdateMessage(messageBtn, messageContent) {
+    const messageId = messageBtn.getAttribute("data-message-id");
+    if (messageContent) {
+      updateMessage(messageId, messageContent);
+    } else {
+      console.log("Message content is empty");
+    }
+  }
+  
+  // Handle sending a new message
+  function handleSendMessage(messageContent) {
+    if (messageContent) {
+      sendMessage(messageContent);
+    } else {
+      console.log("Message content is empty");
+    }
+  }
+  
+  // Function to attach listener to the message list
+  function attachMessageListListener(messageList) {
+    if (messageList) {
+      messageList.addEventListener("click", handleMessageListClick);
+    }
+  }
+  
+  // Event handler for message list clicks
+  function handleMessageListClick(event) {
+    if (event.target.classList.contains("dropdown-item")) {
       event.preventDefault();
-      const messageContent = quill.root.innerHTML.trim();
-      if (messageBtn.innerText === "Update") {
-        const messageId = messageBtn.getAttribute("data-message-id");
-        if (messageContent) {
-          updateMessage(messageId, messageContent);
-        } else {
-          console.log("Message content is empty");
-        }
-      } else {
-        if (messageContent) {
-          sendMessage(messageContent);
-        } else {
-          console.log("Message content is empty");
-        }
-      }
-    });
-  }
-
-  if (messageList) {
-    messageList.addEventListener("click", function (event) {
-      if (event.target.classList.contains("dropdown-item")) {
-        event.preventDefault();
-        const action = event.target.textContent.trim().toLowerCase();
-        const messageId = event.target.closest("li").getAttribute("data-message-id");
-        if (action === "edit") {
-          editMessage(messageId);
-        } else if (action === "delete") {
-          deleteMessage(messageId);
-        }
-      }
-    });
-  }
+      const action = event.target.textContent.trim().toLowerCase();
+      const messageId = event.target.closest("li").getAttribute("data-message-id");
+      handleMessageAction(action, messageId);
+    }  
 }
 
+  //Handle edit/delete actions
+function handleMessageAction(action, messageId) {
+  if (action === "edit") {
+    editMessage(messageId);
+  } else if (action === "delete") {
+    deleteMessage(messageId);
+  }
+}
+      
 export async function fetchMessages() {
   const token = sessionStorage.getItem("jwtToken");
   const currentChannelId = getCurrentChannelId();
@@ -163,6 +196,67 @@ async function sendMessage(messageContent) {
   }
 }
 
+
+async function updateMessage(messageId, messageContent) {
+    const token = sessionStorage.getItem('jwtToken');
+    const currentChannelId = getCurrentChannelId();
+    
+    const messagePayload = {
+        id: messageId,
+        message: messageContent,
+    };
+    
+    try {
+        const response = await fetch(`/api/channel/${currentChannelId}/message/${messageId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(messagePayload),
+        });
+        
+        if (response.ok) {
+            const updatedMessage = await response.json();
+            // Update the message in the UI
+            const messageElement = document.querySelector(`#message_${messageId}`);
+            messageElement.querySelector('.card-text').innerHTML = updatedMessage.message;
+            // Reset the button text to "Send"
+            const messageBtn = document.querySelector('#messageBtn');
+            messageBtn.innerText = 'Send';
+            messageBtn.removeAttribute('data-message-id');
+            quill.setText('');
+        } else {
+            throw new Error('Failed to update message');
+        }
+    } catch (error) {
+        console.error('Error updating message:', error);
+    }
+}
+async function deleteMessage(messageId) {
+    const token = sessionStorage.getItem('jwtToken');
+    const currentChannelId = getCurrentChannelId();
+    
+    try {
+        const response = await fetch(`/api/channel/${currentChannelId}/message/${messageId}`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        
+        if (response.ok) {
+            // Remove the message from the UI
+            const messageElement = document.querySelector(`#message_${messageId}`);
+            messageElement.remove();
+        } else {
+            throw new Error('Failed to delete message');
+        }
+    } catch (error) {
+        console.error('Error deleting message:', error);
+    }
+}
+
 export function editMessage(messageId) {
     const messageText = document.querySelector(
       `[data-message-id="${messageId}"] .card-text`
@@ -175,5 +269,5 @@ export function editMessage(messageId) {
   }
 
 function formatDate(date) {
-  return date.toLocaleString();
+    return date.toLocaleString();
 }
