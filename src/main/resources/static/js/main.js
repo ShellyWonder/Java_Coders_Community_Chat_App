@@ -5,6 +5,7 @@ import { fetchAndUpdateChannels, attachJoinChannelEventListener, showOrHideNavDr
           showOrHideLogoutButton, updateUserNameDisplay } from './uiUtil.js';
 import { initializeChannelPage, attachChannelEventListeners, fetchChannelViewData } from './channel.js';
 
+
 document.addEventListener("DOMContentLoaded", onDOMContentLoaded);
 
 function onDOMContentLoaded() {

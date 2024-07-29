@@ -1,5 +1,6 @@
-//chatMessage.js: Manages message interactions and updates related to messages.
-import { getCurrentChannelId, getCurrentUser } from "./shared.js";
+//chatMessage.js: Manages message interactions and updates.
+import { getCurrentChannelId, getCurrentUser, 
+         getCurrentChannelViewData, setCurrentChannelViewData } from "./shared.js";
 
 let quill;
 
@@ -23,9 +24,8 @@ export function attachChatMessageEventListeners() {
   
   // Function to attach listener to the message button
   function attachMessageButtonListener(messageBtn) {
-    if (messageBtn) {
-      messageBtn.addEventListener("click", handleMessageButtonClick);
-    }
+    if (messageBtn) messageBtn.addEventListener("click", handleMessageButtonClick);
+    
   }
   
   // Event handler for the message button click
@@ -138,20 +138,33 @@ function populateChatDetails(chat) {
 
   card.className = isCurrentUser ? "card chatCard myMessage mb-3" : "card chatCard mb-3";
 
-  card.innerHTML = `
-    <h5 class="card-header">${userName}</h5>
-    <div class="card-body">
-      <p class="card-text">${message}</p>
-      ${isCurrentUser ? `
-        <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown"></i>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#" onclick="editMessage('${chat.id}')">Edit</a></li>
-          <li><a class="dropdown-item" href="#" onclick="deleteMessage('${chat.id}')">Delete</a></li>
-        </ul>
-      ` : ""}
-    </div>
-    <div class="card-footer text-body-secondary">${publishedAt}</div>
-  `;
+  if (isCurrentUser) {
+    card.innerHTML = `
+      <h5 class="card-header">${userName}</h5>
+      <div class="card-body">
+        <p class="card-text">${message}</p>
+        ${isCurrentUser ? `
+          <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown"></i>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" onclick="editMessage('${chat.id}')">Edit</a></li>
+            <li><a class="dropdown-item" href="#" onclick="deleteMessage('${chat.id}')">Delete</a></li>
+          </ul>
+        ` : ""}
+      </div>
+      <div class="card-footer text-body-secondary">${publishedAt}</div>
+    `;
+  } else {
+    card.innerHTML = `
+      <h5 class="card-header">${userName}</h5>
+      <div class="card-body">
+        <p class="card-text">${message}</p>
+      </div>
+      <div class="row card-footer">
+      <p class="col-9 text-body-secondary d-flex justify-content-md-start">${publishedAt}</p>
+      <a href="#" class="col-3 d-flex justify-content-md-end  btn btn-sm btn-primary">Reply</a>
+      </div>
+    `;
+  }
 
   messageList.appendChild(card);
 }
@@ -189,72 +202,92 @@ async function sendMessage(messageContent) {
     }
 
     const newMessage = await response.json();
-    updateMessageList([...document.querySelector("#messageList").children, newMessage]);
+    const channelViewData = getCurrentChannelViewData();
+    channelViewData.messages.push(newMessage);
+    setCurrentChannelViewData(channelViewData);
+    updateMessageList(channelViewData.messages);
     quill.setText("");
   } catch (error) {
     console.error("Error sending message:", error);
   }
 }
 
+async function updateMessage(messageId, updatedContent) {
+  const token = sessionStorage.getItem("jwtToken");
+  const currentUser = getCurrentUser();
 
-async function updateMessage(messageId, messageContent) {
-    const token = sessionStorage.getItem('jwtToken');
-    const currentChannelId = getCurrentChannelId();
-    
-    const messagePayload = {
-        id: messageId,
-        message: messageContent,
-    };
-    
-    try {
-        const response = await fetch(`/api/channel/${currentChannelId}/message/${messageId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(messagePayload),
-        });
-        
-        if (response.ok) {
-            const updatedMessage = await response.json();
-            // Update the message in the UI
-            const messageElement = document.querySelector(`#message_${messageId}`);
-            messageElement.querySelector('.card-text').innerHTML = updatedMessage.message;
-            // Reset the button text to "Send"
-            const messageBtn = document.querySelector('#messageBtn');
-            messageBtn.innerText = 'Send';
-            messageBtn.removeAttribute('data-message-id');
-            quill.setText('');
-        } else {
-            throw new Error('Failed to update message');
-        }
-    } catch (error) {
-        console.error('Error updating message:', error);
+  if (!token || !messageId || !updatedContent || !currentUser) {
+    console.log("Missing required data to update message");
+    return;
+  }
+
+  const messagePayload = {
+    message: updatedContent,
+    user: {
+      id: currentUser.id,
+      userName: currentUser.name,
+    },
+  };
+
+  try {
+    const response = await fetch(`/api/channel/message/${messageId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(messagePayload),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update message");
     }
+
+    const updatedMessage = await response.json();
+    const channelViewData = getCurrentChannelViewData();
+    const messageIndex = channelViewData.messages.findIndex((msg) => msg.id === messageId);
+    if (messageIndex !== -1) {
+      channelViewData.messages[messageIndex] = updatedMessage;
+      setCurrentChannelViewData(channelViewData);
+      updateMessageList(channelViewData.messages);
+      quill.setText("");
+      const messageBtn = document.querySelector("#messageBtn");
+      messageBtn.innerText = "Send";
+      messageBtn.removeAttribute("data-message-id");
+    }
+  } catch (error) {
+    console.error("Error updating message:", error);
+  }
 }
+
 async function deleteMessage(messageId) {
-    const token = sessionStorage.getItem('jwtToken');
-    const currentChannelId = getCurrentChannelId();
-    
-    try {
-        const response = await fetch(`/api/channel/${currentChannelId}/message/${messageId}`, {
-            method: 'DELETE',
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        
-        if (response.ok) {
-            // Remove the message from the UI
-            const messageElement = document.querySelector(`#message_${messageId}`);
-            messageElement.remove();
-        } else {
-            throw new Error('Failed to delete message');
-        }
-    } catch (error) {
-        console.error('Error deleting message:', error);
+  const token = sessionStorage.getItem("jwtToken");
+
+  if (!token || !messageId) {
+    console.log("Missing required data to delete message");
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/channel/message/${messageId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to delete message");
     }
+
+    const channelViewData = getCurrentChannelViewData();
+    const updatedMessages = channelViewData.messages.filter((msg) => msg.id !== messageId);
+    channelViewData.messages = updatedMessages;
+    setCurrentChannelViewData(channelViewData);
+    updateMessageList(channelViewData.messages);
+  } catch (error) {
+    console.error("Error deleting message:", error);
+  }
 }
 
 export function editMessage(messageId) {
@@ -269,5 +302,6 @@ export function editMessage(messageId) {
   }
 
 function formatDate(date) {
-    return date.toLocaleString();
+   return date.toLocaleString();
 }
+  
