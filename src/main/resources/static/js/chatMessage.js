@@ -72,7 +72,7 @@ export function attachChatMessageEventListeners() {
     if (event.target.classList.contains("dropdown-item")) {
       event.preventDefault();
       const action = event.target.textContent.trim().toLowerCase();
-      const messageId = event.target.closest("li").getAttribute("data-message-id");
+      const messageId = event.target.closest("dropdown").getAttribute("data-message-id");
       handleMessageAction(action, messageId);
     }  
 }
@@ -111,8 +111,7 @@ function updateMessageList(messages) {
 
   messageList.innerHTML = "";
   if (messages.length === 0) {
-    messageList.innerHTML =
-      "<li>No one has posted to this channel yet. Be the first!</li>";
+    messageList.innerHTML = "<li>No one has posted to this channel yet. Be the first!</li>";
   } else {
     messages.forEach((chat) => {
       populateChatDetails(chat);
@@ -123,10 +122,10 @@ function updateMessageList(messages) {
 function populateChatDetails(chat) {
   
   const currentUser = getCurrentUser();
-  const chatUserId = chat.user && chat.user.id;
+  const chatUserId = chat.user ? chat.user.id : null;
   const isCurrentUser = currentUser && currentUser.id === chatUserId;
   console.log('Current User:', currentUser);
-  console.log('Chat User ID:', chat.userId);
+  console.log('Chat User ID:', chatUserId);
   console.log('Is Current User:', isCurrentUser);
 
   const card = document.createElement("div");
@@ -136,29 +135,50 @@ function populateChatDetails(chat) {
 
   card.classList.add('card', 'chatCard', 'mb-3');
 
-card.innerHTML = `
-  <div class="card-header d-flex justify-content-between">
-    <h5 class="mb-0">${userName}</h5>
-    ${isCurrentUser ? `
-      <div class="dropdown">
-        <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown"></i>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#" onclick="editMessage('${chat.id}')">Edit</a></li>
-          <li><a class="dropdown-item" href="#" onclick="deleteMessage('${chat.id}')">Delete</a></li>
-        </ul>
-      </div>
-    ` : ""}
-  </div>
-  <div class="card-body">
-    <p class="card-text">${message}</p>
-  </div>
-  <div class="card-footer d-flex justify-content-between">
-    <p class="text-body-secondary mb-0">${publishedAt}</p>
-    <a href="#" class="btn btn-sm btn-primary">Reply</a>
-  </div>
-`;
+  card.innerHTML = `
+    <div class="card-header d-flex justify-content-between">
+      <h5 class="mb-0">${userName}</h5>
+      ${isCurrentUser ? `
+         <div class="dropdown" data-message-id="${chat.id}">
+          <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown"></i>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" onclick="editMessage('${chat.id}')">Edit</a></li>
+            <li><a class="dropdown-item" href="#" onclick="deleteMessage('${chat.id}')">Delete</a></li>
+          </ul>
+        </div>
+      ` : ""}
+    </div>
+    <div class="card-body">
+      <p class="card-text">${message}</p>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+      <p class="text-body-secondary mb-0">${publishedAt}</p>
+      <a href="#" class="btn btn-sm btn-primary">Reply</a>
+    </div>
+  `;
 
-  messageList.appendChild(card);
+   if (messageList) {
+    messageList.appendChild(card);
+  } else {
+    console.error("Element with ID messageList not found");
+  }
+}
+
+export function displayChats(channelViewData) {
+    if (!messageList) {
+    console.error("Element with ID messageList not found");
+    return;
+  }
+
+  messageList.innerHTML = "";
+
+  if (channelViewData.messages.length === 0) {
+    messageList.innerHTML = "<li>No one has posted to this channel yet. Be the first!</li>";
+  } else {
+    channelViewData.messages.forEach(chat => {
+      populateChatDetails(chat);
+    });
+  }
 }
 
 async function sendMessage(messageContent) {
@@ -175,7 +195,7 @@ async function sendMessage(messageContent) {
     message: messageContent,
     user: {
       id: currentUser.id,
-      userName: currentUser.name,
+      userName: currentUser.userName,
     },
   };
 
@@ -282,16 +302,15 @@ async function deleteMessage(messageId) {
   }
 }
 
-export function editMessage(messageId) {
-    const messageText = document.querySelector(
-      `[data-message-id="${messageId}"] .card-text`
-    ).innerHTML;
-    quill.root.innerHTML = messageText;
-  
-    const messageBtn = document.querySelector("#messageBtn");
-    messageBtn.innerText = "Update";
-    messageBtn.setAttribute("data-message-id", messageId);
-  }
+function editMessage(messageId) {
+const messageCard = document.querySelector(`.dropdown[data-message-id="${messageId}"]`);
+const messageText = messageCard.closest(".card").querySelector(".card-text").innerHTML;
+
+quill.root.innerHTML = messageText;
+const messageBtn = document.querySelector("#messageBtn");
+messageBtn.innerText = "Update";
+messageBtn.setAttribute("data-message-id", messageId);
+}
 
 function formatDate(date) {
    return date.toLocaleString();
