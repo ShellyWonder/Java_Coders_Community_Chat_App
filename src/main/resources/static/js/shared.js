@@ -20,10 +20,10 @@ export function setCurrentUser(user){
 }
 
 export function getCurrentUser(){
-    if (currentUser) return currentUser;
-    
-    const userJson = sessionStorage.getItem('currentUser');
-    return userJson? JSON.parse(userJson) : null;
+   const userJson = sessionStorage.getItem('currentUser');
+   const user = userJson ? JSON.parse(userJson) : null;
+   console.log('Getting Current User:', user); // Add this line
+   return user;
 }
 
 export function setCurrentChannelViewData(viewData){
