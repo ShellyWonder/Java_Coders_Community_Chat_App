@@ -3,6 +3,7 @@ import { getCurrentChannelId, getCurrentUser,
          getCurrentChannelViewData, setCurrentChannelViewData } from "./shared.js";
 
 let quill;
+const messageList = document.querySelector("#messageList");
 
 export function initializeMessages(messages) {
   const editorElement = document.querySelector("#editor");
@@ -16,7 +17,6 @@ export function initializeMessages(messages) {
 
 export function attachChatMessageEventListeners() {
     const messageBtn = document.querySelector("#messageBtn");
-    const messageList = document.querySelector("#messageList");
   
     attachMessageButtonListener(messageBtn);
     attachMessageListListener(messageList);
@@ -104,7 +104,6 @@ export async function fetchMessages() {
 }
 
 function updateMessageList(messages) {
-  const messageList = document.querySelector("#messageList");
   if (!messageList) {
     console.error("Element with ID messageList not found");
     return;
@@ -122,49 +121,42 @@ function updateMessageList(messages) {
 }
 
 function populateChatDetails(chat) {
-  const messageList = document.querySelector("#messageList");
-  if (!messageList) {
-    console.error("Element with ID messageList not found");
-    return;
-  }
-
+  
   const currentUser = getCurrentUser();
-  const isCurrentUser = currentUser && currentUser.id === chat.userId;
+  const chatUserId = chat.user && chat.user.id;
+  const isCurrentUser = currentUser && currentUser.id === chatUserId;
+  console.log('Current User:', currentUser);
+  console.log('Chat User ID:', chat.userId);
+  console.log('Is Current User:', isCurrentUser);
+
   const card = document.createElement("div");
   const userName = chat.userName ? chat.userName : "Unknown User";
   const message = chat.message ? chat.message : "No message content";
-  const publishedAt = chat.publishedAt ? formatDate(new Date(chat.publishedAt))
-                       : "Unknown date";
+  const publishedAt = chat.publishedAt ? formatDate(new Date(chat.publishedAt)) : "Unknown date";
 
-  card.className = isCurrentUser ? "card chatCard myMessage mb-3" : "card chatCard mb-3";
+  card.classList.add('card', 'chatCard', 'mb-3');
 
-  if (isCurrentUser) {
-    card.innerHTML = `
-      <h5 class="card-header">${userName}</h5>
-      <div class="card-body">
-        <p class="card-text">${message}</p>
-        ${isCurrentUser ? `
-          <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown"></i>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#" onclick="editMessage('${chat.id}')">Edit</a></li>
-            <li><a class="dropdown-item" href="#" onclick="deleteMessage('${chat.id}')">Delete</a></li>
-          </ul>
-        ` : ""}
+card.innerHTML = `
+  <div class="card-header d-flex justify-content-between">
+    <h5 class="mb-0">${userName}</h5>
+    ${isCurrentUser ? `
+      <div class="dropdown">
+        <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown"></i>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#" onclick="editMessage('${chat.id}')">Edit</a></li>
+          <li><a class="dropdown-item" href="#" onclick="deleteMessage('${chat.id}')">Delete</a></li>
+        </ul>
       </div>
-      <div class="card-footer text-body-secondary">${publishedAt}</div>
-    `;
-  } else {
-    card.innerHTML = `
-      <h5 class="card-header">${userName}</h5>
-      <div class="card-body">
-        <p class="card-text">${message}</p>
-      </div>
-      <div class="row card-footer">
-      <p class="col-9 text-body-secondary d-flex justify-content-md-start">${publishedAt}</p>
-      <a href="#" class="col-3 d-flex justify-content-md-end  btn btn-sm btn-primary">Reply</a>
-      </div>
-    `;
-  }
+    ` : ""}
+  </div>
+  <div class="card-body">
+    <p class="card-text">${message}</p>
+  </div>
+  <div class="card-footer d-flex justify-content-between">
+    <p class="text-body-secondary mb-0">${publishedAt}</p>
+    <a href="#" class="btn btn-sm btn-primary">Reply</a>
+  </div>
+`;
 
   messageList.appendChild(card);
 }

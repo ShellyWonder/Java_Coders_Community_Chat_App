@@ -180,14 +180,13 @@ table {
 }
 
 .card {
-  border: 3px solid var(--sjw-secondary-color);
+  border: 1px solid var(--sjw-secondary-color);
   box-shadow: 3px 6px 6px 5px rgba(0, 0, 0, 0.4);
 }
 /*Current user count display*/
 .card .rounded-pill {
   color: var(--sjw-light-color);
   background-color: var(--sjw-headlineblue-color);
-  border-color: var(--sjw-tertiary-color);
   box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.2);
 }
 .card .description {
@@ -218,12 +217,15 @@ table {
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 .card .chatCard {
-  border: 3px solid transparent; /* Remove the border color by making it transparent */
+  border: 1px solid transparent; /* Remove the border color by making it transparent */
   box-shadow: 1px 2px 2px 1px rgba(0, 0, 0, 0.2)!important; /* Decrease the box shadow */
 }
 
 .card .chatCard:hover {
   box-shadow: 3px 6px 6px 5px rgba(0, 0, 0, 0.4); 
+}
+.bi-three-dots-vertical{
+  color: wheat;
 }
 /*END card styles*/
 /*channel view styles*/
