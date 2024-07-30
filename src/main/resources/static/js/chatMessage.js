@@ -4,6 +4,7 @@ import { getCurrentChannelId, getCurrentUser,
 
 let quill;
 const messageList = document.querySelector("#messageList");
+const currentUser = getCurrentUser();
 
 export function initializeMessages(messages) {
   const editorElement = document.querySelector("#editor");
@@ -113,9 +114,7 @@ function updateMessageList(messages) {
   if (messages.length === 0) {
     messageList.innerHTML = "<li>No one has posted to this channel yet. Be the first!</li>";
   } else {
-    messages.forEach((chat) => {
-      populateChatDetails(chat);
-    });
+    prepareAndDisplayChats(messages);
   }
 }
 
@@ -175,16 +174,20 @@ export function displayChats(channelViewData) {
   if (channelViewData.messages.length === 0) {
     messageList.innerHTML = "<li>No one has posted to this channel yet. Be the first!</li>";
   } else {
-    channelViewData.messages.forEach(chat => {
-      populateChatDetails(chat);
-    });
+    prepareAndDisplayChats(messages);
   }
 }
 
+function prepareAndDisplayChats(messages) {
+  messages.forEach((chat) => {
+    chat.isCurrentUser = currentUser && chat.user && currentUser.id === chat.user.id;
+    populateChatDetails(chat);
+  });
+}
 async function sendMessage(messageContent) {
   const token = sessionStorage.getItem("jwtToken");
   const channelId = getCurrentChannelId();
-  const currentUser = getCurrentUser();
+  
 
   if (!token || !channelId || !messageContent || !currentUser) {
     console.log("Missing required data to send message");
