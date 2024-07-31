@@ -1,6 +1,7 @@
 // channel.js: Manages channel interactions and updates related to channels.
 import { getCurrentChannelId,setCurrentChannelViewData } from "./shared.js";
-import { initializeMessages, attachChatMessageEventListeners } from "./chatMessage.js";
+import { initializeMessages } from "./chatMessage.js";
+import {attachChatMessageEventListeners} from "./messageEventHandlers.js";
 
 export function initializeChannelPage(channelViewData) {
   const currentChannelId = getCurrentChannelId();
