@@ -1,5 +1,6 @@
 // messageDisplay.js: Handles displaying and updating the message list.
 import { getCurrentUser } from "./shared.js";
+import { handleMessageListClick} from "./messageEventHandlers.js";
 
 const messageList = document.querySelector("#messageList");
 
@@ -68,6 +69,7 @@ function createMessageCard(chat) {
   const { userName, message, publishedAt, isCurrentUser, id } = chat;
   const card = document.createElement("div");
   card.classList.add("card", "chatCard", "mb-3");
+ 
 
   card.innerHTML = `
     <div class="card-header d-flex justify-content-between">
@@ -76,8 +78,9 @@ function createMessageCard(chat) {
         <div class="dropdown" data-message-id="${id}">
           <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown"></i>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#" onclick="editMessage('${id}')">Edit</a></li>
-            <li><a class="dropdown-item" href="#" onclick="deleteMessage('${id}')">Delete</a></li>
+          
+            <li><a class="dropdown-item" href="#"  data-action="edit">Edit</a></li>
+            <li><a class="dropdown-item" href="#"  data-action="delete">Delete</a></li>
           </ul>
         </div>
       ` : ""}
@@ -90,6 +93,12 @@ function createMessageCard(chat) {
       <a href="#" class="btn btn-sm btn-primary">Reply</a>
     </div>
   `;
+
+  /// Attach event listener for the dropdown menu
+  const dropdownMenu = card.querySelector('.dropdown-menu'); 
+  if (dropdownMenu) {
+    dropdownMenu.addEventListener('click', handleMessageListClick);
+  }
 
   return card;
 }

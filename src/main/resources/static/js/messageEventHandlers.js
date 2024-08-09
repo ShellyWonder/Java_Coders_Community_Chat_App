@@ -56,11 +56,11 @@ function attachMessageListListener(messageList) {
 }
 
 // Event handler for message list clicks
-function handleMessageListClick(event) {
+export function handleMessageListClick(event) {
   if (event.target.classList.contains("dropdown-item")) {
     event.preventDefault();
-    const action = event.target.textContent.trim().toLowerCase();
-    const messageId = event.target.closest("dropdown").getAttribute("data-message-id");
+    const action = event.target.getAttribute('data-action');
+    const messageId = event.target.closest(".dropdown").getAttribute("data-message-id");
     handleMessageAction(action, messageId);
   }
 }
