@@ -2,10 +2,13 @@
 
 let quill;
 
+export function getQuill() {
+  return quill;
+} 
+
 export function initializeQuill(editorElement) {
-  const editorElement = document.querySelector('#editor');
   if (editorElement) {
-    quill = new Quill('#editor', { theme: "snow" });
+    quill = new Quill(editorElement, { theme: "snow" });
   }
 }
 

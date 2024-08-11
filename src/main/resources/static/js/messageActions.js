@@ -2,7 +2,7 @@
 
 import { getCurrentChannelId, getCurrentUser, getCurrentChannelViewData, setCurrentChannelViewData } from "./shared.js";
 import { updateMessageList } from "./messageDisplay.js";
-import { initializeQuill, resetQuillContent } from "./quill.js";
+import {  getQuill, initializeQuill, resetQuillContent } from "./quill.js";
 
 export async function sendMessage(messageContent) {
   const token = sessionStorage.getItem("jwtToken");
@@ -128,9 +128,12 @@ export async function deleteMessage(messageId) {
 export function editMessage(messageId) {
   const messageCard = document.querySelector(`.dropdown[data-message-id="${messageId}"]`);
   const messageText = messageCard.closest(".card").querySelector(".card-text").innerHTML;
-initializeQuill(editorElement);
+//initializeQuill('#editor');
   //quill.root.innerHTML = messageText;
-  quill.setText(messageId);
+  const quill = getQuill();
+  if (quill) {
+    quill.setText(messageText);
+  }
   const messageBtn = document.querySelector("#messageBtn");
   messageBtn.innerText = "Update";
   messageBtn.setAttribute("data-message-id", messageId);
