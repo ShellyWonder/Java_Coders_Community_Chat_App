@@ -4,6 +4,7 @@
 let currentChannelId = null;
 let currentUser = null;
 let currentChannelViewData =null;
+let currentMessageId = null;
 
 export function setCurrentChannelId(channelId) {
     currentChannelId = channelId;
@@ -37,3 +38,16 @@ export function getCurrentChannelViewData(){
     const viewDataJson = sessionStorage.getItem('currentChannelViewData');
     return viewDataJson ? JSON.parse(viewDataJson) : null;
 }
+export function setCurrentMessageId(messageId) {
+    currentMessageId = messageId;
+    sessionStorage.setItem('currentMessageId', messageId);
+}
+
+export function getCurrentMessageId() {
+    return currentMessageId || sessionStorage.getItem('currentMessageId');
+}
+
+export function resetCurrentMessageId() {
+    sessionStorage.removeItem('currentMessageId');
+}
+
