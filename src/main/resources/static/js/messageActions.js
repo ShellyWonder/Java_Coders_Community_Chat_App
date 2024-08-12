@@ -1,9 +1,20 @@
 // messageActions.js: Handles sending, updating, and deleting (CRUD) messages.
 
-import { getCurrentChannelId, getCurrentUser, getCurrentChannelViewData, setCurrentChannelViewData } from "./shared.js";
-import { updateMessageList } from "./messageDisplay.js";
-import {  getQuill, initializeQuill, resetQuillContent } from "./quill.js";
+import { getCurrentChannelId, getCurrentUser, getCurrentChannelViewData, 
+        setCurrentChannelViewData, setCurrentMessageId,
+        resetCurrentMessageId } from "./shared.js";
+import { updateMessageList, updateMessageCard } from "./messageDisplay.js";
+import {getQuill, resetQuillContent } from "./quill.js";
 
+function createMessagePayload(messageContent, currentUser) {
+  return{
+    message: messageContent,
+    user: {
+      id: currentUser.id,
+      userName: currentUser.userName,
+    },
+  };
+}
 export async function sendMessage(messageContent) {
   const token = sessionStorage.getItem("jwtToken");
   const channelId = getCurrentChannelId();
@@ -14,13 +25,7 @@ export async function sendMessage(messageContent) {
     return;
   }
 
-  const messagePayload = {
-    message: messageContent,
-    user: {
-      id: currentUser.id,
-      userName: currentUser.userName,
-    },
-  };
+  const messagePayload = createMessagePayload(messageContent, currentUser);
 
   try {
     const response = await fetch(`/api/channel/${channelId}/message`, {
@@ -47,53 +52,66 @@ export async function sendMessage(messageContent) {
   }
 }
 
-export async function updateMessage(messageId, updatedContent) {
-  const token = sessionStorage.getItem("jwtToken");
-  const currentUser = getCurrentUser();
-
-  if (!token || !messageId || !updatedContent || !currentUser) {
-    console.log("Missing required data to update message");
-    return;
+export function editMessage(messageId) {
+  const messageCard = document.querySelector(`.dropdown[data-message-id="${messageId}"]`);
+  const messageTextElement = messageCard.closest(".card").querySelector(".card-text").innerHTML;
+  const messageText = messageTextElement.inner.HTML;
+  //send messageId to  shared.js to be stored in sessionStorage
+  setCurrentMessageId(messageId);
+  const quill = getQuill();
+  if (quill) {
+    quill.setText(messageText);
   }
+  const messageBtn = document.querySelector("#messageBtn");
+  messageBtn.innerText = "Update";
+  messageBtn.setAttribute("data-message-id", messageId);
 
-  const messagePayload = {
-    message: updatedContent,
-    user: {
-      id: currentUser.id,
-      userName: currentUser.userName,
-    },
-  };
-
-  try {
-    const response = await fetch(`/api/channel/message/${messageId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(messagePayload),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to update message");
+  // Enable editing in the message card
+  messageTextElement.contentEditable = true;
+  messageTextElement.focus();
+  
+}
+export async function updateMessage(messageId, updatedContent) {
+    const token = sessionStorage.getItem("jwtToken");
+    const currentUser = getCurrentUser();
+  
+    if (!token || !messageId || !updatedContent || !currentUser) {
+      console.log("Missing required data to update message");
+      return;
     }
+  
+   const messagePayload = createMessagePayload(messageContent, currentUser);
 
-    const updatedMessage = await response.json();
-    const channelViewData = getCurrentChannelViewData();
-    const messageIndex = channelViewData.messages.findIndex((msg) => msg.id === messageId);
-    if (messageIndex !== -1) {
-      channelViewData.messages[messageIndex] = updatedMessage;
-      setCurrentChannelViewData(channelViewData);
-      updateMessageList(channelViewData.messages);
+  
+    try {
+      const response = await fetch(`/api/channel/message/${messageId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(messagePayload),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to update message");
+      }
+  
+      const updatedMessage = await response.json();
+      updateMessageCard(messageId, updatedMessage.message);
       resetQuillContent();
+
+      // Update the button text and attributes
       const messageBtn = document.querySelector("#messageBtn");
       messageBtn.innerText = "Send";
       messageBtn.removeAttribute("data-message-id");
+  
+      // Clear the editing message ID from sessionStorage
+      resetCurrentMessageId();
+    } catch (error) {
+      console.error("Error updating message:", error);
     }
-  } catch (error) {
-    console.error("Error updating message:", error);
   }
-}
 
 export async function deleteMessage(messageId) {
   const token = sessionStorage.getItem("jwtToken");
@@ -125,16 +143,4 @@ export async function deleteMessage(messageId) {
   }
 }
 
-export function editMessage(messageId) {
-  const messageCard = document.querySelector(`.dropdown[data-message-id="${messageId}"]`);
-  const messageText = messageCard.closest(".card").querySelector(".card-text").innerHTML;
-//initializeQuill('#editor');
-  //quill.root.innerHTML = messageText;
-  const quill = getQuill();
-  if (quill) {
-    quill.setText(messageText);
-  }
-  const messageBtn = document.querySelector("#messageBtn");
-  messageBtn.innerText = "Update";
-  messageBtn.setAttribute("data-message-id", messageId);
-}
+
