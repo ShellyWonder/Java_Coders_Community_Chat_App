@@ -25,7 +25,11 @@ function handleMessageButtonClick(event) {
   if (messageBtn.innerText === "Update") {
     handleUpdateMessage(messageBtn, messageContent);
   } else {
-    handleSendMessage(messageContent);
+    if (messageContent) {
+      sendMessage(messageContent);
+    } else {
+      console.log("Message content is empty");
+    }
   }
 }
 
@@ -34,15 +38,6 @@ function handleUpdateMessage(messageBtn, messageContent) {
   const messageId = messageBtn.getAttribute("data-message-id");
   if (messageContent) {
     updateMessage(messageId, messageContent);
-  } else {
-    console.log("Message content is empty");
-  }
-}
-
-// Handle sending a new message
-function handleSendMessage(messageContent) {
-  if (messageContent) {
-    sendMessage(messageContent);
   } else {
     console.log("Message content is empty");
   }
