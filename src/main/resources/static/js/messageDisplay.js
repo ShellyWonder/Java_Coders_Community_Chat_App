@@ -103,6 +103,23 @@ function createMessageCard(chat) {
   return card;
 }
 
+// src/main/resources/static/js/messageActions.js
+
+export function updateMessageCard(messageId, updatedContent) {
+  const messageCard = document.querySelector(`.dropdown[data-message-id="${messageId}"]`);
+  const messageTextElement = messageCard.closest(".card").querySelector(".card-text");
+
+  // Update the message text
+  messageTextElement.innerHTML = updatedContent;
+
+  // Disable editing
+  messageTextElement.contentEditable = false;
+
+  // Update the footer to show "updated"
+  const messageFooter = messageCard.closest(".card").querySelector(".card-footer");
+  messageFooter.innerText = "Updated";
+}
+
 function formatDate(date) {
     return date.toLocaleString();
   }
