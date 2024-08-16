@@ -45,6 +45,7 @@ export async function sendMessage(messageContent) {
     const channelViewData = getCurrentChannelViewData();
     channelViewData.messages.push(newMessage);
     setCurrentChannelViewData(channelViewData);
+    setCurrentMessageId(messageId);
     updateMessageList(channelViewData.messages);
     resetQuillContent();
   } catch (error) {
@@ -54,14 +55,22 @@ export async function sendMessage(messageContent) {
 
 export function editMessage(messageId) {
   const messageCard = document.querySelector(`.dropdown[data-message-id="${messageId}"]`);
-  const messageTextElement = messageCard.closest(".card").querySelector(".card-text").innerHTML;
-  const messageText = messageTextElement.inner.HTML;
-  //send messageId to  shared.js to be stored in sessionStorage
+  if (!messageCard) {
+    console.error("Message card not found");
+    return;
+  }
+
+  const messageTextElement = messageCard.closest(".card").querySelector(".card-text");
+  const messageText = messageTextElement.innerHTML;
+
+  // Send messageId to shared.js to be stored in sessionStorage
   setCurrentMessageId(messageId);
+
   const quill = getQuill();
   if (quill) {
     quill.setText(messageText);
   }
+
   const messageBtn = document.querySelector("#messageBtn");
   messageBtn.innerText = "Update";
   messageBtn.setAttribute("data-message-id", messageId);
@@ -69,7 +78,6 @@ export function editMessage(messageId) {
   // Enable editing in the message card
   messageTextElement.contentEditable = true;
   messageTextElement.focus();
-  
 }
 export async function updateMessage(messageId, updatedContent) {
     const token = sessionStorage.getItem("jwtToken");
@@ -80,8 +88,7 @@ export async function updateMessage(messageId, updatedContent) {
       return;
     }
   
-   const messagePayload = createMessagePayload(messageContent, currentUser);
-
+    const messagePayload = createMessagePayload(updatedContent, currentUser);
   
     try {
       const response = await fetch(`/api/channel/message/${messageId}`, {
@@ -100,7 +107,7 @@ export async function updateMessage(messageId, updatedContent) {
       const updatedMessage = await response.json();
       updateMessageCard(messageId, updatedMessage.message);
       resetQuillContent();
-
+  
       // Update the button text and attributes
       const messageBtn = document.querySelector("#messageBtn");
       messageBtn.innerText = "Send";

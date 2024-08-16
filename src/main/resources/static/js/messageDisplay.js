@@ -104,8 +104,19 @@ function createMessageCard(chat) {
 }
 
 export function updateMessageCard(messageId, updatedContent) {
-  const messageCard = document.querySelector(`.dropdown[data-message-id="${messageId}"]`);
-  const messageTextElement = messageCard.closest(".card").querySelector(".card-text");
+  // Select the message card using the data-message-id attribute
+  const messageCard = document.querySelector(`.card[data-message-id="${messageId}"]`);
+  if (!messageCard) {
+    console.error("Message card not found");
+    return;
+  }
+
+  // Select the message text element within the card
+  const messageTextElement = messageCard.querySelector(".card-text");
+  if (!messageTextElement) {
+    console.error("Message text element not found");
+    return;
+  }
 
   // Update the message text
   messageTextElement.innerHTML = updatedContent;
@@ -113,11 +124,14 @@ export function updateMessageCard(messageId, updatedContent) {
   // Disable editing
   messageTextElement.contentEditable = false;
 
-  // Update the footer to show "updated"
-  const messageFooter = messageCard.closest(".card").querySelector(".card-footer");
-  messageFooter.innerText = "Updated";
+  // Update the footer to show "Updated"
+  const messageFooter = messageCard.querySelector(".card-footer");
+  if (messageFooter) {
+    messageFooter.innerText = "Updated";
+  } else {
+    console.error("Message footer not found");
+  }
 }
-
 function formatDate(date) {
     return date.toLocaleString();
   }
