@@ -4,7 +4,7 @@
 
 import { checkLoginStatus} from './auth.js';
 import { channelSelectDetails} from './channel.js';
-import { setCurrentChannelId } from './shared.js';
+import { setCurrentChannelId, getCurrentToken } from './shared.js';
 
 let channelsFetched = false;
 
@@ -24,11 +24,11 @@ async function joinChannelHandler(event) {
         //update Current Channel ID
         setCurrentChannelId(currentChannelId);
         const isLoggedIn = checkLoginStatus();
-
+        const token = getCurrentToken();
         if (isLoggedIn) {
             console.log('Channel selected:', currentChannelId);
-            getCurrentToken(token);
-            console.log('JWT Token:', token);  // Log the token to verify
+            
+            console.log('JWT Token:', token);  
 
             // Fetch the channel view data
             try {
@@ -63,7 +63,7 @@ async function joinChannelHandler(event) {
 }
 
 export async function fetchAndUpdateChannels() {
-    getCurrentToken(token);
+    const token = getCurrentToken();
     if (channelsFetched) return;
     channelsFetched = true;
     console.log("Fetching channels with token:", token); 
@@ -130,7 +130,7 @@ function updateNavbarChannels(channels) {
 }
 
 export async function updateParticipantCount(channelId) {
-    getCurrentToken(token);
+    const token = getCurrentToken();
     console.log("Updating participant count with token:", token);
     try {
         const response = await fetch(`/api/channel/${channelId}/participants/count`, {

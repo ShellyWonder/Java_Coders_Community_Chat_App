@@ -12,7 +12,7 @@ export function initializeMessages(messages) {
 }
    
 export async function fetchMessages() {
-  getCurrentToken(token);
+  const token =getCurrentToken();
   const currentChannelId = getCurrentChannelId();
   try {
     const response = await fetch(`/api/channel/${currentChannelId}/messages`, {

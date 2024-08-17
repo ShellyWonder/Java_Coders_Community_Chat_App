@@ -48,7 +48,7 @@ export function startMessageRefresh(channelId) {
 
 // Fetches channel view data and stores it in shared storage
 export async function fetchChannelViewData(channelId) {
-  getCurrentToken(token);
+  const token = getCurrentToken();
   try {
     const response = await fetch(`/api/channel/${channelId}/view`, {
       method: "GET",
