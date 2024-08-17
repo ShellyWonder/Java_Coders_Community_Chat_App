@@ -5,7 +5,7 @@ import {
   showOrHideLogoutButton,
   updateUserNameDisplay,
 } from "./uiUtil.js";
-import { setCurrentUser } from "./shared.js";
+import { setCurrentUser,setCurrentToken } from "./shared.js";
 
 export function checkLoginStatus() {
   return sessionStorage.getItem("jwtToken") !== null;
@@ -56,7 +56,7 @@ function loginUser() {
     .then((data) => {
       if (data.authenticated) {
         const { token, user } = data;
-        sessionStorage.setItem("jwtToken", token);
+        setCurrentToken(token);
         sessionStorage.setItem("userName", userName);
         sessionStorage.setItem("userId", user.id);
         setCurrentUser(user);

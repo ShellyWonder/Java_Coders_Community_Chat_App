@@ -1,5 +1,5 @@
 //chatMessage.js: Manages message interactions and updates.
-import { getCurrentChannelId} from "./shared.js";
+import { getCurrentChannelId, getCurrentToken} from "./shared.js";
 import{ initializeQuill } from "./quill.js";
 import { updateMessageList} from "./messageDisplay.js";
 
@@ -12,7 +12,7 @@ export function initializeMessages(messages) {
 }
    
 export async function fetchMessages() {
-  const token = sessionStorage.getItem("jwtToken");
+  getCurrentToken(token);
   const currentChannelId = getCurrentChannelId();
   try {
     const response = await fetch(`/api/channel/${currentChannelId}/messages`, {

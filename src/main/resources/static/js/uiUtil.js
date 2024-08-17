@@ -27,7 +27,7 @@ async function joinChannelHandler(event) {
 
         if (isLoggedIn) {
             console.log('Channel selected:', currentChannelId);
-            const token = sessionStorage.getItem("jwtToken");
+            getCurrentToken(token);
             console.log('JWT Token:', token);  // Log the token to verify
 
             // Fetch the channel view data
@@ -47,7 +47,7 @@ async function joinChannelHandler(event) {
                     sessionStorage.setItem('currentChannelViewData', JSON.stringify(channelViewData));
                     
                     // Redirect to the channel view, include the token in the URL
-                    window.location.href = `/channel/${currentChannelId}?token=${token}`; // Include token in URL
+                    window.location.href = `/channel/${currentChannelId}?token=${token}`; 
 
                 } else {
                     throw new Error('Failed to fetch channel view data');
@@ -63,10 +63,10 @@ async function joinChannelHandler(event) {
 }
 
 export async function fetchAndUpdateChannels() {
-    const token = sessionStorage.getItem("jwtToken");
+    getCurrentToken(token);
     if (channelsFetched) return;
     channelsFetched = true;
-    console.log("Fetching channels with token:", token); // Log the token
+    console.log("Fetching channels with token:", token); 
     try {
         const response = await fetch("/api/channels", {
             method: "GET",
@@ -93,12 +93,10 @@ function addNavbarDropdownEventListener(link) {
     link.addEventListener("click", (event) => {
         event.preventDefault();
         const channelId = event.dataset.channelId;
-        // const token = sessionStorage.getItem("jwtToken");
         console.log("Channel selected:", channelId);
         if (channelId) {
             // Set the current channel ID in the shared module and navigate to the channel view
             setCurrentChannelId(channelId);
-            // window.location.href = `/channel/${channelId}?token=${token}`;
             window.location.href = `/channel/${channelId}`;
         } else {
             console.log("Channel ID not found in event data");
@@ -132,7 +130,7 @@ function updateNavbarChannels(channels) {
 }
 
 export async function updateParticipantCount(channelId) {
-    const token = sessionStorage.getItem("jwtToken");
+    getCurrentToken(token);
     console.log("Updating participant count with token:", token);
     try {
         const response = await fetch(`/api/channel/${channelId}/participants/count`, {

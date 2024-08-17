@@ -1,10 +1,19 @@
 // storing global variables  for use across the application;
 //Avoids code duplication and circular dependency issues
-
+let currentToken = null;
 let currentChannelId = null;
 let currentUser = null;
 let currentChannelViewData =null;
 let currentMessageId = null;
+
+export function setCurrentToken(token) {
+    currentToken = token;
+    sessionStorage.setItem('jwtToken', token);
+}
+
+export function getCurrentToken() {
+    return currentToken || sessionStorage.getItem('jwtToken');
+}
 
 export function setCurrentChannelId(channelId) {
     currentChannelId = channelId;
@@ -23,7 +32,7 @@ export function setCurrentUser(user){
 export function getCurrentUser(){
    const userJson = sessionStorage.getItem('currentUser');
    const user = userJson ? JSON.parse(userJson) : null;
-   console.log('Getting Current User:', user); // Add this line
+   console.log('Getting Current User:', user); 
    return user;
 }
 

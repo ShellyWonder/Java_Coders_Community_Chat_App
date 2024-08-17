@@ -1,5 +1,5 @@
 // channel.js: Manages channel interactions and updates related to channels.
-import { getCurrentChannelId,setCurrentChannelViewData } from "./shared.js";
+import { getCurrentChannelId,getCurrentToken,setCurrentChannelViewData } from "./shared.js";
 import { initializeMessages } from "./chatMessage.js";
 import {attachChatMessageEventListeners} from "./messageEventHandlers.js";
 
@@ -48,7 +48,7 @@ export function startMessageRefresh(channelId) {
 
 // Fetches channel view data and stores it in shared storage
 export async function fetchChannelViewData(channelId) {
-  const token = sessionStorage.getItem("jwtToken");
+  getCurrentToken(token);
   try {
     const response = await fetch(`/api/channel/${channelId}/view`, {
       method: "GET",

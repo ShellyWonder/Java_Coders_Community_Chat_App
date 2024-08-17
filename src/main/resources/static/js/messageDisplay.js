@@ -78,9 +78,8 @@ function createMessageCard(chat) {
         <div class="dropdown" data-message-id="${id}">
           <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown"></i>
           <ul class="dropdown-menu">
-          
-            <li><a class="dropdown-item" href="#"  data-action="edit">Edit</a></li>
-            <li><a class="dropdown-item" href="#"  data-action="delete">Delete</a></li>
+            <li><a class="dropdown-item" href="#" data-action="edit">Edit</a></li>
+            <li><a class="dropdown-item" href="#" data-action="delete">Delete</a></li>
           </ul>
         </div>
       ` : ""}
@@ -107,7 +106,7 @@ export function updateMessageCard(messageId, updatedContent) {
   // Select the message card using the data-message-id attribute
   const messageCard = document.querySelector(`.card[data-message-id="${messageId}"]`);
   if (!messageCard) {
-    console.error("Message card not found");
+    console.error("Message card Id not found");
     return;
   }
 
@@ -124,14 +123,14 @@ export function updateMessageCard(messageId, updatedContent) {
   // Disable editing
   messageTextElement.contentEditable = false;
 
-  // Update the footer to show "Updated"
-  const messageFooter = messageCard.querySelector(".card-footer");
-  if (messageFooter) {
-    messageFooter.innerText = "Updated";
-  } else {
-    console.error("Message footer not found");
-  }
+  // Indicate that the message was updated
+  const successMessage = document.createElement('p');
+  successMessage.className = 'text-success mb-0';
+  successMessage.innerText = 'Updated';
+  card.querySelector('.card-footer').appendChild(successMessage);
 }
+    
+
 function formatDate(date) {
     return date.toLocaleString();
   }

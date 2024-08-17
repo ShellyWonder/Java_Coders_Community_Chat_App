@@ -2,7 +2,7 @@
 
 import { getCurrentChannelId, getCurrentUser, getCurrentChannelViewData, 
         setCurrentChannelViewData, setCurrentMessageId,
-        resetCurrentMessageId } from "./shared.js";
+        resetCurrentMessageId, getCurrentToken} from "./shared.js";
 import { updateMessageList, updateMessageCard } from "./messageDisplay.js";
 import {getQuill, resetQuillContent } from "./quill.js";
 
@@ -16,7 +16,7 @@ function createMessagePayload(messageContent, currentUser) {
   };
 }
 export async function sendMessage(messageContent) {
-  const token = sessionStorage.getItem("jwtToken");
+  getCurrentToken(token);
   const channelId = getCurrentChannelId();
   const currentUser = getCurrentUser();
 
@@ -54,33 +54,41 @@ export async function sendMessage(messageContent) {
 }
 
 export function editMessage(messageId) {
-  const messageCard = document.querySelector(`.dropdown[data-message-id="${messageId}"]`);
-  if (!messageCard) {
-    console.error("Message card not found");
-    return;
+  const currentUser = getCurrentUser();
+  const isCurrentUser = true;
+  const card = document.querySelector(`[data-message-id="${messageId}"]`);
+
+  if (isCurrentUser) {
+      card.querySelector('[data-action="edit"]').addEventListener('click', (event) => {
+        event.preventDefault();
+        // Initialize Quill editor
+        const quill = getQuill("#editor");
+
+        // Enable editing in the message card
+        const messageTextElement = card.querySelector('.card-text');
+        messageTextElement.contentEditable = true;
+        messageTextElement.focus();
+
+        // Update the button text and attributes
+        const messageBtn = document.querySelector("#messageBtn");
+        messageBtn.innerText = "Update";
+        messageBtn.setAttribute("data-message-id", messageId);
+
+        // Send messageId to shared.js to be stored in sessionStorage
+        setCurrentMessageId(messageId);
+       
+         // Add event listener to the button for updating the message
+          messageBtn.addEventListener('click', async () => {
+            const updatedContent = quill.root.innerHTML; 
+            updateMessage(id, updatedContent);
+
+        });
+      });
+    }else alert("You are not authorized to edit this message");
   }
-
-  const messageTextElement = messageCard.closest(".card").querySelector(".card-text");
-  const messageText = messageTextElement.innerHTML;
-
-  // Send messageId to shared.js to be stored in sessionStorage
-  setCurrentMessageId(messageId);
-
-  const quill = getQuill();
-  if (quill) {
-    quill.setText(messageText);
-  }
-
-  const messageBtn = document.querySelector("#messageBtn");
-  messageBtn.innerText = "Update";
-  messageBtn.setAttribute("data-message-id", messageId);
-
-  // Enable editing in the message card
-  messageTextElement.contentEditable = true;
-  messageTextElement.focus();
-}
+   
 export async function updateMessage(messageId, updatedContent) {
-    const token = sessionStorage.getItem("jwtToken");
+    getCurrentToken(token);
     const currentUser = getCurrentUser();
   
     if (!token || !messageId || !updatedContent || !currentUser) {
@@ -106,12 +114,7 @@ export async function updateMessage(messageId, updatedContent) {
   
       const updatedMessage = await response.json();
       updateMessageCard(messageId, updatedMessage.message);
-      resetQuillContent();
-  
-      // Update the button text and attributes
-      const messageBtn = document.querySelector("#messageBtn");
-      messageBtn.innerText = "Send";
-      messageBtn.removeAttribute("data-message-id");
+      updateMessageList(getCurrentChannelViewData().messages);
   
       // Clear the editing message ID from sessionStorage
       resetCurrentMessageId();
@@ -121,8 +124,7 @@ export async function updateMessage(messageId, updatedContent) {
   }
 
 export async function deleteMessage(messageId) {
-  const token = sessionStorage.getItem("jwtToken");
-
+  getCurrentToken(token);
   if (!token || !messageId) {
     console.log("Missing required data to delete message");
     return;
