@@ -43,8 +43,10 @@ function handleDirectChannelAccess() {
         } else {
             const pathnameParts = window.location.pathname.split('/');
             const channelId = pathnameParts[pathnameParts.length - 1];
-            setCurrentChannelId(channelId); // Set the current channel ID in the shared module
-            fetchChannelViewData(channelId); // Fetch the data if not present in sessionStorage
+            // Set the current channel ID in the shared module
+            setCurrentChannelId(channelId); 
+            // Fetch the data if not present in sessionStorage
+            fetchChannelViewData(channelId); 
         }
     }
 }
