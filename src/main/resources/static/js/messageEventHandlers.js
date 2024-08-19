@@ -2,6 +2,7 @@
 
 import { getQuillContent } from "./quill.js";
 import { sendMessage, updateMessage, deleteMessage, editMessage } from "./messageActions.js";
+import { setCurrentMessageId, } from "./shared.js";
 
 export function attachChatMessageEventListeners() {
   const messageBtn = document.querySelector("#messageBtn");
@@ -17,31 +18,35 @@ function attachMessageButtonListener(messageBtn) {
 }
 
 // Event handler for the message button click
-function handleMessageButtonClick(event) {
-  event.preventDefault();
-  const messageContent = getQuillContent();
-  const messageBtn = event.target;
+async function handleMessageButtonClick(event) {
+  const messageBtn = document.querySelector("#messageBtn");
+    messageBtn.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const messageContent = getQuillContent(); 
+    const messageId = messageBtn.getAttribute("data-message-id");
+    setCurrentMessageId(messageId);
 
   if (messageBtn.innerText === "Update") {
-    handleUpdateMessage(messageBtn, messageContent);
+    await updateMessage(messageId, messageContent);
   } else {
     if (messageContent) {
-      sendMessage(messageContent);
+      await sendMessage(messageId, messageContent);
     } else {
-      console.log("Message content is empty");
+      console.error("Message content is empty");
     }
+  }
+});
+}
+
+// Handle edit/delete actions on nav dropdown
+function handleMessageAction(action, messageId) {
+  if (action === "edit") {
+    editMessage(messageId);
+  } else if (action === "delete") {
+    deleteMessage(messageId);
   }
 }
 
-// Handle message update
-function handleUpdateMessage(messageBtn, messageContent) {
-  const messageId = messageBtn.getAttribute("data-message-id");
-  if (messageContent) {
-    updateMessage(messageId, messageContent);
-  } else {
-    console.log("Message content is empty");
-  }
-}
 
 // Function to attach listener to the message list
 function attachMessageListListener(messageList) {
@@ -60,11 +65,4 @@ export function handleMessageListClick(event) {
   }
 }
 
-// Handle edit/delete actions
-function handleMessageAction(action, messageId) {
-  if (action === "edit") {
-    editMessage(messageId);
-  } else if (action === "delete") {
-    deleteMessage(messageId);
-  }
-}
+

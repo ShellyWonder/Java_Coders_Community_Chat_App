@@ -1,7 +1,7 @@
 // messageActions.js: Handles sending, updating, and deleting (CRUD) messages.
 
 import { getCurrentChannelId, getCurrentUser, getCurrentChannelViewData, 
-        setCurrentChannelViewData, setCurrentMessageId,
+        setCurrentChannelViewData, setCurrentMessageId, getCurrentMessageId,
         resetCurrentMessageId, getCurrentToken} from "./shared.js";
 import { updateMessageList, updateMessageCard } from "./messageDisplay.js";
 import {getQuill, resetQuillContent } from "./quill.js";
@@ -15,8 +15,8 @@ function createMessagePayload(messageContent, currentUser) {
     },
   };
 }
-export async function sendMessage(messageContent) {
-  getCurrentToken(token);
+export async function sendMessage(messageId,messageContent) {
+  const token = getCurrentToken();
   const channelId = getCurrentChannelId();
   const currentUser = getCurrentUser();
 
@@ -24,9 +24,9 @@ export async function sendMessage(messageContent) {
     console.log("Missing required data to send message");
     return;
   }
-
+  
   const messagePayload = createMessagePayload(messageContent, currentUser);
-
+  
   try {
     const response = await fetch(`/api/channel/${channelId}/message`, {
       method: "POST",
@@ -36,27 +36,26 @@ export async function sendMessage(messageContent) {
       },
       body: JSON.stringify(messagePayload),
     });
-
+    
     if (!response.ok) {
       throw new Error("Failed to send message");
     }
-
+    
     const newMessage = await response.json();
     const channelViewData = getCurrentChannelViewData();
     channelViewData.messages.push(newMessage);
-    setCurrentChannelViewData(channelViewData);
-    setCurrentMessageId(messageId);
-    updateMessageList(channelViewData.messages);
-    resetQuillContent();
-  } catch (error) {
-    console.error("Error sending message:", error);
-  }
+      setCurrentChannelViewData(channelViewData);
+      updateMessageList(channelViewData.messages);
+      resetQuillContent();
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
 }
 
 export function editMessage(messageId) {
-  const currentUser = getCurrentUser();
+  getCurrentUser();
   const isCurrentUser = true;
-  const card = document.querySelector(`[data-message-id="${messageId}"]`);
+  const card = document.querySelector(`.card[data-message-id="${messageId}"]`);
 
   if (isCurrentUser) {
       card.querySelector('[data-action="edit"]').addEventListener('click', (event) => {
@@ -80,7 +79,7 @@ export function editMessage(messageId) {
          // Add event listener to the button for updating the message
           messageBtn.addEventListener('click', async () => {
             const updatedContent = quill.root.innerHTML; 
-            updateMessage(id, updatedContent);
+            await updateMessage(messageId, updatedContent);
 
         });
       });
@@ -88,7 +87,7 @@ export function editMessage(messageId) {
   }
    
 export async function updateMessage(messageId, updatedContent) {
-    getCurrentToken(token);
+    const token =getCurrentToken();
     const currentUser = getCurrentUser();
   
     if (!token || !messageId || !updatedContent || !currentUser) {
@@ -124,7 +123,7 @@ export async function updateMessage(messageId, updatedContent) {
   }
 
 export async function deleteMessage(messageId) {
-  getCurrentToken(token);
+  const token = getCurrentToken();
   if (!token || !messageId) {
     console.log("Missing required data to delete message");
     return;
