@@ -1,10 +1,11 @@
 // messageActions.js: Handles sending, updating, and deleting (CRUD) messages.
 
 import { getCurrentChannelId, getCurrentUser, getCurrentChannelViewData, 
-        setCurrentChannelViewData, setCurrentMessageId, getCurrentMessageId,
+        setCurrentChannelViewData, setCurrentMessageId,
         resetCurrentMessageId, getCurrentToken} from "./shared.js";
 import { updateMessageList, updateMessageCard } from "./messageDisplay.js";
-import {getQuill, resetQuillContent } from "./quill.js";
+import {addSendMessageListener} from "./messageEventHandlers.js";
+import { resetQuillContent } from "./quill.js";
 
 function createMessagePayload(messageContent, currentUser) {
   return{
@@ -46,48 +47,18 @@ export async function sendMessage(messageId,messageContent) {
     channelViewData.messages.push(newMessage);
       setCurrentChannelViewData(channelViewData);
       updateMessageList(channelViewData.messages);
+     
       resetQuillContent();
     } catch (error) {
       console.error("Error sending message:", error);
     }
+    setCurrentMessageId(newMessage.id);
 }
 
-export function editMessage(messageId) {
-  getCurrentUser();
-  const isCurrentUser = true;
-  const card = document.querySelector(`.card[data-message-id="${messageId}"]`);
 
-  if (isCurrentUser) {
-      card.querySelector('[data-action="edit"]').addEventListener('click', (event) => {
-        event.preventDefault();
-        // Initialize Quill editor
-        const quill = getQuill("#editor");
-
-        // Enable editing in the message card
-        const messageTextElement = card.querySelector('.card-text');
-        messageTextElement.contentEditable = true;
-        messageTextElement.focus();
-
-        // Update the button text and attributes
-        const messageBtn = document.querySelector("#messageBtn");
-        messageBtn.innerText = "Update";
-        messageBtn.setAttribute("data-message-id", messageId);
-
-        // Send messageId to shared.js to be stored in sessionStorage
-        setCurrentMessageId(messageId);
-       
-         // Add event listener to the button for updating the message
-          messageBtn.addEventListener('click', async () => {
-            const updatedContent = quill.root.innerHTML; 
-            await updateMessage(messageId, updatedContent);
-
-        });
-      });
-    }else alert("You are not authorized to edit this message");
-  }
    
 export async function updateMessage(messageId, updatedContent) {
-    const token =getCurrentToken();
+    const token = getCurrentToken();
     const currentUser = getCurrentUser();
   
     if (!token || !messageId || !updatedContent || !currentUser) {

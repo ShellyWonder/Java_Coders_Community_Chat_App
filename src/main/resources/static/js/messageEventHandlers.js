@@ -1,8 +1,9 @@
 // messageEventHandlers.js: Manages message button and message list event listeners.
 
 import { getQuillContent } from "./quill.js";
-import { sendMessage, updateMessage, deleteMessage, editMessage } from "./messageActions.js";
+import { sendMessage, updateMessage, deleteMessage} from "./messageActions.js";
 import { setCurrentMessageId, } from "./shared.js";
+import { editMessage } from "./messageDisplay.js";
 
 export function attachChatMessageEventListeners() {
   const messageBtn = document.querySelector("#messageBtn");
@@ -14,34 +15,61 @@ export function attachChatMessageEventListeners() {
 
 // Function to attach listener to the message button
 function attachMessageButtonListener(messageBtn) {
-  if (messageBtn) messageBtn.addEventListener("click", handleMessageButtonClick);
+  if (messageBtn.innerText === "Send") messageBtn.addEventListener("click", addSendMessageListener);
+  if (messageBtn.innerText === "Update") messageBtn.addEventListener("click", addEditMessageListener);
 }
 
 // Event handler for the message button click
-async function handleMessageButtonClick(event) {
+async function addSendMessageListener(event) {
   const messageBtn = document.querySelector("#messageBtn");
     messageBtn.addEventListener('click', async (event) => {
     event.preventDefault();
+    messageBtn.innerText === "Send";
     const messageContent = getQuillContent(); 
     const messageId = messageBtn.getAttribute("data-message-id");
     setCurrentMessageId(messageId);
 
-  if (messageBtn.innerText === "Update") {
-    await updateMessage(messageId, messageContent);
-  } else {
     if (messageContent) {
       await sendMessage(messageId, messageContent);
     } else {
       console.error("Message content is empty");
     }
-  }
-});
-}
 
+  });
+
+}
+//NEW CODE
+export function addEditMessageListener(card, messageId) {
+  card.querySelector('[data-action="edit"]').addEventListener('click', (event) => {
+      event.preventDefault();
+      // Initialize Quill editor
+      const quill = getQuill("#editor");
+
+      // Enable editing in the message card
+      const messageTextElement = card.querySelector('.card-text');
+      messageTextElement.contentEditable = true;
+      messageTextElement.focus();
+
+      // Update the button text and attributes
+      const messageBtn = document.querySelector("#messageBtn");
+      messageBtn.innerText = "Update";
+      messageBtn.setAttribute("data-message-id", messageId);
+
+      // Send messageId to shared.js to be stored in sessionStorage
+      setCurrentMessageId(messageId);
+
+      // Add event listener to the button for updating the message
+      messageBtn.addEventListener('click', async () => {
+          const updatedContent = quill.root.innerHTML;
+          await updateMessage(messageId, updatedContent);
+      });
+  });
+}
+//END NEW CODE
 // Handle edit/delete actions on nav dropdown
-function handleMessageAction(action, messageId) {
+async function handleMessageAction(action, messageId) {
   if (action === "edit") {
-    editMessage(messageId);
+    await editMessage(messageId);
   } else if (action === "delete") {
     deleteMessage(messageId);
   }
