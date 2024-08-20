@@ -1,6 +1,6 @@
 // messageDisplay.js: Handles displaying and updating the message list.
 import { getCurrentUser } from "./shared.js";
-import { handleMessageListClick} from "./messageEventHandlers.js";
+import { addEditMessageListener, handleMessageListClick} from "./messageEventHandlers.js";
 
 const messageList = document.querySelector("#messageList");
 
@@ -100,6 +100,17 @@ function createMessageCard(chat) {
   }
 
   return card;
+}
+
+export async function editMessage(messageId) {
+  getCurrentUser();
+  const isCurrentUser = true;
+  const card = document.querySelector(`.card[data-message-id="${messageId}"]`);
+
+     if (isCurrentUser) {
+      addEditMessageListener(card, messageId);
+    }else alert("You are not authorized to edit this message");
+
 }
 
 export function updateMessageCard(messageId, updatedContent) {
