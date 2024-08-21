@@ -43,6 +43,7 @@ export async function sendMessage(messageId,messageContent) {
     }
     
     const newMessage = await response.json();
+    setCurrentMessageId(newMessage.id);
     const channelViewData = getCurrentChannelViewData();
     channelViewData.messages.push(newMessage);
       setCurrentChannelViewData(channelViewData);
@@ -52,7 +53,8 @@ export async function sendMessage(messageId,messageContent) {
     } catch (error) {
       console.error("Error sending message:", error);
     }
-    setCurrentMessageId(newMessage.id);
+    
+    addSendMessageListener(messageId);
 }
 
 
