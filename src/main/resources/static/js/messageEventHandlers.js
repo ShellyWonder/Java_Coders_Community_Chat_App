@@ -1,34 +1,35 @@
 // messageEventHandlers.js: Manages message button and message list event listeners.
 import { getQuillContent } from "./quill.js";
 import { sendMessage, updateMessage, deleteMessage} from "./messageActions.js";
-import { setCurrentMessageId, } from "./shared.js";
+import { setCurrentMessageId} from "./shared.js";
 import { editMessage } from "./messageDisplay.js";
 
 export function attachChatMessageEventListeners() {
-    const sendBtn = document.querySelector("#sendBtn");
-    const updateBtn = document.querySelector("#updateBtn");
-    const card = document.querySelector(".message-card");
-    const messageList = document.querySelector("#messageList");
-  
-    if (sendBtn) {
-      attachMessageButtonListener(sendBtn, card);
-    }
-    if (updateBtn) {
-      attachMessageButtonListener(updateBtn, card);
-    }
-    attachMessageListListener(messageList);
+  const sendBtn = document.querySelector("[data-action='send']");
+  const updateBtn = document.querySelector("[data-action='update']");
+  const card = document.querySelector(".message-card");
+  const messageList = document.querySelector("#messageList");
+
+  if (sendBtn) {
+    attachMessageButtonListener(sendBtn, card);
   }
+  if (updateBtn) {
+    attachMessageButtonListener(updateBtn, card);
+  }
+  attachMessageListListener(messageList);
+}
   
   // Function to attach listener to the message button
   function attachMessageButtonListener(button, card) {
     const messageId = fetchMessageId(button);
+    const action = button.getAttribute('data-action');
   
-    if (button.id === "sendBtn") {
+    if (action === "send") {
       button.addEventListener("click", (event) => addSendMessageListener(event, messageId));
-    } else if (button.id === "updateBtn") {
+    } else if (action === "update") {
       button.addEventListener("click", () => addEditMessageListener(card, messageId));
     } else {
-      console.log("No valid message button found");
+      console.log("No valid message button action found");
     }
   }
   

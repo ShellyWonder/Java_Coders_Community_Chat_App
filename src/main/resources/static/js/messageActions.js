@@ -54,7 +54,7 @@ export async function sendMessage(messageId,messageContent) {
       console.error("Error sending message:", error);
     }
     
-    addSendMessageListener(messageId);
+    return;
 }
 
 
