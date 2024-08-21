@@ -78,8 +78,8 @@ function createMessageCard(chat) {
         <div class="dropdown">
           <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown"></i>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#" data-action="edit" data-message-id="${id}"><i class="bi bi-pencil"></i>Edit</a></li>
-            <li><a class="dropdown-item" href="#" data-action="delete" data-message-id="${id}"><i class="bi bi-trash3"></i>Delete</a></li>
+            <li><a class="dropdown-item" href="#" data-action="edit" data-message-id="${id}"><i class="bi bi-pencil">&nbsp</i>Edit</a></li>
+            <li><a class="dropdown-item" href="#" data-action="delete" data-message-id="${id}"><i class="bi bi-trash3">&nbsp</i>Delete</a></li>
           </ul>
         </div>
       ` : ""}

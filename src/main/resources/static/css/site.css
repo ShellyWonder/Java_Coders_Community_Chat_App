@@ -80,8 +80,17 @@ li {
   color: whitesmoke !important;
 }
 .dropdown-menu {
-  background-color: var(--sjw-light-color);
+ background-color: var(--sjw-lightbg-color);
   opacity: 0.95;
+}
+.dropdown-item:hover, .dropdown-item:focus {
+  background-color: var( --sjw-secondary-color);
+  color: wheat !important; 
+}
+.dropdown-item {
+  color: var(--sjw-headlineblue-color) !important;
+  
+  font-weight: 600;
 }
 /*END nav styles*/
 
