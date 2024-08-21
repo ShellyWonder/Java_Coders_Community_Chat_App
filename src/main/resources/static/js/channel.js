@@ -30,10 +30,11 @@ export function initializeChannelPage(channelViewData) {
 export function attachChannelEventListeners() {
   console.log("Attaching channel event listeners");
 
-  const messageBtn = document.querySelector("#messageBtn");
-  console.log("Elements found:", { messageBtn});
+  const sendBtn = document.querySelector("[data-action='send']");
+  const updateBtn = document.querySelector("[data-action='update']");
+  console.log("Elements found:", { sendBtn, updateBtn });
 
-  if (messageBtn) {
+  if (sendBtn || updateBtn) {
     attachChatMessageEventListeners();
   }
 }
