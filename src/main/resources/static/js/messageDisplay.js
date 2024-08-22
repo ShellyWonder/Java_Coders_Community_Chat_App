@@ -97,12 +97,17 @@ function createMessageCard(chat) {
 
   return card;
 }
-
+//for message card dropdown  UI elements 
 export async function editMessage(messageId) {
   getCurrentUser();
   const isCurrentUser = true;
   const card = document.querySelector(`.card[data-message-id="${messageId}"]`);
+  console.log('All cards:', Array.from(document.querySelectorAll('.card')).map(card => card.dataset.messageId));
 
+  if (!card) {
+    console.log("Card not found");
+    return;
+  }
      if (isCurrentUser) {
       addEditMessageListener(card, messageId);
     }else alert("You are not authorized to edit this message");
@@ -120,7 +125,7 @@ export function updateMessageCard(messageId, updatedContent) {
   // Select the message text element within the card
   const messageTextElement = messageCard.querySelector(".card-text");
   if (!messageTextElement) {
-    console.error("Message text element not found");
+    console.log("Message text element not found");
     return;
   }
 
