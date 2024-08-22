@@ -1,5 +1,5 @@
 // messageEventHandlers.js: Manages message button and message list event listeners.
-import { getQuillContent } from "./quill.js";
+import { getQuillContent, getQuill } from "./quill.js";
 import { sendMessage, updateMessage, deleteMessage} from "./messageActions.js";
 import { setCurrentMessageId} from "./shared.js";
 import { editMessage } from "./messageDisplay.js";
@@ -24,13 +24,14 @@ export function attachChatMessageEventListeners() {
     const messageId = fetchMessageId(button);
     const action = button.getAttribute('data-action');
   
-    if (action === "send") {
-      button.addEventListener("click", (event) => addSendMessageListener(event, messageId));
-    } else if (action === "update") {
-      button.addEventListener("click", () => addEditMessageListener(card, messageId));
-    } else {
-      console.log("No valid message button action found");
-    }
+    button.addEventListener("click", async (event) => {
+      event.preventDefault();
+      if (action === "send") {
+        await addSendMessageListener(event, messageId);
+      } else if (action === "update") {
+        await addUpdateMessageListener(messageId);
+      }
+    });
   }
   
   // Event handler for the message button click
@@ -40,38 +41,72 @@ export function attachChatMessageEventListeners() {
     if (messageId && messageContent) {
       await sendMessage(messageId, messageContent);
       console.log(`Message ID ${messageId} fetched and set.`);
+
     } else {
       console.error("Message content is empty");
     }
   }
   
   // Add event listener to the button for updating the message
-  function addUpdateMessageListener(updateBtn, messageId) {
-    updateBtn.addEventListener('click', async () => {
-      const updatedContent = quill.root.innerHTML;
-      await updateMessage(messageId, updatedContent);
+  export async function addUpdateMessageListener(messageId) {
+        const quill = getQuill();
+        if (!quill) {
+          console.error('Quill editor not initialized');
+          return;
+        }
+        const updatedContent = quill.root.innerHTML;
+        try {
+          await updateMessage(messageId, updatedContent);
+          console.log('Message updated successfully');
+        } catch (error) {
+          console.error('Error updating message:', error);
+        }
+      }
+  
+  // Function to handle edit message action on the message card dropdown
+  export function addEditMessageListener(card, messageId) {
+    if (!card) {
+      console.log('Card element is null or undefined');
+      return;
+    }
+
+    // Add event listener to the card element
+    card.addEventListener('click', (event) => {
+      const editBtn = event.target.closest('[data-action="edit"]');
+      if (editBtn) {
+        event.preventDefault();
+        // Initialize Quill editor
+        const quill = getQuill();
+        if (!quill) {
+          console.error('Quill editor not initialized');
+          return;
+        }
+        // Enable editing in the message card
+        const messageTextElement = card.querySelector('.card-text');
+        if (messageTextElement) {
+          messageTextElement.contentEditable = true;
+          messageTextElement.focus();
+  
+          // Set Quill content
+          quill.setContents(quill.clipboard.convert(messageTextElement.innerHTML));
+  
+          // Show update button and hide send button
+          setupUpdateButton(messageId);
+
+        }
+      }
+     
     });
   }
-  
-  // Function to handle edit message action
-  export function addEditMessageListener(card, messageId) {
-    card.querySelector('[data-action="edit"]').addEventListener('click', (event) => {
-      event.preventDefault();
-      // Initialize Quill editor
-      const quill = getQuill("#editor");
-  
-      // Enable editing in the message card
-      const messageTextElement = card.querySelector('.card-text');
-      messageTextElement.contentEditable = true;
-      messageTextElement.focus();
-  
-      const updateBtn = document.querySelector("#updateBtn");
-      if (updateBtn) {
-        addUpdateMessageListener(updateBtn, messageId);
-      } else {
-        console.error("Update button not found");
-      }
-    });
+
+  function setupUpdateButton(messageId) {
+    const updateBtn = document.querySelector("#updateBtn");
+    const sendBtn = document.querySelector("#sendBtn");
+    if (updateBtn && sendBtn) {
+      updateBtn.style.display = 'inline-block';
+      sendBtn.style.display = 'none';
+      updateBtn.setAttribute('data-message-id', messageId);
+    }
   }
   
   function fetchMessageId(button) {
@@ -85,14 +120,17 @@ export function attachChatMessageEventListeners() {
   }
   
   export function attachDropdownListener(card) {
-    /// Attach event listener for the dropdown menu
-    const dropdownMenu = card.querySelector('.dropdown-menu'); 
-    if (dropdownMenu) {
-      dropdownMenu.addEventListener('click', handleMessageListClick);
-    }
+  const dropdownMenu = card.querySelector('.dropdown-menu'); 
+  if (dropdownMenu) {
+    console.log('Attaching event listener to dropdown menu', dropdownMenu);
+    dropdownMenu.addEventListener('click', handleMessageListClick);
+  } else {
+    console.error('Dropdown menu not found in card', card);
   }
+}
+
   // Handle edit/delete actions on nav dropdown
-  async function handleMessageAction(action, messageId) {
+  export async function handleMessageAction(action, messageId) {
     if (action === "edit") {
       await editMessage(messageId);
     } else if (action === "delete") {
@@ -106,13 +144,17 @@ export function attachChatMessageEventListeners() {
       messageList.addEventListener("click", handleMessageListClick);
     }
   }
-  
-  // Event handler for message list clicks
-  export async function handleMessageListClick(event) {
-    if (event.target.classList.contains("dropdown-item")) {
-      event.preventDefault();
-      const action = event.target.getAttribute('data-action');
-      const messageId = event.target.getAttribute("data-message-id");
-      handleMessageAction(action, messageId);
-    }
+  //card message dropdown 
+export async function handleMessageListClick(event) {
+  console.log('Click event triggered', event.target);
+  const actionItem = event.target.closest('.dropdown-item[data-action]');
+  console.log('Action item found:', actionItem);
+
+  if (actionItem) {
+    event.preventDefault();
+    const action = actionItem.getAttribute('data-action');
+    const messageId = actionItem.getAttribute('data-message-id');
+    console.log('Action:', action, 'Message ID:', messageId);
+    handleMessageAction(action, messageId);
   }
+}
