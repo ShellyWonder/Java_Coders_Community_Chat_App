@@ -4,7 +4,6 @@ import { getCurrentChannelId, getCurrentUser, getCurrentChannelViewData,
         setCurrentChannelViewData, setCurrentMessageId,
         resetCurrentMessageId, getCurrentToken} from "./shared.js";
 import { updateMessageList, updateMessageCard } from "./messageDisplay.js";
-import {addSendMessageListener} from "./messageEventHandlers.js";
 import { resetQuillContent } from "./quill.js";
 
 function createMessagePayload(messageContent, currentUser) {
@@ -88,8 +87,6 @@ export async function updateMessage(messageId, updatedContent) {
       updateMessageCard(messageId, updatedMessage.message);
       updateMessageList(getCurrentChannelViewData().messages);
   
-      // Clear the editing message ID from sessionStorage
-      resetCurrentMessageId();
     } catch (error) {
       console.error("Error updating message:", error);
     }
