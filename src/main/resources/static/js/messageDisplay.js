@@ -1,5 +1,5 @@
 // messageDisplay.js: Handles displaying and updating the message list.
-import { getCurrentUser } from "./shared.js";
+import { getCurrentUser, setCurrentMessageId } from "./shared.js";
 import { addEditMessageListener, attachDropdownListener} from "./messageEventHandlers.js";
 
 const messageList = document.querySelector("#messageList");
@@ -69,6 +69,8 @@ function createMessageCard(chat) {
   const { userName, message, publishedAt, isCurrentUser, id } = chat;
   const card = document.createElement("div");
   card.classList.add("card", "chatCard", "mb-3");
+  const messageId = card.setAttribute('data-message-id', id);
+  setCurrentMessageId(messageId);
  
 
   card.innerHTML = `
@@ -85,7 +87,7 @@ function createMessageCard(chat) {
       ` : ""}
     </div>
     <div class="card-body">
-      <p class="card-text">${message}</p>
+      <p class="card-text" contentEditable="false">${message}</p>
     </div>
     <div class="card-footer d-flex justify-content-between">
       <p class="text-body-secondary mb-0">${publishedAt}</p>
@@ -142,7 +144,12 @@ export function updateMessageCard(messageId, updatedContent) {
   card.querySelector('.card-footer').appendChild(successMessage);
 }
     
-
+export function restoreOriginalFooter(footerElement, messageId) {
+  footerElement.innerHTML = `
+    <p class="text-body-secondary mb-0">${formatDate(new Date())}</p>
+    <a href="#" class="btn btn-sm btn-primary">Reply</a>
+  `;
+}
 function formatDate(date) {
     return date.toLocaleString();
   }

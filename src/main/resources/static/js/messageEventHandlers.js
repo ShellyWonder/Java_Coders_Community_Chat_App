@@ -1,8 +1,8 @@
 // messageEventHandlers.js: Manages message button and message list event listeners.
-import { getQuillContent, getQuill } from "./quill.js";
+import { getQuillContent } from "./quill.js";
 import { sendMessage, updateMessage, deleteMessage} from "./messageActions.js";
 import { setCurrentMessageId} from "./shared.js";
-import { editMessage } from "./messageDisplay.js";
+import { editMessage, restoreOriginalFooter } from "./messageDisplay.js";
 
 export function attachChatMessageEventListeners() {
   const sendBtn = document.querySelector("[data-action='send']");
@@ -48,20 +48,18 @@ export function attachChatMessageEventListeners() {
   }
   
   // Add event listener to the button for updating the message
-  export async function addUpdateMessageListener(messageId) {
-        const quill = getQuill();
-        if (!quill) {
-          console.error('Quill editor not initialized');
-          return;
-        }
-        const updatedContent = quill.root.innerHTML;
-        try {
-          await updateMessage(messageId, updatedContent);
-          console.log('Message updated successfully');
-        } catch (error) {
-          console.error('Error updating message:', error);
-        }
-      }
+  export async function addUpdateMessageListener(messageId, card) {
+    const messageTextElement = card.querySelector('.card-text');
+    const updatedContent = messageTextElement.innerHTML;
+    try {
+      await updateMessage(messageId, updatedContent);
+      console.log('Message updated successfully');
+      messageTextElement.contentEditable = false;
+      restoreOriginalFooter(card.querySelector('.card-footer'), messageId);
+    } catch (error) {
+      console.error('Error updating message:', error);
+    }
+  }
   
   // Function to handle edit message action on the message card dropdown
   export function addEditMessageListener(card, messageId) {
@@ -69,35 +67,43 @@ export function attachChatMessageEventListeners() {
       console.log('Card element is null or undefined');
       return;
     }
+    const messageTextElement = card.querySelector('.card-text');
+    const footerElement = card.querySelector('.card-footer');
+    const originalContent = messageTextElement.innerHTML;
 
     // Add event listener to the card element
     card.addEventListener('click', (event) => {
-      const editBtn = event.target.closest('[data-action="edit"]');
-      if (editBtn) {
+      const editButton = event.target.closest('[data-action="edit"]');
+      if (editButton) {
         event.preventDefault();
-        // Initialize Quill editor
-        const quill = getQuill();
-        if (!quill) {
-          console.error('Quill editor not initialized');
-          return;
-        }
-        // Enable editing in the message card
-        const messageTextElement = card.querySelector('.card-text');
-        if (messageTextElement) {
-          messageTextElement.contentEditable = true;
-          messageTextElement.focus();
+        messageTextElement.contentEditable = true;
+        messageTextElement.focus();
   
-          // Set Quill content
-          quill.setContents(quill.clipboard.convert(messageTextElement.innerHTML));
-  
-          // Show update button and hide send button
-          setupUpdateButton(messageId);
+        // Place the cursor at the end of the content
+        const range = document.createRange();
+        range.selectNodeContents(messageTextElement);
+        range.collapse(false);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
 
-        }
-      }
-     
-    });
-  }
+      footerElement.innerHTML = `
+        <button class="btn btn-primary update-btn" data-message-id="${messageId}">Update</button>
+        <button class="btn btn-secondary cancel-btn">Cancel</button>
+      `;
+  
+      const updateBtn = footerElement.querySelector('.update-btn');
+      const cancelBtn = footerElement.querySelector('.cancel-btn');
+
+      updateBtn.addEventListener('click', () => addUpdateMessageListener(messageId, card));
+      cancelBtn.addEventListener('click', () => {
+        messageTextElement.innerHTML = originalContent;
+        messageTextElement.contentEditable = false;
+        restoreOriginalFooter(footerElement, messageId);
+      });
+    }
+  });
+}
 
   function setupUpdateButton(messageId) {
     const updateBtn = document.querySelector("#updateBtn");
@@ -131,6 +137,7 @@ export function attachChatMessageEventListeners() {
 
   // Handle edit/delete actions on nav dropdown
   export async function handleMessageAction(action, messageId) {
+    setCurrentMessageId(messageId);
     if (action === "edit") {
       await editMessage(messageId);
     } else if (action === "delete") {
@@ -147,14 +154,14 @@ export function attachChatMessageEventListeners() {
   //card message dropdown 
 export async function handleMessageListClick(event) {
   console.log('Click event triggered', event.target);
-  const actionItem = event.target.closest('.dropdown-item[data-action]');
+  const actionItem = event.target.closest('[data-action]');
   console.log('Action item found:', actionItem);
 
   if (actionItem) {
     event.preventDefault();
     const action = actionItem.getAttribute('data-action');
-    const messageId = actionItem.getAttribute('data-message-id');
+    const messageId = actionItem.closest('.card').getAttribute('data-message-id');
     console.log('Action:', action, 'Message ID:', messageId);
-    handleMessageAction(action, messageId);
+    await handleMessageAction(action, messageId);
   }
 }
